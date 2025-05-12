@@ -1,0 +1,143 @@
+// Basic User Type
+export interface User {
+  id: number;
+  walletAddress?: string;
+  username: string;
+  avatar?: string;
+  role?: UserRole;
+  joined: Date;
+  votingPower: number;
+}
+
+// User Roles
+export enum UserRole {
+  Guest = 'guest',
+  Participant = 'participant',
+  Operator = 'operator',
+  Scientist = 'scientist',
+  Investor = 'investor',
+  Government = 'government'
+}
+
+// Token Types
+export interface Token {
+  symbol: string;
+  name: string;
+  balance: number;
+  price: number;
+  logo?: string;
+}
+
+// Transaction Types
+export interface Transaction {
+  id: string;
+  type: TransactionType;
+  token: string;
+  amount: number;
+  date: Date;
+  status: TransactionStatus;
+  from?: string;
+  to?: string;
+}
+
+export enum TransactionType {
+  RECEIVED = 'Received',
+  SENT = 'Sent',
+  STAKING = 'Staking',
+  DAO_VOTE = 'DAO Vote'
+}
+
+export enum TransactionStatus {
+  COMPLETED = 'Completed',
+  PENDING = 'Pending',
+  FAILED = 'Failed'
+}
+
+// Water Resource Types
+export interface WaterResource {
+  id: number;
+  name: string;
+  region: string;
+  country: string;
+  status: ResourceStatus;
+  qualityIndex: number;
+  flowRate: number;
+  isActive: boolean;
+  coordinates: [number, number]; // [latitude, longitude]
+  description?: string;
+  imageUrl?: string;
+}
+
+export enum ResourceStatus {
+  CRITICAL = 'Critical',
+  NEEDS_ATTENTION = 'Needs Attention',
+  STABLE = 'Stable',
+  EXCELLENT = 'Excellent'
+}
+
+// Project Types
+export interface Project {
+  id: number;
+  name: string;
+  location: string;
+  region: string;
+  country: string;
+  description: string;
+  imageUrl?: string;
+  totalFunding: number;
+  availableForDAO: number;
+  fundingProgress: number;
+  irr: number; // Interest Rate of Return in %
+  endDate: Date;
+}
+
+// DAO Proposal Types
+export interface Proposal {
+  id: number;
+  title: string;
+  description: string;
+  votesYes: number;
+  votesNo: number;
+  quorum: number;
+  requiredQuorum: number;
+  status: ProposalStatus;
+  endDate: Date;
+}
+
+export enum ProposalStatus {
+  ACTIVE = 'Active',
+  PASSED = 'Passed',
+  FAILED = 'Failed',
+  PENDING = 'Pending'
+}
+
+// DAO Event Types
+export interface DAOEvent {
+  id: number;
+  title: string;
+  description: string;
+  date: Date;
+  location: string;
+  isVirtual: boolean;
+}
+
+// NFT Achievement Types
+export interface NFTAchievement {
+  id: number;
+  name: string;
+  description: string;
+  imageUrl: string;
+  dateAcquired: Date;
+}
+
+// Staking Option Types
+export interface StakingOption {
+  id: number;
+  name: string;
+  token: string;
+  apy: number; // Annual Percentage Yield in %
+  capacity: number;
+  filled: number;
+  minAmount: number;
+  lockPeriod: number; // in days
+}
