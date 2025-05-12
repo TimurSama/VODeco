@@ -4,45 +4,51 @@
 
 @layer base {
   :root {
-    --background: 215 60% 8%;
-    --foreground: 0 0% 98%;
-    --muted: 210 40% 15%;
+    --background: 222 70% 6%;
+    --foreground: 210 100% 98%;
+    --muted: 220 40% 12%;
     --muted-foreground: 210 5% 70%;
-    --popover: 215 60% 8%;
-    --popover-foreground: 0 0% 98%;
-    --card: 215 60% 10%;
-    --card-foreground: 0 0% 98%;
-    --border: 210 40% 20%;
-    --input: 210 40% 15%;
-    --primary: 175 85% 45%; /* Bright turquoise */
+    --popover: 222 70% 6%;
+    --popover-foreground: 210 100% 98%;
+    --card: 220 50% 8%;
+    --card-foreground: 210 100% 98%;
+    --border: 210 40% 18%;
+    --input: 220 40% 12%;
+    --primary: 183 100% 50%; /* Bright turquoise/cyan */
     --primary-foreground: 210 100% 98%;
-    --secondary: 160 70% 40%; /* Mint */
-    --secondary-foreground: 0 0% 98%;
-    --accent: 335 80% 70%; /* Soft pink */
+    --secondary: 163 60% 45%; /* Mint green */
+    --secondary-foreground: 210 100% 98%;
+    --accent: 335 80% 65%; /* Soft pink */
     --accent-foreground: 0 0% 98%;
+    --positive: 160 100% 40%;
+    --warning: 38 100% 50%;
+    --danger: 354 100% 65%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --ring: 210 40% 30%;
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 215 60% 8%;
-    --foreground: 0 0% 98%;
-    --muted: 210 40% 15%;
+    --background: 222 70% 6%;
+    --foreground: 210 100% 98%;
+    --muted: 220 40% 12%;
     --muted-foreground: 210 5% 70%;
-    --popover: 215 60% 8%;
-    --popover-foreground: 0 0% 98%;
-    --card: 215 60% 10%;
-    --card-foreground: 0 0% 98%;
-    --border: 210 40% 20%;
-    --input: 210 40% 15%;
-    --primary: 175 85% 45%;
+    --popover: 222 70% 6%;
+    --popover-foreground: 210 100% 98%;
+    --card: 220 50% 8%;
+    --card-foreground: 210 100% 98%;
+    --border: 210 40% 18%;
+    --input: 220 40% 12%;
+    --primary: 183 100% 50%;
     --primary-foreground: 210 100% 98%;
-    --secondary: 160 70% 40%;
-    --secondary-foreground: 0 0% 98%;
-    --accent: 335 80% 70%;
+    --secondary: 163 60% 45%;
+    --secondary-foreground: 210 100% 98%;
+    --accent: 335 80% 65%;
     --accent-foreground: 0 0% 98%;
+    --positive: 160 100% 40%;
+    --warning: 38 100% 50%;
+    --danger: 354 100% 65%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --ring: 210 40% 30%;
@@ -57,17 +63,22 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
     background-image: 
-      linear-gradient(to right, rgba(0, 186, 188, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 186, 188, 0.03) 1px, transparent 1px),
-      radial-gradient(circle at 30% 20%, rgba(0, 186, 188, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 70% 80%, rgba(120, 219, 204, 0.05) 0%, transparent 50%);
-    background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%;
+      linear-gradient(to right, rgba(0, 186, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 186, 255, 0.03) 1px, transparent 1px),
+      radial-gradient(circle at 30% 20%, rgba(0, 186, 255, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba(0, 255, 217, 0.04) 0%, transparent 50%);
+    background-size: 24px 24px, 24px 24px, 100% 100%, 100% 100%;
+    background-attachment: fixed;
   }
 }
 
 @layer components {
   .hexagon {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  }
+  
+  .animate-spin-slow {
+    animation: spin 8s linear infinite;
   }
   
   .hex-border {
