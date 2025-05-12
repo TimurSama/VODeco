@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   };
 
   return (
-    <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-card/90 backdrop-blur-sm border-r border-primary/10 
+    <aside className={`fixed top-[60px] left-0 h-[calc(100vh-60px)] bg-card/90 backdrop-blur-sm border-r border-primary/10 
       transition-all duration-300 shadow-lg shadow-primary/5 z-30
       ${open ? 'w-64 translate-x-0' : 'w-64 -translate-x-full'}`}>
       <div className="flex items-center justify-between p-3 border-b border-primary/10">

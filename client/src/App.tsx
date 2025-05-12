@@ -47,9 +47,9 @@ function App() {
       <TooltipProvider>
         <div className="min-h-screen flex flex-col">
           <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-          <div className="flex flex-grow relative">
+          <div className="flex flex-grow relative mt-16">
             <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-            <main className="flex-grow pt-4">
+            <main className="flex-grow pt-4 px-2">
               <Router />
             </main>
           </div>
