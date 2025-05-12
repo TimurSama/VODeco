@@ -50,40 +50,52 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
   };
 
   return (
-    <aside className={`sidebar ${collapsed ? 'sidebar-collapsed' : ''}`}>
-      <div className="flex items-center justify-between p-3 border-b border-primary/20">
-        {!collapsed && <div className="text-primary font-semibold">Navigation</div>}
+    <aside className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-card/90 backdrop-blur-sm border-r border-primary/10 
+      transition-all duration-300 shadow-lg shadow-primary/5 z-30
+      ${collapsed ? 'w-16' : 'w-64'}`}>
+      <div className="flex items-center justify-between p-3 border-b border-primary/10">
+        {!collapsed && <div className="text-primary font-medium">Меню</div>}
         <button 
           onClick={() => setCollapsed(!collapsed)} 
-          className="p-1 rounded-md hover:bg-primary/10 text-primary"
+          className="p-1 rounded-full hover:bg-primary/10 text-primary/80 hover:text-primary transition-colors"
         >
           {collapsed ? '→' : '←'}
         </button>
       </div>
 
-      <div className="p-2 overflow-y-auto">
+      <div className="p-2 overflow-y-auto h-full">
         {/* Dashboard always at top */}
         <Link href={dashboardItem.path}>
-          <div className={`sidebar-item ${isActive(dashboardItem.path) ? 'active' : ''}`}>
-            <dashboardItem.icon className={`${collapsed ? 'mx-auto' : 'mr-2'} h-5 w-5`} />
+          <div className={`flex items-center p-3 mb-1 rounded-lg transition-all
+            ${isActive(dashboardItem.path) 
+              ? 'bg-primary/10 text-primary border border-primary/20' 
+              : 'text-foreground/70 hover:bg-primary/5 hover:text-primary border border-transparent hover:border-primary/10'
+            }`}>
+            <dashboardItem.icon className={`${collapsed ? 'mx-auto' : 'mr-3'} h-5 w-5`} />
             {!collapsed && <span>{dashboardItem.name}</span>}
           </div>
         </Link>
 
-        <div className={`my-2 border-b border-primary/10 ${collapsed ? 'mx-auto w-10' : ''}`}></div>
+        <div className={`my-3 border-b border-primary/10 ${collapsed ? 'mx-auto w-10' : ''}`}></div>
 
         {/* Other nav items */}
-        {navItems.map((item) => (
-          <Link key={item.path} href={item.path}>
-            <div className={`sidebar-item ${isActive(item.path) ? 'active' : ''}`}>
-              <item.icon className={`${collapsed ? 'mx-auto' : 'mr-2'} h-5 w-5`} />
-              {!collapsed && <span>{item.name}</span>}
-            </div>
-          </Link>
-        ))}
+        <div className="space-y-1">
+          {navItems.map((item) => (
+            <Link key={item.path} href={item.path}>
+              <div className={`flex items-center p-3 rounded-lg transition-all
+                ${isActive(item.path) 
+                  ? 'bg-primary/10 text-primary border border-primary/20' 
+                  : 'text-foreground/70 hover:bg-primary/5 hover:text-primary border border-transparent hover:border-primary/10'
+                }`}>
+                <item.icon className={`${collapsed ? 'mx-auto' : 'mr-3'} h-5 w-5`} />
+                {!collapsed && <span>{item.name}</span>}
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
-      <div className="mt-auto p-3 border-t border-primary/20">
+      <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-primary/10 bg-card">
         {!collapsed && (
           <div className="text-xs text-foreground/60 text-center">
             VODeco v1.0.0
