@@ -97,6 +97,32 @@
     @apply bg-opacity-70 backdrop-blur-md border border-primary/30 bg-card;
   }
   
+  .glassmorphism-dark {
+    @apply bg-background/60 backdrop-blur-md border border-primary/20 shadow-lg;
+  }
+  
+  .pulse-animation {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .wave-animation {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .wave-animation::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,230,200,0.2) 0%, rgba(0,180,255,0.2) 100%);
+    animation: wave 8s linear infinite;
+    transform-origin: center bottom;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  
   .animate-wave {
     animation: wave-animation 8s infinite ease-in-out;
   }
@@ -172,5 +198,16 @@
   @keyframes rotate {
     0% { transform: rotateY(0deg) rotateX(15deg); }
     100% { transform: rotateY(360deg) rotateX(15deg); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  @keyframes wave {
+    0% { transform: translateX(0) translateY(0) scaleY(1); }
+    50% { transform: translateX(-25%) translateY(-10px) scaleY(0.8); }
+    100% { transform: translateX(-50%) translateY(0) scaleY(1); }
   }
 }

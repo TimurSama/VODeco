@@ -139,7 +139,7 @@ const WalletPage: React.FC = () => {
           {/* Actions Panel */}
           <div className="glassmorphism-dark rounded-xl p-6">
             <h3 className="font-medium text-lg text-white mb-4 flex items-center">
-              <WaterDrop className="w-5 h-5 mr-2 text-primary" />
+              <Droplet className="w-5 h-5 mr-2 text-primary" />
               Quick Actions
             </h3>
             
@@ -160,7 +160,7 @@ const WalletPage: React.FC = () => {
               </button>
               
               <button className="p-4 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors text-white flex flex-col items-center">
-                <WaterDrop className="w-6 h-6 mb-2 text-primary" />
+                <Droplet className="w-6 h-6 mb-2 text-primary" />
                 <span>Projects</span>
               </button>
             </div>

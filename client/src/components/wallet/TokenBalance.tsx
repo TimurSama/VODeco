@@ -8,14 +8,14 @@ interface TokenBalanceProps {
   onRefresh?: () => void;
 }
 
-// Subtoken data for visual elements
-const subtokenIcons = {
+// Subtoken data with explicit type definitions
+const subtokenIcons: Record<string, React.ReactNode> = {
   'VOD_Uzbekistan': <Globe className="h-4 w-4 text-primary" />,
   'VOD_Aral': <Droplet className="h-4 w-4 text-accent" />,
   'VOD_Ural': <Mountain className="h-4 w-4 text-primary" />
 };
 
-const subtokenColors = {
+const subtokenColors: Record<string, string> = {
   'VOD_Uzbekistan': 'from-primary/60 to-primary',
   'VOD_Aral': 'from-accent/60 to-accent',
   'VOD_Ural': 'from-primary/80 to-primary'
@@ -105,8 +105,7 @@ const TokenBalance: React.FC<TokenBalanceProps> = ({ onRefresh }) => {
                   <div className="flex items-center mt-1">
                     <Progress 
                       value={(balance / totalSubtokenBalance) * 100} 
-                      className="h-1.5 w-20 bg-white/10" 
-                      indicatorClassName={`bg-gradient-to-r ${subtokenColors[tokenName]}`}
+                      className={`h-1.5 w-20 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:${subtokenColors[tokenName]}`} 
                     />
                     <span className="text-white/40 text-xs ml-2">
                       {totalSubtokenBalance > 0 
