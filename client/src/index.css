@@ -4,61 +4,48 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 20 14.3% 4.1%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --primary: 189 100% 45%;
-    --primary-foreground: 211 100% 99%;
-    --secondary: 60 4.8% 95.9%;
-    --secondary-foreground: 24 9.8% 10%;
-    --accent: 332 100% 64%;
-    --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --ring: 20 14.3% 4.1%;
-    --radius: 0.5rem;
-    --sidebar-background: 240 10% 3.9%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 189 100% 45%;
-    --sidebar-primary-foreground: 211 100% 99%;
-    --sidebar-accent: 332 100% 64%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 240 4.9% 83.9%;
-    --chart-1: 189 100% 45%;
-    --chart-2: 332 100% 64%;
-    --chart-3: 256 100% 65%;
-    --chart-4: 178 100% 50%;
-    --chart-5: 43 96% 56%;
-  }
-
-  .dark {
-    --background: 222 47% 11%;
+    --background: 215 60% 8%;
     --foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --popover: 222 47% 11%;
+    --muted: 210 40% 15%;
+    --muted-foreground: 210 5% 70%;
+    --popover: 215 60% 8%;
     --popover-foreground: 0 0% 98%;
-    --card: 224 71% 4%;
+    --card: 215 60% 10%;
     --card-foreground: 0 0% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 240 3.7% 15.9%;
-    --primary: 189 100% 45%;
-    --primary-foreground: 211 100% 99%;
-    --secondary: 240 3.7% 15.9%;
+    --border: 210 40% 20%;
+    --input: 210 40% 15%;
+    --primary: 175 85% 45%; /* Bright turquoise */
+    --primary-foreground: 210 100% 98%;
+    --secondary: 160 70% 40%; /* Mint */
     --secondary-foreground: 0 0% 98%;
-    --accent: 332 100% 64%;
+    --accent: 335 80% 70%; /* Soft pink */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --ring: 240 4.9% 83.9%;
+    --ring: 210 40% 30%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 215 60% 8%;
+    --foreground: 0 0% 98%;
+    --muted: 210 40% 15%;
+    --muted-foreground: 210 5% 70%;
+    --popover: 215 60% 8%;
+    --popover-foreground: 0 0% 98%;
+    --card: 215 60% 10%;
+    --card-foreground: 0 0% 98%;
+    --border: 210 40% 20%;
+    --input: 210 40% 15%;
+    --primary: 175 85% 45%;
+    --primary-foreground: 210 100% 98%;
+    --secondary: 160 70% 40%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 335 80% 70%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --ring: 210 40% 30%;
   }
 }
 
@@ -68,7 +55,13 @@
   }
 
   body {
-    @apply font-sans antialiased bg-[#0B1B3A] text-foreground bg-[radial-gradient(circle_at_10%_20%,rgba(0,229,224,0.05)_0%,transparent_50%),radial-gradient(circle_at_90%_80%,rgba(255,46,147,0.05)_0%,transparent_50%)];
+    @apply font-sans antialiased bg-background text-foreground;
+    background-image: 
+      linear-gradient(to right, rgba(0, 186, 188, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 186, 188, 0.03) 1px, transparent 1px),
+      radial-gradient(circle at 30% 20%, rgba(0, 186, 188, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba(120, 219, 204, 0.05) 0%, transparent 50%);
+    background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%;
   }
 }
 
@@ -88,7 +81,7 @@
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, #00E5E0, #FF2E93);
+    background: hsl(var(--primary));
     z-index: -1;
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   }
@@ -114,6 +107,30 @@
     animation: rotate 30s infinite linear;
   }
   
+  .sidebar {
+    @apply fixed top-0 left-0 h-full w-64 bg-card border-r border-primary/20 flex flex-col overflow-hidden z-40;
+  }
+  
+  .sidebar-collapsed {
+    @apply w-16 transition-all duration-300;
+  }
+  
+  .sidebar-item {
+    @apply flex items-center text-white/80 p-3 mb-1 hover:bg-primary/10 rounded-md transition-colors;
+  }
+  
+  .sidebar-item.active {
+    @apply bg-primary/20 text-primary;
+  }
+
+  .main-with-sidebar {
+    @apply ml-64 transition-all duration-300;
+  }
+
+  .main-with-sidebar-collapsed {
+    @apply ml-16 transition-all duration-300;
+  }
+  
   .wallet-btn {
     position: relative;
     overflow: hidden;
@@ -126,7 +143,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: rgba(255,255,255,0.1);
     transition: 0.5s;
   }
   
