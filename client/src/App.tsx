@@ -40,16 +40,16 @@ function Router() {
 }
 
 function App() {
-  const [collapsed, setCollapsed] = useState(false);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="min-h-screen flex flex-col">
-          <Header />
-          <div className="flex flex-grow">
-            <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-            <main className={`flex-grow ${collapsed ? 'main-with-sidebar-collapsed' : 'main-with-sidebar'}`}>
+          <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+          <div className="flex flex-grow relative">
+            <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+            <main className="flex-grow pt-4">
               <Router />
             </main>
           </div>
