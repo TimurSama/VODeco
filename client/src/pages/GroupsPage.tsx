@@ -12,7 +12,6 @@ import {
   Lock, Filter, MessageSquare, Search, Plus, ChevronRight, Pin, Bell
 } from "lucide-react";
 import { Group } from "@/types";
-import { apiRequest } from "@/lib/queryClient";
 
 export default function GroupsPage() {
   const [groups, setGroups] = useState<Group[]>([]);
@@ -23,33 +22,106 @@ export default function GroupsPage() {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const [showFilterDialog, setShowFilterDialog] = useState(false);
 
-  // Получение групп с сервера
+  // Временные фиктивные данные, пока мы решаем проблему с API
   useEffect(() => {
+    setLoading(true);
+    
+    // Используем фиктивные данные для тестирования интерфейса
+    const mockGroups: Group[] = [
+      {
+        id: 1,
+        name: 'Глобальная DAO-группа',
+        description: 'Официальная группа для всех участников VODeco DAO',
+        type: 'official',
+        category: 'global',
+        imageUrl: null,
+        creatorId: 1,
+        memberCount: 156,
+        isActive: true,
+        createdAt: new Date()
+      },
+      {
+        id: 2,
+        name: 'Европейский регион',
+        description: 'Региональная группа для обсуждения европейских водных инициатив',
+        type: 'official',
+        category: 'regional',
+        imageUrl: null,
+        creatorId: 1,
+        memberCount: 42,
+        isActive: true,
+        createdAt: new Date()
+      },
+      {
+        id: 3,
+        name: 'Азиатский регион',
+        description: 'Региональная группа для обсуждения азиатских водных инициатив',
+        type: 'official',
+        category: 'regional',
+        imageUrl: null,
+        creatorId: 1,
+        memberCount: 37,
+        isActive: true,
+        createdAt: new Date()
+      },
+      {
+        id: 4,
+        name: 'Научное сообщество',
+        description: 'Группа для научных дискуссий о технологиях очистки воды',
+        type: 'public',
+        category: 'professional',
+        imageUrl: null,
+        creatorId: 2,
+        memberCount: 27,
+        isActive: true,
+        createdAt: new Date()
+      },
+      {
+        id: 5,
+        name: 'Образовательные курсы',
+        description: 'Обучающие материалы по ESG-стандартам и водным ресурсам',
+        type: 'public',
+        category: 'education',
+        imageUrl: null,
+        creatorId: 2,
+        memberCount: 86,
+        isActive: true,
+        createdAt: new Date()
+      },
+      {
+        id: 6,
+        name: 'Инвестиционный клуб',
+        description: 'Закрытый клуб для инвесторов в водные проекты',
+        type: 'private',
+        category: 'investment',
+        imageUrl: null,
+        creatorId: 3,
+        memberCount: 18,
+        isActive: true,
+        createdAt: new Date()
+      }
+    ];
+    
+    setGroups(mockGroups);
+    setFilteredGroups(mockGroups);
+    setLoading(false);
+    
+    // TODO: Раскомментировать и исправить, когда решим проблему с API
+    /*
     const fetchGroups = async () => {
-      setLoading(true);
       try {
-        console.log("Начало запроса API для групп");
-        // Версия без дженерика, так как в предыдущем вызове была ошибка типа
-        const response = await fetch('/api/groups', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        
+        const response = await fetch('/api/groups');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-        console.log("Полученные данные:", data);
         
-        // Проверка, что data - это массив
         if (Array.isArray(data)) {
           setGroups(data);
           setFilteredGroups(data);
         } else {
-          console.error("Получены данные в неправильном формате:", data);
+          console.error("Данные в неправильном формате:", data);
           setGroups([]);
           setFilteredGroups([]);
         }
@@ -61,8 +133,9 @@ export default function GroupsPage() {
         setLoading(false);
       }
     };
-
+    
     fetchGroups();
+    */
   }, []);
 
   // Фильтрация групп при изменении поисковой строки или активной вкладки
