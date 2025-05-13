@@ -12,12 +12,13 @@ import Dashboard from "@/pages/Dashboard";
 import WalletPage from "@/pages/WalletPage";
 import GloboPage from "@/pages/GloboPage";
 import DAOPage from "@/pages/DAOPage";
+import AccountPage from "@/pages/AccountPage";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Dashboard} />
-      <Route path="/account" component={NotFound} />
+      <Route path="/account" component={AccountPage} />
       <Route path="/wallet" component={WalletPage} />
       <Route path="/messages" component={NotFound} />
       <Route path="/contacts" component={NotFound} />

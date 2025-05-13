@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { 
-  User, QrCode, Hexagon, Award, History, Settings, 
-  Globe, Flask, Building, BarChart3, Edit, Eye, Lock, 
+  User, QrCode, Award, History, Settings, 
+  Globe, FlaskConical, Building2, BarChart3, Edit, Eye, Lock, 
   UserPlus, Bell, Wallet, HelpCircle, ExternalLink 
 } from "lucide-react";
 import { UserRole } from '@/types';
@@ -43,8 +43,8 @@ export default function AccountPage() {
   const getRoleIcon = (role: RoleType) => {
     switch (role) {
       case 'community': return <Globe className="h-5 w-5" />;
-      case 'scientific': return <Flask className="h-5 w-5" />;
-      case 'government': return <Building className="h-5 w-5" />;
+      case 'scientific': return <FlaskConical className="h-5 w-5" />;
+      case 'government': return <Building2 className="h-5 w-5" />;
       case 'investor': return <BarChart3 className="h-5 w-5" />;
       default: return <User className="h-5 w-5" />;
     }
@@ -102,7 +102,7 @@ export default function AccountPage() {
             
             <div className="text-center">
               <div className="bg-background/30 border border-primary/20 px-3 py-1 rounded-full text-xs text-primary mb-1 inline-flex items-center">
-                <Hexagon className="h-3 w-3 mr-1" />
+                <QrCode className="h-3 w-3 mr-1" />
                 {userData.id}
               </div>
               <h2 className="text-xl font-bold text-white">{userData.username}</h2>
