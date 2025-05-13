@@ -371,22 +371,26 @@ export default function GroupsPage() {
         
         {/* Вкладки типов групп */}
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-card/40 border border-primary/20">
-            <TabsTrigger value="all" className="data-[state=active]:bg-primary/20">
-              <UsersRound className="h-4 w-4 mr-2" />
-              Все группы
+          <TabsList className="bg-card/40 border border-primary/20 w-full max-w-full overflow-auto flex-wrap sm:flex-nowrap mb-1">
+            <TabsTrigger value="all" className="data-[state=active]:bg-primary/20 flex-1">
+              <UsersRound className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="sm:inline hidden">Все группы</span>
+              <span className="sm:hidden inline">Все</span>
             </TabsTrigger>
-            <TabsTrigger value="official" className="data-[state=active]:bg-primary/20">
-              <Users className="h-4 w-4 mr-2" />
-              Официальные
+            <TabsTrigger value="official" className="data-[state=active]:bg-primary/20 flex-1">
+              <Users className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="sm:inline hidden">Официальные</span>
+              <span className="sm:hidden inline">Офиц.</span>
             </TabsTrigger>
-            <TabsTrigger value="public" className="data-[state=active]:bg-primary/20">
-              <Globe className="h-4 w-4 mr-2" />
-              Публичные
+            <TabsTrigger value="public" className="data-[state=active]:bg-primary/20 flex-1">
+              <Globe className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="sm:inline hidden">Публичные</span>
+              <span className="sm:hidden inline">Публ.</span>
             </TabsTrigger>
-            <TabsTrigger value="private" className="data-[state=active]:bg-primary/20">
-              <Lock className="h-4 w-4 mr-2" />
-              Закрытые
+            <TabsTrigger value="private" className="data-[state=active]:bg-primary/20 flex-1">
+              <Lock className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="sm:inline hidden">Закрытые</span>
+              <span className="sm:hidden inline">Закр.</span>
             </TabsTrigger>
           </TabsList>
           
@@ -397,7 +401,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -419,7 +423,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -441,7 +445,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
