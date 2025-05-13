@@ -233,37 +233,37 @@ export default function GroupsPage() {
   };
 
   const renderGroupCard = (group: Group) => (
-    <Card key={group.id} className="glassmorphism-dark overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/50">
-      <CardHeader className="pb-2">
+    <Card key={group.id} className="glassmorphism-dark overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/50 max-w-full">
+      <CardHeader className="pb-2 p-3 sm:p-6">
         <div className="flex justify-between items-start">
-          <Badge variant="outline" className={`${getGroupTypeColor(group.type)}`}>
+          <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-xs sm:text-sm`}>
             {getGroupTypeName(group.type)}
           </Badge>
           
-          <Badge variant="outline" className="text-white/70 bg-white/5">
-            {group.memberCount} участников
+          <Badge variant="outline" className="text-white/70 bg-white/5 text-xs sm:text-sm">
+            {group.memberCount} уч.
           </Badge>
         </div>
-        <CardTitle className="text-lg text-white mt-2">{group.name}</CardTitle>
-        <div className="flex items-center text-sm text-white/60 space-x-2">
+        <CardTitle className="text-base sm:text-lg text-white mt-2">{group.name}</CardTitle>
+        <div className="flex items-center text-xs sm:text-sm text-white/60 space-x-1 sm:space-x-2">
           {getGroupCategoryIcon(group.category)}
           <span>{getGroupCategoryName(group.category)}</span>
         </div>
       </CardHeader>
       
-      <CardContent>
-        <CardDescription className="text-white/70 line-clamp-2 h-10">
+      <CardContent className="py-1 px-3 sm:p-6">
+        <CardDescription className="text-white/70 line-clamp-2 h-10 text-xs sm:text-sm">
           {group.description}
         </CardDescription>
       </CardContent>
       
-      <CardFooter className="flex justify-between items-center pt-2 border-t border-white/10">
-        <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
+      <CardFooter className="flex justify-between items-center pt-2 border-t border-white/10 p-3 sm:px-6">
+        <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10 h-8 p-0 sm:p-2 sm:h-auto">
           <MessageSquare className="h-4 w-4 mr-1" />
-          Обсуждения
+          <span className="hidden sm:inline">Обсуждения</span>
         </Button>
-        <Button variant="outline" size="sm" className="text-white hover:text-primary hover:bg-primary/10 hover:border-primary">
-          Открыть
+        <Button variant="outline" size="sm" className="text-white hover:text-primary hover:bg-primary/10 hover:border-primary h-8 text-xs sm:text-sm">
+          <span className="sm:inline">Открыть</span>
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </CardFooter>
@@ -271,8 +271,8 @@ export default function GroupsPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex flex-col space-y-6">
+    <div className="container mx-auto px-4 py-6 max-w-full">
+      <div className="flex flex-col space-y-6 max-w-[100%]">
         {/* Заголовок страницы */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center">
@@ -401,7 +401,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-full">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -423,7 +423,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-full">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -445,7 +445,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-full">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -467,7 +467,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 max-w-full">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -565,11 +565,11 @@ export default function GroupsPage() {
           </div>
           
           <ScrollArea className="h-[200px] sm:h-[220px]">
-            <div className="flex space-x-4 sm:space-x-6 pb-4">
+            <div className="flex space-x-3 sm:space-x-4 pb-4">
               {Array.isArray(filteredGroups) && filteredGroups.length > 0 ? (
                 <>
                   {filteredGroups.slice(0, 5).map(group => (
-                    <Card key={group.id} className="min-w-[260px] sm:min-w-[280px] glassmorphism-dark">
+                    <Card key={group.id} className="min-w-[240px] max-w-[85vw] sm:min-w-[260px] glassmorphism-dark">
                       <CardHeader className="pb-2 p-3 sm:p-4">
                         <div className="flex justify-between items-start">
                           <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-xs sm:text-sm`}>
