@@ -1,14 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-// Импорт компонентов для каждого экрана
-import LoadingAnimation from "../components/preview/LoadingAnimation";
+// Импорт обновленных компонентов для каждого экрана
+import SplashIntro from "../components/preview/SplashIntro";
+import TransitionAnimation from "../components/preview/TransitionAnimation";
 import WelcomeScreen from "../components/preview/WelcomeScreen";
-import PlanetCrisisScreen from "../components/preview/PlanetCrisisScreen";
-import InterventionScreen from "../components/preview/InterventionScreen";
+import PlanetCrisisWithStats from "../components/preview/PlanetCrisisWithStats";
 import UniteForceScreen from "../components/preview/UniteForceScreen";
 import WhyDaoScreen from "../components/preview/WhyDaoScreen";
 import ArchitectureScreen from "../components/preview/ArchitectureScreen";
@@ -16,194 +15,157 @@ import TokenomicsScreen from "../components/preview/TokenomicsScreen";
 import ForEveryoneScreen from "../components/preview/ForEveryoneScreen";
 import FinalCallScreen from "../components/preview/FinalCallScreen";
 
+// Перечисление этапов презентации
+enum PresentationStage {
+  SPLASH_INTRO,       // Начальный экран с логотипом и кнопками
+  TRANSITION,         // Анимация перехода между начальным экраном и презентацией
+  WELCOME,            // Приветствие
+  PLANET_CRISIS,      // Информация о планете и водном кризисе
+  UNITE_FORCES,       // Объединение сил в единую экосистему
+  WHY_DAO,            // Почему DAO эффективно для управления водой
+  ARCHITECTURE,       // Архитектура платформы
+  TOKENOMICS,         // Токеномика платформы
+  FOR_EVERYONE,       // Кто и что получает от платформы
+  FINAL_CALL          // Финальный призыв и переход в приложение
+}
+
 export default function PreviewPage() {
-  const [currentStage, setCurrentStage] = useState(0);
-  const [showExplore, setShowExplore] = useState(false);
+  const [currentStage, setCurrentStage] = useState<PresentationStage>(PresentationStage.SPLASH_INTRO);
   const [tokens, setTokens] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const previewRef = useRef<HTMLDivElement>(null);
   const [, setLocation] = useLocation();
-  
-  // Максимальное количество экранов
-  const totalStages = 10;
-  
-  // Управление переходом к следующему экрану
-  const handleNextScreen = () => {
-    if (isScrolling) return;
-    
-    setIsScrolling(true);
-    setTimeout(() => {
-      setIsScrolling(false);
-    }, 1000); // Время для анимации
-    
-    if (currentStage < totalStages - 1) {
-      setCurrentStage(prev => prev + 1);
-    } else {
-      // Последний экран
-      setShowExplore(true);
-    }
-  };
-  
-  // Прокрутка колесом мыши
-  useEffect(() => {
-    const handleScroll = (e: WheelEvent) => {
-      e.preventDefault();
-      
-      if (isScrolling) return;
-      
-      if (e.deltaY > 0) {
-        // Скролл вниз
-        handleNextScreen();
-      } else if (e.deltaY < 0 && currentStage > 0) {
-        // Скролл вверх
-        setIsScrolling(true);
-        setTimeout(() => {
-          setIsScrolling(false);
-        }, 1000);
-        setCurrentStage(prev => prev - 1);
-      }
-    };
-    
-    const ref = previewRef.current;
-    if (ref) {
-      ref.addEventListener('wheel', handleScroll, { passive: false });
-    }
-    
-    return () => {
-      if (ref) {
-        ref.removeEventListener('wheel', handleScroll);
-      }
-    };
-  }, [currentStage, isScrolling]);
-  
+
   // Функция добавления токенов
   const addTokens = (amount: number) => {
     setTokens(prev => prev + amount);
   };
   
-  // Обработчики для каждого шага
+  // Обработчики перехода между этапами
+  const handleLogin = () => {
+    setLocation('/login');
+  };
+  
+  const handleExplore = () => {
+    addTokens(100);
+    setCurrentStage(PresentationStage.TRANSITION);
+  };
+  
+  const handleTransitionComplete = () => {
+    setCurrentStage(PresentationStage.WELCOME);
+  };
+  
   const handleWelcomeNext = () => {
     addTokens(5);
-    handleNextScreen();
+    setCurrentStage(PresentationStage.PLANET_CRISIS);
   };
   
-  const handleCrisisNext = () => {
-    addTokens(5);
-    handleNextScreen();
-  };
-  
-  const handleInterventionNext = () => {
-    addTokens(5);
-    handleNextScreen();
+  const handlePlanetSave = () => {
+    addTokens(50);
+    setCurrentStage(PresentationStage.UNITE_FORCES);
   };
   
   const handleUniteForceNext = () => {
     addTokens(5);
-    handleNextScreen();
+    setCurrentStage(PresentationStage.WHY_DAO);
   };
   
   const handleWhyDaoNext = () => {
     addTokens(5);
-    handleNextScreen();
+    setCurrentStage(PresentationStage.ARCHITECTURE);
   };
   
   const handleArchitectureNext = () => {
     addTokens(5);
-    handleNextScreen();
+    setCurrentStage(PresentationStage.TOKENOMICS);
   };
   
   const handleTokenomicsNext = () => {
     addTokens(5);
-    handleNextScreen();
+    setCurrentStage(PresentationStage.FOR_EVERYONE);
   };
   
   const handleForEveryoneNext = () => {
     addTokens(5);
-    handleNextScreen();
+    setCurrentStage(PresentationStage.FINAL_CALL);
   };
   
-  // Обработка финального перехода
   const handleFinalContinue = () => {
     addTokens(50);
-    setLocation('/dashboard');
+    setLocation('/dashboard'); // Переход в приложение
   };
   
+  // Отображаем счетчик токенов, если мы не на начальном экране
+  const shouldShowTokens = currentStage !== PresentationStage.SPLASH_INTRO;
+  
   return (
-    <div 
-      ref={previewRef}
-      className="w-full h-screen relative overflow-hidden"
-    >
-      {/* Токены */}
-      <motion.div
-        className="absolute top-4 right-4 z-50 flex items-center bg-background/30 backdrop-blur-sm px-3 py-1.5 rounded-full border border-primary/20"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.5 }}
-      >
-        <span className="text-primary font-bold">{tokens}</span>
-        <span className="ml-1 text-white/80">💧</span>
-      </motion.div>
-      
-      {/* Индикатор прогресса */}
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
-        <div className="flex flex-col items-center space-y-2">
-          {Array.from({ length: totalStages }).map((_, index) => (
-            <motion.div
-              key={index}
-              className={`w-2 h-2 rounded-full ${
-                index === currentStage 
-                  ? 'bg-primary' 
-                  : index < currentStage 
-                    ? 'bg-primary/50' 
-                    : 'bg-white/20'
-              }`}
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ 
-                scale: index === currentStage ? 1.2 : 1, 
-                opacity: 1 
-              }}
-              transition={{ delay: 0.1 * index, duration: 0.3 }}
-            />
-          ))}
-        </div>
-      </div>
-      
-      {/* Скролл вниз индикатор */}
-      {currentStage === 0 && (
-        <motion.div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 text-white/50 flex flex-col items-center"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ 
-            opacity: [0.5, 1, 0.5], 
-            y: [-10, 0, -10] 
-          }}
-          transition={{ 
-            duration: 2, 
-            repeat: Infinity,
-            repeatType: "loop" 
-          }}
+    <div className="w-full h-screen relative overflow-hidden">
+      {/* Счетчик токенов */}
+      {shouldShowTokens && (
+        <motion.div
+          className="absolute top-4 right-4 z-50 flex items-center bg-background/30 backdrop-blur-sm px-3 py-1.5 rounded-full border border-primary/20"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <span className="text-xs mb-2">Скролл вниз</span>
-          <ChevronDown className="h-5 w-5" />
+          <span className="text-primary font-bold">{tokens}</span>
+          <span className="ml-1 text-white/80">💧</span>
         </motion.div>
       )}
       
-      {/* Контент стадий */}
+      {/* Индикатор прогресса - показываем, только если мы в основной презентации */}
+      {currentStage > PresentationStage.TRANSITION && (
+        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
+          <div className="flex flex-col items-center space-y-2">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <motion.div
+                key={index}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentStage - 2 
+                    ? 'bg-primary' 
+                    : index < currentStage - 2 
+                      ? 'bg-primary/50' 
+                      : 'bg-white/20'
+                }`}
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ 
+                  scale: index === currentStage - 2 ? 1.2 : 1, 
+                  opacity: 1 
+                }}
+                transition={{ delay: 0.1 * index, duration: 0.3 }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Основной контент */}
       <AnimatePresence mode="wait">
-        {currentStage === 0 && (
+        {currentStage === PresentationStage.SPLASH_INTRO && (
           <motion.div
-            key="loading"
+            key="splash"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <LoadingAnimation onComplete={handleNextScreen} />
+            <SplashIntro onLogin={handleLogin} onExplore={handleExplore} />
           </motion.div>
         )}
         
-        {currentStage === 1 && (
+        {currentStage === PresentationStage.TRANSITION && (
+          <motion.div
+            key="transition"
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <TransitionAnimation onComplete={handleTransitionComplete} />
+          </motion.div>
+        )}
+        
+        {currentStage === PresentationStage.WELCOME && (
           <motion.div
             key="welcome"
             className="absolute inset-0"
@@ -216,35 +178,22 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
-        {currentStage === 2 && (
+        {currentStage === PresentationStage.PLANET_CRISIS && (
           <motion.div
-            key="crisis"
+            key="planet-crisis"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <PlanetCrisisScreen onNext={handleCrisisNext} />
+            <PlanetCrisisWithStats onSave={handlePlanetSave} />
           </motion.div>
         )}
         
-        {currentStage === 3 && (
+        {currentStage === PresentationStage.UNITE_FORCES && (
           <motion.div
-            key="intervention"
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <InterventionScreen onNext={handleInterventionNext} />
-          </motion.div>
-        )}
-        
-        {currentStage === 4 && (
-          <motion.div
-            key="unite"
+            key="unite-forces"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -255,9 +204,9 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
-        {currentStage === 5 && (
+        {currentStage === PresentationStage.WHY_DAO && (
           <motion.div
-            key="whydao"
+            key="why-dao"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -268,7 +217,7 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
-        {currentStage === 6 && (
+        {currentStage === PresentationStage.ARCHITECTURE && (
           <motion.div
             key="architecture"
             className="absolute inset-0"
@@ -281,7 +230,7 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
-        {currentStage === 7 && (
+        {currentStage === PresentationStage.TOKENOMICS && (
           <motion.div
             key="tokenomics"
             className="absolute inset-0"
@@ -294,9 +243,9 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
-        {currentStage === 8 && (
+        {currentStage === PresentationStage.FOR_EVERYONE && (
           <motion.div
-            key="foreveryone"
+            key="for-everyone"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -307,9 +256,9 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
-        {currentStage === 9 && (
+        {currentStage === PresentationStage.FINAL_CALL && (
           <motion.div
-            key="final"
+            key="final-call"
             className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
