@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,11 +9,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Separator } from "@/components/ui/separator";
 import { 
   UsersRound, Users, UserPlus, Globe, Building2, Briefcase, School, 
-  Lock, Filter, MessageSquare, Search, Plus, ChevronRight, Pin, Bell
+  Lock, Filter, MessageSquare, Search, Plus, ChevronRight, Pin, Bell,
+  ChevronLeft, SlidersHorizontal
 } from "lucide-react";
 import { Group } from "@/types";
 
 export default function GroupsPage() {
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = 250;
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   const [groups, setGroups] = useState<Group[]>([]);
   const [filteredGroups, setFilteredGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
@@ -182,12 +195,12 @@ export default function GroupsPage() {
   // Получение иконки для категории группы
   const getGroupCategoryIcon = (category: string) => {
     switch (category) {
-      case 'global': return <Globe className="h-5 w-5" />;
-      case 'regional': return <Building2 className="h-5 w-5" />;
-      case 'professional': return <Briefcase className="h-5 w-5" />;
-      case 'education': return <School className="h-5 w-5" />;
-      case 'investment': return <Briefcase className="h-5 w-5" />;
-      default: return <UsersRound className="h-5 w-5" />;
+      case 'global': return <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
+      case 'regional': return <Building2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
+      case 'professional': return <Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
+      case 'education': return <School className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
+      case 'investment': return <Briefcase className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
+      default: return <UsersRound className="h-3.5 w-3.5 sm:h-4 sm:w-4" />;
     }
   };
 
@@ -406,12 +419,10 @@ export default function GroupsPage() {
               </div>
             ) : (
               <div className="text-center p-12 border border-dashed border-white/20 rounded-lg bg-card/20">
-                <UsersRound className="h-12 w-12 text-white/30 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white">Группы не найдены</h3>
-                <p className="text-white/60 mt-2">
-                  {searchQuery 
-                    ? "Попробуйте изменить параметры поиска" 
-                    : "В этой категории пока нет групп"}
+                <UsersRound className="h-12 w-12 mx-auto text-white/20 mb-4" />
+                <h3 className="text-lg font-medium text-white mb-2">Группы не найдены</h3>
+                <p className="text-white/60 text-sm">
+                  Попробуйте изменить параметры поиска или создайте новую группу
                 </p>
               </div>
             )}
@@ -428,13 +439,7 @@ export default function GroupsPage() {
               </div>
             ) : (
               <div className="text-center p-12 border border-dashed border-white/20 rounded-lg bg-card/20">
-                <Users className="h-12 w-12 text-white/30 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white">Официальные группы не найдены</h3>
-                <p className="text-white/60 mt-2">
-                  {searchQuery 
-                    ? "Попробуйте изменить параметры поиска" 
-                    : "В этой категории пока нет групп"}
-                </p>
+                <div>Нет официальных групп</div>
               </div>
             )}
           </TabsContent>
@@ -450,13 +455,7 @@ export default function GroupsPage() {
               </div>
             ) : (
               <div className="text-center p-12 border border-dashed border-white/20 rounded-lg bg-card/20">
-                <Globe className="h-12 w-12 text-white/30 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white">Публичные группы не найдены</h3>
-                <p className="text-white/60 mt-2">
-                  {searchQuery 
-                    ? "Попробуйте изменить параметры поиска" 
-                    : "В этой категории пока нет групп"}
-                </p>
+                <div>Нет публичных групп</div>
               </div>
             )}
           </TabsContent>
@@ -472,24 +471,18 @@ export default function GroupsPage() {
               </div>
             ) : (
               <div className="text-center p-12 border border-dashed border-white/20 rounded-lg bg-card/20">
-                <Lock className="h-12 w-12 text-white/30 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white">Закрытые группы не найдены</h3>
-                <p className="text-white/60 mt-2">
-                  {searchQuery 
-                    ? "Попробуйте изменить параметры поиска" 
-                    : "У вас нет доступа к закрытым группам или они отсутствуют"}
-                </p>
+                <div>Нет закрытых групп</div>
               </div>
             )}
           </TabsContent>
         </Tabs>
         
-        {/* Присоединенные группы */}
-        <div className="mt-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg sm:text-xl font-bold text-white">Ваше участие</h2>
-            <Button variant="link" className="text-primary hover:text-primary/80 p-0 h-auto text-sm sm:text-base">
-              Все мои группы
+        {/* Ваше участие */}
+        <div className="mt-2">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm sm:text-lg font-bold text-white">Ваше участие</h2>
+            <Button variant="link" className="text-primary/80 hover:text-primary h-7 text-xs p-0">
+              Все группы
               <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
             </Button>
           </div>
@@ -559,53 +552,76 @@ export default function GroupsPage() {
         </div>
         
         {/* Рекомендуемые группы */}
-        <div className="mt-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg sm:text-xl font-bold text-white">Рекомендуемые</h2>
+        <div className="mt-2 pb-2">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm sm:text-lg font-bold text-white">Рекомендуемые</h2>
+            <div className="flex space-x-1 sm:space-x-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-6 w-6 sm:h-8 sm:w-8 p-0 border-primary/30 hover:bg-primary/10 hover:text-primary"
+                onClick={() => scrollCarousel('left')}
+              >
+                <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-6 w-6 sm:h-8 sm:w-8 p-0 border-primary/30 hover:bg-primary/10 hover:text-primary"
+                onClick={() => scrollCarousel('right')}
+              >
+                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+              </Button>
+            </div>
           </div>
           
-          <ScrollArea className="h-[200px] sm:h-[220px]">
-            <div className="flex space-x-3 sm:space-x-4 pb-4">
-              {Array.isArray(filteredGroups) && filteredGroups.length > 0 ? (
-                <>
-                  {filteredGroups.slice(0, 5).map(group => (
-                    <Card key={group.id} className="min-w-[240px] max-w-[85vw] sm:min-w-[260px] glassmorphism-dark">
-                      <CardHeader className="pb-2 p-3 sm:p-4">
-                        <div className="flex justify-between items-start">
-                          <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-xs sm:text-sm`}>
-                            {getGroupTypeName(group.type)}
-                          </Badge>
-                        </div>
-                        <CardTitle className="text-base sm:text-lg text-white mt-2">{group.name}</CardTitle>
-                      </CardHeader>
-                      
-                      <CardContent className="px-3 py-1 sm:px-6 sm:py-2">
-                        <CardDescription className="text-white/70 line-clamp-2 text-xs sm:text-sm h-8 sm:h-10">
-                          {group.description}
-                        </CardDescription>
-                      </CardContent>
-                      
-                      <CardFooter className="flex justify-between items-center p-3 sm:p-4">
-                        <Badge variant="outline" className="text-white/70 bg-white/5 text-xs">
-                          {group.memberCount} участников
-                        </Badge>
-                        <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary h-8 text-xs sm:text-sm">
-                          <UserPlus className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          <span className="hidden sm:inline">Присоединиться</span>
-                          <span className="sm:hidden inline">+</span>
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </>
-              ) : (
-                <div className="min-w-[260px] sm:min-w-[280px] p-4 sm:p-6 border border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center text-center">
-                  <UsersRound className="h-6 w-6 sm:h-8 sm:w-8 text-white/30 mb-2" />
-                  <p className="text-white/70 text-sm">Нет доступных групп</p>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
+          <div 
+            ref={carouselRef}
+            className="flex space-x-3 sm:space-x-4 overflow-x-auto pb-4 scrollbar-hide"
+            style={{ 
+              scrollbarWidth: 'none', 
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+              scrollBehavior: 'smooth'
+            }}
+          >
+            {filteredGroups.length > 0 ? (
+              filteredGroups.slice(0, 5).map(group => (
+                <Card key={group.id} className="min-w-[210px] max-w-[85vw] sm:min-w-[250px] flex-shrink-0 glassmorphism-dark">
+                  <CardHeader className="pb-1 p-2 sm:p-3">
+                    <div className="flex justify-between items-start">
+                      <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-[10px] sm:text-xs px-1 py-0 h-5`}>
+                        {getGroupTypeName(group.type)}
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-sm sm:text-base text-white mt-1 truncate">{group.name}</CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="py-1 px-2 sm:px-3">
+                    <CardDescription className="text-white/70 line-clamp-2 h-8 text-[10px] sm:text-xs">
+                      {group.description}
+                    </CardDescription>
+                  </CardContent>
+                  
+                  <CardFooter className="flex justify-between items-center pt-1 border-t border-white/10 p-2 sm:p-3">
+                    <div className="flex items-center space-x-1 text-white/60 text-[10px]">
+                      {getGroupCategoryIcon(group.category)}
+                      <span className="truncate max-w-[80px]">{getGroupCategoryName(group.category)}</span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="h-6 px-1 text-[10px] text-primary hover:text-primary hover:bg-primary/10">
+                      <span>Открыть</span>
+                      <ChevronRight className="h-3 w-3 ml-1" />
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            ) : (
+              <div className="min-w-[260px] sm:min-w-[280px] p-4 sm:p-6 border border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center text-center">
+                <UsersRound className="h-6 w-6 sm:h-8 sm:w-8 text-white/30 mb-2" />
+                <p className="text-white/70 text-sm">Нет доступных групп</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
