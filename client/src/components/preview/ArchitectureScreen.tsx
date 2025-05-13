@@ -1,38 +1,56 @@
 import { motion } from 'framer-motion';
+import { 
+  Database, 
+  Layers, 
+  Globe, 
+  ShieldCheck, 
+  Cpu, 
+  BarChart4 
+} from 'lucide-react';
 
 interface ArchitectureScreenProps {
   onNext: () => void;
 }
 
 export default function ArchitectureScreen({ onNext }: ArchitectureScreenProps) {
-  // Слои архитектуры
   const layers = [
     {
-      name: "Пользователи и роли",
-      description: "Участники экосистемы с разными правами доступа",
-      color: "from-blue-400/20 to-blue-600/20"
+      icon: <Globe className="h-5 w-5 text-primary" />,
+      title: "Интерфейсный слой",
+      description: "Web-интерфейс, мобильное приложение, API",
+      color: "rgba(20, 184, 166, 0.1)"
     },
     {
-      name: "Токеномика и экономика воды",
-      description: "Мотивационная система и экономические механизмы",
-      color: "from-teal-400/20 to-teal-600/20"
+      icon: <ShieldCheck className="h-5 w-5 text-primary" />,
+      title: "Слой управления",
+      description: "DAO, голосование, смарт-контракты",
+      color: "rgba(20, 184, 166, 0.15)"
     },
     {
-      name: "DAO и блокчейн",
-      description: "Управление и прозрачные транзакции",
-      color: "from-green-400/20 to-green-600/20"
+      icon: <BarChart4 className="h-5 w-5 text-primary" />,
+      title: "Аналитический слой",
+      description: "ML/AI, обработка данных, прогнозирование",
+      color: "rgba(20, 184, 166, 0.2)"
     },
     {
-      name: "SCADA / IoT / AI",
-      description: "Сбор и анализ данных о водных ресурсах",
-      color: "from-cyan-400/20 to-cyan-600/20"
+      icon: <Layers className="h-5 w-5 text-primary" />,
+      title: "Слой токенизации",
+      description: "Токены VOD, субтокены, NFT, инвестиции",
+      color: "rgba(20, 184, 166, 0.25)"
     },
     {
-      name: "Инфраструктура",
-      description: "Физические компоненты и системы водоснабжения",
-      color: "from-indigo-400/20 to-indigo-600/20"
+      icon: <Database className="h-5 w-5 text-primary" />,
+      title: "Слой данных",
+      description: "Блокчейн, распределенное хранилище",
+      color: "rgba(20, 184, 166, 0.3)"
+    },
+    {
+      icon: <Cpu className="h-5 w-5 text-primary" />,
+      title: "Инфраструктурный слой",
+      description: "IoT датчики, спутники, станции мониторинга",
+      color: "rgba(20, 184, 166, 0.35)"
     }
-  ].reverse(); // Перевернем, чтобы отображать слои снизу вверх
+  ];
 
   // Анимация заголовка
   const titleVariants = {
@@ -47,30 +65,44 @@ export default function ArchitectureScreen({ onNext }: ArchitectureScreenProps) 
     }
   };
   
-  // Анимация слоев
+  // Анимация для слоев
   const layerVariants = {
-    initial: { opacity: 0, scale: 0.95, y: 30 },
+    initial: { opacity: 0, x: -30 },
     animate: (i: number) => ({ 
       opacity: 1, 
-      scale: 1,
-      y: 0,
+      x: 0,
       transition: {
-        delay: 0.3 + (i * 0.15),
-        duration: 0.7,
+        delay: 0.2 + (i * 0.15),
+        duration: 0.5,
         ease: "easeOut"
       }
     })
   };
+  
+  // Анимация для соединительных линий
+  const lineVariants = {
+    initial: { pathLength: 0, opacity: 0 },
+    animate: { 
+      pathLength: 1,
+      opacity: 0.5,
+      transition: {
+        delay: 1.2,
+        duration: 1,
+        ease: "easeInOut"
+      }
+    }
+  };
 
   return (
     <div 
-      className="w-full h-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
+      className="w-full h-full flex flex-col items-center justify-center relative p-4"
       onClick={onNext}
     >
       {/* Фоновый градиент */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-background"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
+      <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
       
-      <div className="relative z-10 max-w-4xl w-full">
+      <div className="relative z-10 max-w-5xl w-full">
         {/* Заголовок */}
         <motion.div
           className="text-center mb-12"
@@ -78,54 +110,71 @@ export default function ArchitectureScreen({ onNext }: ArchitectureScreenProps) 
           initial="initial"
           animate="animate"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-            Архитектура
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Архитектура платформы
           </h2>
-          <p className="text-white/70 text-lg">
-            Многослойная структура DAO VODeco
+          <p className="text-lg text-white/70">
+            Многослойная система для эффективного управления водными ресурсами
           </p>
         </motion.div>
         
-        {/* Слои архитектуры */}
-        <div className="relative space-y-3 mx-auto max-w-lg">
+        {/* Архитектурные слои */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {layers.map((layer, index) => (
             <motion.div
               key={index}
-              className={`rounded-lg py-5 px-6 backdrop-blur-sm border border-white/10 bg-gradient-to-r ${layer.color}`}
+              className="bg-card/30 backdrop-blur-sm rounded-lg border border-primary/20 p-5 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 transition-all"
+              style={{ background: `linear-gradient(135deg, ${layer.color}, transparent)` }}
               variants={layerVariants}
+              custom={index}
               initial="initial"
               animate="animate"
-              custom={index}
-              style={{ 
-                marginTop: index > 0 ? '-8px' : '0',
-                zIndex: layers.length - index,
-                position: 'relative'
-              }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
-              <h3 className="text-white font-semibold text-lg mb-1">{layer.name}</h3>
-              <p className="text-white/70 text-sm">{layer.description}</p>
+              <div className="flex items-start">
+                <div className="p-2 rounded-full bg-primary/10 w-fit mr-4 flex-shrink-0">
+                  {layer.icon}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">{layer.title}</h3>
+                  <p className="text-sm text-white/70">{layer.description}</p>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
         
-        {/* Соединительные линии */}
+        {/* Схема взаимодействия слоев */}
         <motion.div
-          className="absolute inset-0 pointer-events-none"
+          className="relative h-10 w-full mt-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
         >
-          <svg width="100%" height="100%" style={{ position: 'absolute' }}>
-            <defs>
-              <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="rgba(20, 184, 166, 0.3)" />
-                <stop offset="100%" stopColor="rgba(20, 184, 166, 0.05)" />
-              </linearGradient>
-            </defs>
-            {/* Здесь могли бы быть линии, соединяющие слои, но это требует точных координат */}
+          <svg className="w-full h-full" viewBox="0 0 400 10">
+            <motion.path
+              d="M 20 5 C 100 20, 300 -10, 380 5"
+              stroke="rgba(20, 184, 166, 0.5)"
+              strokeWidth="1"
+              strokeDasharray="4,4"
+              fill="none"
+              variants={lineVariants}
+              initial="initial"
+              animate="animate"
+            />
           </svg>
         </motion.div>
       </div>
+      
+      {/* Декоративный элемент */}
+      <motion.div 
+        className="absolute bottom-4 right-4 text-white/50 text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8 }}
+      >
+        Нажмите для продолжения +5💧
+      </motion.div>
     </div>
   );
 }

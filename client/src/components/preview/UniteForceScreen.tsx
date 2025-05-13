@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { 
-  Users, Building, Beaker, Briefcase, Wallet, Eye, 
-  HardDriveDownload, Globe 
+  GraduationCap, 
+  Building2, 
+  FlaskConical, 
+  Globe, 
+  Users 
 } from 'lucide-react';
 
 interface UniteForceScreenProps {
@@ -9,18 +12,34 @@ interface UniteForceScreenProps {
 }
 
 export default function UniteForceScreen({ onNext }: UniteForceScreenProps) {
-  // Участники DAO
-  const participants = [
-    { name: "Общество", icon: <Users className="h-8 w-8 text-primary" /> },
-    { name: "Государства", icon: <Building className="h-8 w-8 text-primary" /> },
-    { name: "Учёные", icon: <Beaker className="h-8 w-8 text-primary" /> },
-    { name: "Компании", icon: <Briefcase className="h-8 w-8 text-primary" /> },
-    { name: "Инвесторы", icon: <Wallet className="h-8 w-8 text-primary" /> },
-    { name: "Наблюдатели", icon: <Eye className="h-8 w-8 text-primary" /> },
-    { name: "Инженеры", icon: <HardDriveDownload className="h-8 w-8 text-primary" /> },
-    { name: "Регионы", icon: <Globe className="h-8 w-8 text-primary" /> }
+  const stakeholders = [
+    {
+      icon: <GraduationCap className="h-5 w-5 text-primary" />,
+      title: "Образование",
+      position: { x: "-10%", y: "30%" }
+    },
+    {
+      icon: <Building2 className="h-5 w-5 text-primary" />,
+      title: "Бизнес",
+      position: { x: "10%", y: "70%" }
+    },
+    {
+      icon: <FlaskConical className="h-5 w-5 text-primary" />,
+      title: "Наука",
+      position: { x: "25%", y: "20%" }
+    },
+    {
+      icon: <Globe className="h-5 w-5 text-primary" />,
+      title: "Гос. сектор",
+      position: { x: "-25%", y: "55%" }
+    },
+    {
+      icon: <Users className="h-5 w-5 text-primary" />,
+      title: "Сообщества",
+      position: { x: "0%", y: "40%" }
+    }
   ];
-  
+
   // Анимация заголовка
   const titleVariants = {
     initial: { opacity: 0, y: -20 },
@@ -34,75 +53,139 @@ export default function UniteForceScreen({ onNext }: UniteForceScreenProps) {
     }
   };
   
-  // Анимация шестиугольников
-  const hexVariants = {
+  // Анимация для центрального элемента
+  const centerVariants = {
+    initial: { scale: 0.8, opacity: 0 },
+    animate: { 
+      scale: 1, 
+      opacity: 1,
+      transition: {
+        delay: 0.3,
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+  
+  // Анимация для участников
+  const stakeholderVariants = {
     initial: { opacity: 0, scale: 0.8 },
     animate: (i: number) => ({ 
       opacity: 1, 
       scale: 1,
       transition: {
-        delay: 0.4 + (i * 0.1),
-        duration: 0.5,
-        ease: "backOut"
+        delay: 0.5 + (i * 0.15),
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    })
+  };
+  
+  // Анимация для линий соединения
+  const lineVariants = {
+    initial: { pathLength: 0, opacity: 0 },
+    animate: (i: number) => ({ 
+      pathLength: 1,
+      opacity: 1,
+      transition: {
+        delay: 0.8 + (i * 0.1),
+        duration: 0.8,
+        ease: "easeOut"
       }
     })
   };
 
   return (
     <div 
-      className="w-full h-full flex flex-col items-center justify-center relative pt-12 px-4 overflow-hidden"
+      className="w-full h-full flex flex-col items-center justify-center relative p-4"
       onClick={onNext}
     >
-      {/* Фоновый гексагональный паттерн */}
-      <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-20"></div>
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-background"></div>
+      {/* Фоновый градиент */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
+      <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
       
       <div className="relative z-10 max-w-5xl w-full">
         {/* Заголовок */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-16"
           variants={titleVariants}
           initial="initial"
           animate="animate"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
-            Кто участвует в DAO?
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Объединение сил
           </h2>
+          <p className="text-lg text-white/70">
+            VODeco соединяет всех заинтересованных участников в единую экосистему
+          </p>
         </motion.div>
         
-        {/* Сетка шестиугольников */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 justify-items-center">
-          {participants.map((participant, index) => (
+        {/* Схема взаимодействия */}
+        <div className="relative h-[400px] w-full mx-auto">
+          {/* Центральный элемент - VODeco */}
+          <motion.div
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20"
+            variants={centerVariants}
+            initial="initial"
+            animate="animate"
+          >
+            <div className="w-24 h-24 rounded-full bg-background border-2 border-primary/80 shadow-lg shadow-primary/20 flex items-center justify-center">
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
+                VODeco
+              </span>
+            </div>
+          </motion.div>
+          
+          {/* Участники */}
+          {stakeholders.map((stakeholder, index) => (
             <motion.div
               key={index}
-              className="relative"
-              variants={hexVariants}
+              className="absolute h-24 pointer-events-none"
+              style={{ 
+                left: `calc(50% + ${stakeholder.position.x})`, 
+                top: `calc(${stakeholder.position.y})`,
+                transform: "translate(-50%, -50%)"
+              }}
+              variants={stakeholderVariants}
+              custom={index}
               initial="initial"
               animate="animate"
-              custom={index}
             >
-              <div className="hexagon-container">
-                <div className="hexagon bg-card/30 backdrop-blur-sm border border-primary/30 flex flex-col items-center justify-center p-6 shadow-lg">
-                  <div className="mb-3">{participant.icon}</div>
-                  <span className="text-white font-medium">{participant.name}</span>
+              <div className="w-16 h-16 rounded-full bg-background/70 backdrop-blur-sm border border-primary/50 flex flex-col items-center justify-center">
+                <div className="p-2 rounded-full bg-primary/10 mb-1">
+                  {stakeholder.icon}
                 </div>
+                <span className="text-xs text-white font-medium">{stakeholder.title}</span>
               </div>
+              
+              {/* Линия соединения */}
+              <svg className="absolute top-0 left-0 w-full h-full" style={{ overflow: 'visible' }}>
+                <motion.path
+                  d={`M ${8} ${8} L 0 0`}
+                  stroke="rgba(20, 184, 166, 0.5)"
+                  strokeWidth="1"
+                  strokeDasharray="5,5"
+                  fill="none"
+                  variants={lineVariants}
+                  custom={index}
+                  initial="initial"
+                  animate="animate"
+                />
+              </svg>
             </motion.div>
           ))}
         </div>
-        
-        {/* Подсказка о взаимодействии */}
-        <motion.div
-          className="text-center mt-12 text-white/60"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-        >
-          Все участники объединены в единую децентрализованную сеть
-        </motion.div>
       </div>
       
-      {/* CSS для шестиугольников добавлен в общий стиль app */}
+      {/* Декоративный элемент */}
+      <motion.div 
+        className="absolute bottom-4 right-4 text-white/50 text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+      >
+        Нажмите для продолжения +5💧
+      </motion.div>
     </div>
   );
 }

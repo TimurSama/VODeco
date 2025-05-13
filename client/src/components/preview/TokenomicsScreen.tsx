@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { PieChart } from 'recharts';
 import { 
-  Coins, 
-  BarChart, 
-  FileImage 
+  Droplets, 
+  TrendingUp, 
+  Layers, 
+  Shield 
 } from 'lucide-react';
 
 interface TokenomicsScreenProps {
@@ -10,39 +12,44 @@ interface TokenomicsScreenProps {
 }
 
 export default function TokenomicsScreen({ onNext }: TokenomicsScreenProps) {
-  // Категории токенов
-  const tokenCategories = [
+  const tokenFeatures = [
     {
-      name: "Основной токен VOD",
-      items: [
-        "ограниченный",
-        "эмиссия на 1 м³ воды",
-        "применяется во всех действиях"
-      ],
-      icon: <Coins />,
-      variant: "primary"
+      icon: <Droplets className="h-5 w-5 text-primary" />,
+      title: "Основной токен VOD",
+      description: "Внутренняя валюта экосистемы, право голоса в DAO"
     },
     {
-      name: "Субтокены",
-      items: [
-        "по объектам",
-        "по регионам",
-        "по инициативам"
-      ],
-      icon: <BarChart />,
-      variant: "secondary"
+      icon: <TrendingUp className="h-5 w-5 text-primary" />,
+      title: "Инвестиционная механика",
+      description: "Стейкинг, пассивный доход, рост с развитием экосистемы"
     },
     {
-      name: "NFT",
-      items: [
-        "паспорта",
-        "гранты",
-        "лицензии",
-        "профили"
-      ],
-      icon: <FileImage />,
-      variant: "accent"
+      icon: <Layers className="h-5 w-5 text-primary" />,
+      title: "Субтокены",
+      description: "Региональные токены для локальных проектов"
+    },
+    {
+      icon: <Shield className="h-5 w-5 text-primary" />,
+      title: "Управление и безопасность",
+      description: "Смарт-контракты, автоматическое распределение"
     }
+  ];
+
+  const allocation = [
+    { name: 'Резерв DAO', value: 30 },
+    { name: 'Команда', value: 15 },
+    { name: 'Инвесторы', value: 25 },
+    { name: 'Экосистема', value: 20 },
+    { name: 'Маркетинг', value: 10 }
+  ];
+
+  // Цвета для диаграммы
+  const colors = [
+    'rgba(20, 184, 166, 0.8)',  // primary
+    'rgba(20, 184, 166, 0.6)',
+    'rgba(20, 184, 166, 0.4)',
+    'rgba(20, 184, 166, 0.3)',
+    'rgba(20, 184, 166, 0.2)'
   ];
 
   // Анимация заголовка
@@ -58,29 +65,29 @@ export default function TokenomicsScreen({ onNext }: TokenomicsScreenProps) {
     }
   };
   
-  // Анимация категорий токенов
-  const categoryVariants = {
-    initial: { opacity: 0, x: -20 },
+  // Анимация блоков
+  const featureVariants = {
+    initial: { opacity: 0, y: 20 },
     animate: (i: number) => ({ 
       opacity: 1, 
-      x: 0,
+      y: 0,
       transition: {
-        delay: 0.3 + (i * 0.2),
-        duration: 0.7,
+        delay: 0.2 + (i * 0.15),
+        duration: 0.5,
         ease: "easeOut"
       }
     })
   };
   
-  // Анимация строки таблицы
-  const listItemVariants = {
-    initial: { opacity: 0, x: -10 },
+  // Анимация для процентов
+  const percentVariants = {
+    initial: { opacity: 0, scale: 0.8 },
     animate: (i: number) => ({ 
       opacity: 1, 
-      x: 0,
+      scale: 1,
       transition: {
-        delay: 0.5 + (i * 0.1),
-        duration: 0.5,
+        delay: 1 + (i * 0.1),
+        duration: 0.3,
         ease: "easeOut"
       }
     })
@@ -88,90 +95,130 @@ export default function TokenomicsScreen({ onNext }: TokenomicsScreenProps) {
 
   return (
     <div 
-      className="w-full h-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
+      className="w-full h-full flex flex-col items-center justify-center relative p-4"
       onClick={onNext}
     >
       {/* Фоновый градиент */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-background"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
       <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
       
-      <div className="relative z-10 max-w-6xl w-full">
+      <div className="relative z-10 max-w-5xl w-full">
         {/* Заголовок */}
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-10"
           variants={titleVariants}
           initial="initial"
           animate="animate"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Токеномика
           </h2>
+          <p className="text-lg text-white/70">
+            Экономическая модель платформы VODeco
+          </p>
         </motion.div>
         
-        {/* Три колонки токенов */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {tokenCategories.map((category, index) => (
-            <motion.div
-              key={index}
-              className={`bg-card/30 backdrop-blur-sm rounded-lg border 
-                ${category.variant === 'primary' ? 'border-primary/40' : 
-                  category.variant === 'secondary' ? 'border-cyan-400/40' : 'border-pink-400/40'}`}
-              variants={categoryVariants}
-              initial="initial"
-              animate="animate"
-              custom={index}
-            >
-              <div className={`p-4 flex items-center border-b 
-                ${category.variant === 'primary' ? 'border-primary/30 bg-primary/10' : 
-                  category.variant === 'secondary' ? 'border-cyan-400/30 bg-cyan-400/10' : 'border-pink-400/30 bg-pink-400/10'}`}
+          {/* Левая колонка - свойства токена */}
+          <div className="md:col-span-2 space-y-4">
+            {tokenFeatures.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="bg-card/30 backdrop-blur-sm rounded-lg border border-primary/20 p-4 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 transition-all"
+                variants={featureVariants}
+                custom={index}
+                initial="initial"
+                animate="animate"
+                whileHover={{ y: -3, transition: { duration: 0.2 } }}
               >
-                <div className={`mr-3 p-2 rounded-full 
-                  ${category.variant === 'primary' ? 'bg-primary/20 text-primary' : 
-                    category.variant === 'secondary' ? 'bg-cyan-400/20 text-cyan-400' : 'bg-pink-400/20 text-pink-400'}`}
-                >
-                  {category.icon}
+                <div className="flex items-start">
+                  <div className="p-2 rounded-full bg-primary/10 w-fit mr-4 flex-shrink-0">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white mb-1">{feature.title}</h3>
+                    <p className="text-sm text-white/70">{feature.description}</p>
+                  </div>
                 </div>
-                <h3 className="text-white text-xl font-semibold">{category.name}</h3>
+              </motion.div>
+            ))}
+          </div>
+          
+          {/* Правая колонка - распределение токенов */}
+          <div className="flex flex-col">
+            <motion.div
+              className="bg-card/30 backdrop-blur-sm rounded-lg border border-primary/20 p-4 h-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+            >
+              <h3 className="text-lg font-bold text-white mb-4 text-center">Распределение токенов</h3>
+              
+              {/* Схема распределения (представление без recharts) */}
+              <div className="space-y-3">
+                {allocation.map((item, index) => (
+                  <motion.div 
+                    key={index}
+                    className="flex items-center justify-between"
+                    variants={percentVariants}
+                    custom={index}
+                    initial="initial"
+                    animate="animate"
+                  >
+                    <div className="flex items-center">
+                      <div 
+                        className="w-3 h-3 rounded-full mr-2"
+                        style={{ backgroundColor: colors[index % colors.length] }}
+                      ></div>
+                      <span className="text-sm text-white">{item.name}</span>
+                    </div>
+                    <span className="text-sm font-medium text-primary">{item.value}%</span>
+                  </motion.div>
+                ))}
               </div>
               
-              <div className="p-5">
-                <ul className="space-y-3">
-                  {category.items.map((item, itemIndex) => (
-                    <motion.li 
-                      key={itemIndex}
-                      className="flex items-center text-white/80"
-                      variants={listItemVariants}
-                      initial="initial"
-                      animate="animate"
-                      custom={itemIndex}
-                    >
-                      <span className={`mr-2 text-lg 
-                        ${category.variant === 'primary' ? 'text-primary' : 
-                          category.variant === 'secondary' ? 'text-cyan-400' : 'text-pink-400'}`}
-                      >
-                        •
-                      </span>
-                      {item}
-                    </motion.li>
-                  ))}
-                </ul>
+              {/* Визуальное представление процентов */}
+              <div className="w-full h-2 bg-primary/10 rounded-full mt-6 overflow-hidden">
+                {allocation.map((item, index) => {
+                  // Рассчитываем нарастающий процент для позиционирования
+                  const prevTotal = allocation
+                    .slice(0, index)
+                    .reduce((sum, curr) => sum + curr.value, 0);
+                  
+                  return (
+                    <motion.div
+                      key={index}
+                      className="h-full absolute"
+                      style={{ 
+                        backgroundColor: colors[index % colors.length],
+                        width: `${item.value}%`,
+                        left: `${prevTotal}%`
+                      }}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ 
+                        delay: 1.3 + (index * 0.1), 
+                        duration: 0.5,
+                        ease: "easeOut"
+                      }}
+                    />
+                  );
+                })}
               </div>
             </motion.div>
-          ))}
-        </div>
-        
-        {/* Декоративный элемент токена */}
-        <motion.div
-          className="absolute -top-10 -right-10 opacity-10 pointer-events-none"
-          initial={{ rotate: 0 }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        >
-          <div className="w-64 h-64 rounded-full border-4 border-primary/30 flex items-center justify-center">
-            <div className="w-48 h-48 rounded-full border-2 border-primary/20"></div>
           </div>
-        </motion.div>
+        </div>
       </div>
+      
+      {/* Декоративный элемент */}
+      <motion.div 
+        className="absolute bottom-4 right-4 text-white/50 text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8 }}
+      >
+        Нажмите для продолжения +5💧
+      </motion.div>
     </div>
   );
 }
