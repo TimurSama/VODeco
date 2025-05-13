@@ -39,7 +39,7 @@ export default function ArchitectureScreen({ onNext }: ArchitectureScreenProps) 
     initial: { opacity: 0, y: -20 },
     animate: { 
       opacity: 1, 
-      y: T0,
+      y: 0,
       transition: {
         duration: 0.8,
         ease: "easeOut"

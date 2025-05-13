@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { 
-  Users, Building, Flask, Briefcase, Wallet, Eye, 
+  Users, Building, Beaker, Briefcase, Wallet, Eye, 
   HardDriveDownload, Globe 
 } from 'lucide-react';
 
@@ -13,7 +13,7 @@ export default function UniteForceScreen({ onNext }: UniteForceScreenProps) {
   const participants = [
     { name: "Общество", icon: <Users className="h-8 w-8 text-primary" /> },
     { name: "Государства", icon: <Building className="h-8 w-8 text-primary" /> },
-    { name: "Учёные", icon: <Flask className="h-8 w-8 text-primary" /> },
+    { name: "Учёные", icon: <Beaker className="h-8 w-8 text-primary" /> },
     { name: "Компании", icon: <Briefcase className="h-8 w-8 text-primary" /> },
     { name: "Инвесторы", icon: <Wallet className="h-8 w-8 text-primary" /> },
     { name: "Наблюдатели", icon: <Eye className="h-8 w-8 text-primary" /> },
@@ -102,30 +102,7 @@ export default function UniteForceScreen({ onNext }: UniteForceScreenProps) {
         </motion.div>
       </div>
       
-      {/* CSS для шестиугольников */}
-      <style jsx>{`
-        .hexagon-container {
-          width: 120px;
-          height: 140px;
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .hexagon {
-          width: 120px;
-          height: 120px;
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          transition: all 0.3s ease;
-        }
-        
-        .hexagon:hover {
-          transform: scale(1.05);
-          border-color: rgba(20, 184, 166, 0.5);
-          background-color: rgba(20, 184, 166, 0.1);
-        }
-      `}</style>
+      {/* CSS для шестиугольников добавлен в общий стиль app */}
     </div>
   );
 }
