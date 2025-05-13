@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +9,8 @@ interface PlanetCrisisWithStatsProps {
 export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsProps) {
   const [currentPlate, setCurrentPlate] = useState(0);
   const [showButton, setShowButton] = useState(false);
-  const [planetState, setPlanetState] = useState<'normal' | 'crisis' | 'recover'>('normal');
+  const [redLevel, setRedLevel] = useState(0); // Уровень "покраснения" глобуса (0-100%)
+  const globeRef = useRef<HTMLDivElement>(null);
   
   // Данные для информационных плиток
   const plates = [
@@ -39,28 +40,36 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
     ]
   ];
   
-  // Последовательное появление плиток и смена состояния планеты
+  // Анимация глобуса
   useEffect(() => {
-    // Показываем первую плитку сразу
+    // Начинаем вращение глобуса
+    const globe = globeRef.current;
+    if (globe) {
+      globe.style.animation = 'rotateGlobe 60s linear infinite';
+    }
+    
+    // Показываем первую плитку и начинаем постепенное "покраснение" глобуса
     const timer1 = setTimeout(() => {
       setCurrentPlate(1);
-      // Начинаем показывать планету в состоянии кризиса
-      setPlanetState('crisis');
+      setRedLevel(25); // 25% покраснения с первой плиткой
     }, 2000);
     
-    // Показываем вторую плитку
+    // Показываем вторую плитку и увеличиваем "покраснение"
     const timer2 = setTimeout(() => {
       setCurrentPlate(2);
+      setRedLevel(50); // 50% покраснения со второй плиткой
     }, 4000);
     
-    // Показываем третью плитку
+    // Показываем третью плитку и увеличиваем "покраснение"
     const timer3 = setTimeout(() => {
       setCurrentPlate(3);
+      setRedLevel(75); // 75% покраснения с третьей плиткой
     }, 6000);
     
-    // Показываем четвертую плитку
+    // Показываем четвертую плитку и максимальное "покраснение"
     const timer4 = setTimeout(() => {
       setCurrentPlate(4);
+      setRedLevel(100); // 100% покраснения с четвертой плиткой
     }, 8000);
     
     // Показываем кнопку после всех плиток
@@ -76,35 +85,6 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
       clearTimeout(timerButton);
     };
   }, []);
-  
-  // Анимация для планеты
-  const planetVariants = {
-    initial: { opacity: 0, scale: 0.8 },
-    normal: { 
-      opacity: 1, 
-      scale: 1,
-      transition: {
-        duration: 1.5,
-        ease: "easeOut"
-      }
-    },
-    crisis: { 
-      opacity: 1, 
-      scale: 1,
-      filter: "hue-rotate(320deg) saturate(1.5)",
-      transition: {
-        duration: 2,
-        ease: "easeInOut"
-      }
-    },
-    recover: {
-      filter: "hue-rotate(0deg) saturate(1)",
-      transition: {
-        duration: 2,
-        ease: "easeInOut"
-      }
-    }
-  };
   
   // Анимация для плиток
   const plateVariants = {
@@ -135,7 +115,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   // Обработка нажатия на кнопку спасения
   const handleSaveClick = () => {
     // Анимируем восстановление планеты
-    setPlanetState('recover');
+    setRedLevel(0);
     
     // После анимации вызываем коллбэк
     setTimeout(() => {
@@ -154,41 +134,50 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         <div className="flex items-center justify-center">
           <motion.div
             className="relative"
-            variants={planetVariants}
-            initial="initial"
-            animate={planetState}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Планета Земля */}
-            <div className="w-64 h-64 rounded-full relative overflow-hidden border border-primary/30">
+            {/* Настоящий 3D-глобус с постепенным окрашиванием */}
+            <div 
+              ref={globeRef}
+              className="w-72 h-72 rounded-full relative overflow-hidden shadow-xl"
+              style={{
+                background: 'url(/earth-globe.jpg) repeat-x',
+                backgroundSize: 'cover',
+                boxShadow: `0 0 40px rgba(255, ${Math.max(0, 100 - redLevel)}, ${Math.max(0, 100 - redLevel)}, 0.3)`,
+                filter: `hue-rotate(${redLevel * 0.6}deg) saturate(${1 + (redLevel / 100)})`
+              }}
+            >
+              {/* Слой для эффекта "покраснения" */}
               <div 
-                className="absolute inset-0 bg-gradient-to-br from-blue-600 to-green-600"
-                style={{
-                  filter: planetState === 'crisis' ? 'hue-rotate(320deg) saturate(1.5)' : 'none'
+                className="absolute inset-0 bg-red-600 mix-blend-overlay transition-opacity duration-1000"
+                style={{ opacity: redLevel / 200 }}
+              />
+              
+              {/* Слой атмосферы */}
+              <div 
+                className="absolute inset-0 rounded-full"
+                style={{ 
+                  boxShadow: 'inset 0 0 40px rgba(255, 255, 255, 0.1), 0 0 20px rgba(0, 183, 255, 0.2)',
+                  background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%)'
                 }}
               />
               
-              {/* Континенты */}
+              {/* Эффект дыма/загрязнения, который усиливается с увеличением redLevel */}
               <div 
-                className="absolute inset-0 opacity-60"
+                className="absolute inset-0 bg-black transition-opacity duration-1000"
                 style={{ 
-                  backgroundImage: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><path fill=\"white\" d=\"M30,20 Q40,15 45,25 T60,30 Q70,20 75,30 T65,40 Q75,45 70,55 T50,60 Q40,70 30,65 T25,50 Q15,45 20,35 T30,20 Z\"/></svg>')",
-                  backgroundSize: "cover"
-                }}
-              />
-              
-              {/* Облака */}
-              <div 
-                className="absolute inset-0 opacity-40"
-                style={{ 
-                  backgroundImage: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle fill=\"white\" cx=\"20\" cy=\"30\" r=\"5\"/><circle fill=\"white\" cx=\"40\" cy=\"20\" r=\"8\"/><circle fill=\"white\" cx=\"60\" cy=\"35\" r=\"6\"/><circle fill=\"white\" cx=\"75\" cy=\"25\" r=\"4\"/><circle fill=\"white\" cx=\"30\" cy=\"60\" r=\"7\"/><circle fill=\"white\" cx=\"70\" cy=\"70\" r=\"9\"/><circle fill=\"white\" cx=\"15\" cy=\"80\" r=\"6\"/></svg>')",
-                  backgroundSize: "cover",
-                  animation: "rotateClouds 120s linear infinite"
+                  opacity: (redLevel / 100) * 0.3,
+                  backgroundImage: 'url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii4wNSIgbnVtT2N0YXZlcz0iMiIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIxIDAgMCAwIDAgMCAxIDAgMCAwIDAgMCAxIDAgMCAwIDAgMCAuMyAwIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuNSIvPjwvc3ZnPg==)',
+                  backgroundSize: 'cover',
+                  mixBlendMode: 'soft-light'
                 }}
               />
             </div>
             
             {/* Гексагональная структура, появляющаяся при восстановлении */}
-            {planetState === 'recover' && (
+            {redLevel === 0 && (
               <motion.div
                 className="absolute inset-0 rounded-full"
                 initial={{ opacity: 0 }}
@@ -304,14 +293,14 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         </div>
       </div>
       
-      {/* CSS для анимации вращения облаков */}
+      {/* CSS для анимации вращения глобуса */}
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes rotateClouds {
+        @keyframes rotateGlobe {
           from {
-            transform: rotate(0deg);
+            background-position-x: 0%;
           }
           to {
-            transform: rotate(360deg);
+            background-position-x: -200%;
           }
         }
       `}} />
