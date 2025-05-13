@@ -233,46 +233,46 @@ export default function GroupsPage() {
   };
 
   const renderGroupCard = (group: Group) => (
-    <Card key={group.id} className="glassmorphism-dark overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/50 max-w-full">
-      <CardHeader className="pb-2 p-3 sm:p-6">
+    <Card key={group.id} className="glassmorphism-dark overflow-hidden transition-all duration-300 hover:shadow-md hover:border-primary/50 w-full">
+      <CardHeader className="pb-0 p-2 sm:p-4">
         <div className="flex justify-between items-start">
-          <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-xs sm:text-sm`}>
+          <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-[10px] sm:text-xs px-1 py-0 h-5`}>
             {getGroupTypeName(group.type)}
           </Badge>
           
-          <Badge variant="outline" className="text-white/70 bg-white/5 text-xs sm:text-sm">
-            {group.memberCount} уч.
+          <Badge variant="outline" className="text-white/70 bg-white/5 text-[10px] sm:text-xs px-1 py-0 h-5">
+            {group.memberCount}
           </Badge>
         </div>
-        <CardTitle className="text-base sm:text-lg text-white mt-2">{group.name}</CardTitle>
-        <div className="flex items-center text-xs sm:text-sm text-white/60 space-x-1 sm:space-x-2">
+        <CardTitle className="text-sm sm:text-base text-white mt-1 truncate">{group.name}</CardTitle>
+        <div className="flex items-center text-[10px] sm:text-xs text-white/60 space-x-1">
           {getGroupCategoryIcon(group.category)}
-          <span>{getGroupCategoryName(group.category)}</span>
+          <span className="truncate">{getGroupCategoryName(group.category)}</span>
         </div>
       </CardHeader>
       
-      <CardContent className="py-1 px-3 sm:p-6">
-        <CardDescription className="text-white/70 line-clamp-2 h-10 text-xs sm:text-sm">
+      <CardContent className="py-1 px-2 sm:px-4">
+        <CardDescription className="text-white/70 line-clamp-2 h-8 text-[10px] sm:text-xs">
           {group.description}
         </CardDescription>
       </CardContent>
       
-      <CardFooter className="flex justify-between items-center pt-2 border-t border-white/10 p-3 sm:px-6">
-        <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10 h-8 p-0 sm:p-2 sm:h-auto">
-          <MessageSquare className="h-4 w-4 mr-1" />
-          <span className="hidden sm:inline">Обсуждения</span>
+      <CardFooter className="flex justify-between items-center pt-1 border-t border-white/10 p-2 sm:px-4">
+        <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10 h-6 p-0 min-w-0 w-6 sm:w-auto sm:p-2">
+          <MessageSquare className="h-3 w-3" />
+          <span className="hidden sm:inline sm:ml-1 text-xs">Обсуждения</span>
         </Button>
-        <Button variant="outline" size="sm" className="text-white hover:text-primary hover:bg-primary/10 hover:border-primary h-8 text-xs sm:text-sm">
+        <Button variant="outline" size="sm" className="text-white hover:text-primary hover:bg-primary/10 hover:border-primary h-6 text-[10px] sm:text-xs px-2">
           <span className="sm:inline">Открыть</span>
-          <ChevronRight className="h-4 w-4 ml-1" />
+          <ChevronRight className="h-3 w-3 ml-1" />
         </Button>
       </CardFooter>
     </Card>
   );
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-full">
-      <div className="flex flex-col space-y-6 max-w-[100%]">
+    <div className="w-full px-2 sm:px-4 py-4 sm:py-6 max-w-[100vw] overflow-hidden">
+      <div className="flex flex-col space-y-4 sm:space-y-6 w-full overflow-hidden">
         {/* Заголовок страницы */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center">
@@ -494,63 +494,63 @@ export default function GroupsPage() {
             </Button>
           </div>
           
-          <ScrollArea className="h-[170px] sm:h-[180px] bg-card/20 rounded-lg border border-primary/20 p-3 sm:p-4">
-            <div className="space-y-2 sm:space-y-3">
-              <div className="p-2 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
-                <div className="flex items-center">
-                  <div className="mr-2 sm:mr-3 w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-primary/20 text-primary">
-                    <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
+          <ScrollArea className="h-[150px] sm:h-[180px] bg-card/20 rounded-lg border border-primary/20 p-2">
+            <div className="space-y-1 sm:space-y-2">
+              <div className="p-1.5 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
+                <div className="flex items-center max-w-[70%]">
+                  <div className="mr-1.5 sm:mr-3 w-7 h-7 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-primary/20 text-primary">
+                    <Globe className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
                   </div>
-                  <div>
-                    <h3 className="font-medium text-white text-sm sm:text-base">Глобальная DAO-группа</h3>
-                    <p className="text-[10px] sm:text-xs text-white/60">Официальная группа · 156 участников</p>
+                  <div className="overflow-hidden">
+                    <h3 className="font-medium text-white text-xs sm:text-base truncate">Глобальная DAO-группа</h3>
+                    <p className="text-[9px] sm:text-xs text-white/60 truncate">Официальная · 156 уч.</p>
                   </div>
                 </div>
-                <div className="flex space-x-1 sm:space-x-2">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
-                    Активная
+                <div className="flex space-x-1">
+                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[9px] sm:text-xs py-0 px-1 h-4 sm:h-5">
+                    Акт.
                   </Badge>
-                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
-                    <Bell className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20 text-[9px] sm:text-xs py-0 px-1 h-4 sm:h-5">
+                    <Bell className="h-2 w-2 sm:h-3 sm:w-3 mr-0.5" />
                     3
                   </Badge>
                 </div>
               </div>
               
-              <div className="p-2 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
-                <div className="flex items-center">
-                  <div className="mr-2 sm:mr-3 w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-secondary/20 text-secondary">
-                    <School className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="p-1.5 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
+                <div className="flex items-center max-w-[70%]">
+                  <div className="mr-1.5 sm:mr-3 w-7 h-7 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-secondary/20 text-secondary">
+                    <School className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
                   </div>
-                  <div>
-                    <h3 className="font-medium text-white text-sm sm:text-base">Образовательные курсы</h3>
-                    <p className="text-[10px] sm:text-xs text-white/60">Публичная группа · 86 участников</p>
+                  <div className="overflow-hidden">
+                    <h3 className="font-medium text-white text-xs sm:text-base truncate">Образовательные курсы</h3>
+                    <p className="text-[9px] sm:text-xs text-white/60 truncate">Публичная · 86 уч.</p>
                   </div>
                 </div>
-                <div className="flex space-x-1 sm:space-x-2">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
-                    Активная
+                <div className="flex space-x-1">
+                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[9px] sm:text-xs py-0 px-1 h-4 sm:h-5">
+                    Акт.
                   </Badge>
-                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
-                    <Pin className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
+                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20 text-[9px] sm:text-xs py-0 px-1 h-4 sm:h-5">
+                    <Pin className="h-2 w-2 sm:h-3 sm:w-3 mr-0.5" />
                     1
                   </Badge>
                 </div>
               </div>
               
-              <div className="p-2 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
-                <div className="flex items-center">
-                  <div className="mr-2 sm:mr-3 w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-accent/20 text-accent">
-                    <Briefcase className="h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="p-1.5 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
+                <div className="flex items-center max-w-[70%]">
+                  <div className="mr-1.5 sm:mr-3 w-7 h-7 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-accent/20 text-accent">
+                    <Briefcase className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
                   </div>
-                  <div>
-                    <h3 className="font-medium text-white text-sm sm:text-base">Научное сообщество</h3>
-                    <p className="text-[10px] sm:text-xs text-white/60">Публичная группа · 27 участников</p>
+                  <div className="overflow-hidden">
+                    <h3 className="font-medium text-white text-xs sm:text-base truncate">Научное сообщество</h3>
+                    <p className="text-[9px] sm:text-xs text-white/60 truncate">Публичная · 27 уч.</p>
                   </div>
                 </div>
-                <div className="flex space-x-1 sm:space-x-2">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
-                    Активная
+                <div className="flex space-x-1">
+                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[9px] sm:text-xs py-0 px-1 h-4 sm:h-5">
+                    Акт.
                   </Badge>
                 </div>
               </div>
