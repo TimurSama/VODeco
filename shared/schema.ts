@@ -181,3 +181,69 @@ export type Vote = typeof votes.$inferSelect;
 
 export type InsertInvestment = z.infer<typeof insertInvestmentSchema>;
 export type Investment = typeof investments.$inferSelect;
+
+export const groups = pgTable("groups", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // 'official', 'public', 'private'
+  category: text("category").notNull(), // 'global', 'regional', 'project', 'initiative', 'education'
+  imageUrl: text("image_url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  creatorId: integer("creator_id").references(() => users.id),
+  memberCount: integer("member_count").default(0),
+  isActive: boolean("is_active").default(true)
+});
+
+export const insertGroupSchema = createInsertSchema(groups).pick({
+  name: true,
+  description: true,
+  type: true,
+  category: true,
+  imageUrl: true,
+  creatorId: true
+});
+
+export const groupMembers = pgTable("group_members", {
+  id: serial("id").primaryKey(),
+  groupId: integer("group_id").references(() => groups.id).notNull(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  role: text("role").default("member").notNull(), // 'owner', 'moderator', 'member'
+  joinedAt: timestamp("joined_at").defaultNow().notNull()
+});
+
+export const insertGroupMemberSchema = createInsertSchema(groupMembers).pick({
+  groupId: true,
+  userId: true,
+  role: true
+});
+
+export const groupPosts = pgTable("group_posts", {
+  id: serial("id").primaryKey(),
+  groupId: integer("group_id").references(() => groups.id).notNull(),
+  authorId: integer("author_id").references(() => users.id).notNull(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  type: text("type").default("post").notNull(), // 'post', 'announcement', 'poll'
+  isPinned: boolean("is_pinned").default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+});
+
+export const insertGroupPostSchema = createInsertSchema(groupPosts).pick({
+  groupId: true,
+  authorId: true,
+  title: true,
+  content: true,
+  type: true,
+  isPinned: true
+});
+
+export type InsertGroup = z.infer<typeof insertGroupSchema>;
+export type Group = typeof groups.$inferSelect;
+
+export type InsertGroupMember = z.infer<typeof insertGroupMemberSchema>;
+export type GroupMember = typeof groupMembers.$inferSelect;
+
+export type InsertGroupPost = z.infer<typeof insertGroupPostSchema>;
+export type GroupPost = typeof groupPosts.$inferSelect;

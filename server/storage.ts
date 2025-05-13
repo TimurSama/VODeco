@@ -5,7 +5,10 @@ import {
   proposals, type Proposal, type InsertProposal,
   events, type Event, type InsertEvent,
   votes, type Vote, type InsertVote,
-  investments, type Investment, type InsertInvestment
+  investments, type Investment, type InsertInvestment,
+  groups, type Group, type InsertGroup,
+  groupMembers, type GroupMember, type InsertGroupMember,
+  groupPosts, type GroupPost, type InsertGroupPost
 } from "@shared/schema";
 
 // Define the storage interface
@@ -45,6 +48,28 @@ export interface IStorage {
   createInvestment(investment: InsertInvestment): Promise<Investment>;
   getInvestmentsByUser(userId: number): Promise<Investment[]>;
   getInvestmentsByProject(projectId: number): Promise<Investment[]>;
+  
+  // Group operations
+  getGroup(id: number): Promise<Group | undefined>;
+  getAllGroups(): Promise<Group[]>;
+  getGroupsByCategory(category: string): Promise<Group[]>;
+  getGroupsByType(type: string): Promise<Group[]>;
+  createGroup(group: InsertGroup): Promise<Group>;
+  updateGroup(id: number, data: Partial<Group>): Promise<Group | undefined>;
+  
+  // Group member operations
+  getGroupMembers(groupId: number): Promise<GroupMember[]>;
+  getUserGroups(userId: number): Promise<Group[]>;
+  addGroupMember(member: InsertGroupMember): Promise<GroupMember>;
+  updateGroupMemberRole(groupId: number, userId: number, role: string): Promise<GroupMember | undefined>;
+  removeGroupMember(groupId: number, userId: number): Promise<boolean>;
+  
+  // Group post operations
+  getGroupPosts(groupId: number): Promise<GroupPost[]>;
+  getGroupPost(id: number): Promise<GroupPost | undefined>;
+  createGroupPost(post: InsertGroupPost): Promise<GroupPost>;
+  updateGroupPost(id: number, data: Partial<GroupPost>): Promise<GroupPost | undefined>;
+  deleteGroupPost(id: number): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -55,6 +80,9 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private votes: Map<number, Vote>;
   private investments: Map<number, Investment>;
+  private groups: Map<number, Group>;
+  private groupMembers: Map<number, GroupMember>;
+  private groupPosts: Map<number, GroupPost>;
   
   private currentUserId: number;
   private currentResourceId: number;
@@ -63,6 +91,9 @@ export class MemStorage implements IStorage {
   private currentEventId: number;
   private currentVoteId: number;
   private currentInvestmentId: number;
+  private currentGroupId: number;
+  private currentGroupMemberId: number;
+  private currentGroupPostId: number;
 
   constructor() {
     this.users = new Map();
