@@ -48,29 +48,17 @@ export default function SplashIntro({ onLogin, onExplore }: SplashIntroProps) {
       }
     },
     splash: {
-      scale: [1, 1.2, 0],
-      opacity: [1, 0.8, 0],
+      // Трансформация капли в букву O в логотипе
+      scale: [1, 1.2, 1],
+      y: [0, -10, 0],
+      x: [0, 0, 25], // Смещение вправо, чтобы попасть в букву O
+      opacity: 1,
       transition: {
-        duration: 0.5,
-        ease: "easeOut"
+        duration: 0.8,
+        ease: "easeInOut"
       }
     }
   };
-  
-  // Анимация для линий логотипа
-  const lineVariants = (index: number) => ({
-    initial: { opacity: 0, scale: 0 },
-    animate: { 
-      opacity: 1,
-      scale: 1,
-      rotate: index * 60, // Разворачиваем линии по кругу (6 линий)
-      transition: {
-        delay: 0.1 * index,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  });
   
   // Анимация для текста
   const textVariants = {
@@ -101,7 +89,7 @@ export default function SplashIntro({ onLogin, onExplore }: SplashIntroProps) {
 
   return (
     <div className="h-full w-full bg-black flex flex-col items-center justify-center">
-      <div className="relative h-64 w-64 mb-10">
+      <div className="relative h-64 w-64 mb-4">
         {showDroplet && (
           <motion.div
             className="absolute top-0 left-1/2 transform -translate-x-1/2"
@@ -112,52 +100,28 @@ export default function SplashIntro({ onLogin, onExplore }: SplashIntroProps) {
             <svg width="60" height="80" viewBox="0 0 60 80" fill="none">
               <path 
                 d="M30 0 C30 0, 0 40, 0 60 C0 80, 60 80, 60 60 C60 40, 30 0, 30 0 Z" 
-                fill="none" 
+                fill={showLogo ? "#14b8a6" : "none"} 
                 stroke="#14b8a6" 
                 strokeWidth="2"
               />
             </svg>
           </motion.div>
         )}
-        
-        {showLogo && (
-          <div className="relative h-full w-full">
-            {/* Центральная точка */}
-            <motion.div 
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            />
-            
-            {/* 6 линий логотипа */}
-            {Array.from({ length: 6 }).map((_, index) => (
-              <motion.div 
-                key={index}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 origin-center"
-                variants={lineVariants(index)}
-                initial="initial"
-                animate="animate"
-              >
-                <div className="w-64 h-1 bg-gradient-to-r from-primary via-primary/70 to-transparent rounded-full" />
-              </motion.div>
-            ))}
-          </div>
-        )}
       </div>
       
       {/* Текст логотипа */}
       {showLogo && (
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-8"
           variants={textVariants}
           initial="initial"
           animate="animate"
         >
           <h1 className="text-4xl font-bold text-white">
-            dao V<span className="text-primary">O</span>Dec<span className="text-primary">o</span>
+            V<span className="text-primary">O</span>Dec<span className="text-primary">o</span>
           </h1>
-          <p className="text-white/70 text-lg mt-2">WELCOME</p>
+          <p className="text-white/70 text-base mt-2">welcome to</p>
+          <p className="text-white/80 text-sm mt-1">DAO Value Of Data ecology ecosystem</p>
         </motion.div>
       )}
       
@@ -180,7 +144,7 @@ export default function SplashIntro({ onLogin, onExplore }: SplashIntroProps) {
             className="w-40 bg-primary hover:bg-primary/90 text-black font-medium"
             onClick={onExplore}
           >
-            Explore +100💧
+            Explore +5💧
           </Button>
         </motion.div>
       )}

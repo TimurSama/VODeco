@@ -140,9 +140,17 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
     globeRef.current.atmosphereColor(new THREE.Color(r, g, b));
     
     // Эффект дыма и загрязнения через насыщенность
-    const material = globeRef.current.material();
-    if (material && 'emissiveIntensity' in material) {
-      material.emissiveIntensity = Math.max(0.3 - (level / 150), 0.1);
+    try {
+      // В некоторых случаях material может быть недоступен, поэтому используем try-catch
+      const material = globeRef.current.material && typeof globeRef.current.material === 'function' 
+        ? globeRef.current.material() 
+        : null;
+      
+      if (material && 'emissiveIntensity' in material) {
+        material.emissiveIntensity = Math.max(0.3 - (level / 150), 0.1);
+      }
+    } catch (error) {
+      console.log('Material not available yet');
     }
     
     // Обновляем освещение
