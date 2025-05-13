@@ -34,7 +34,7 @@ export default function GroupsPage() {
         description: 'Официальная группа для всех участников VODeco DAO',
         type: 'official',
         category: 'global',
-        imageUrl: null,
+        imageUrl: undefined,
         creatorId: 1,
         memberCount: 156,
         isActive: true,
@@ -46,7 +46,7 @@ export default function GroupsPage() {
         description: 'Региональная группа для обсуждения европейских водных инициатив',
         type: 'official',
         category: 'regional',
-        imageUrl: null,
+        imageUrl: undefined,
         creatorId: 1,
         memberCount: 42,
         isActive: true,
@@ -58,7 +58,7 @@ export default function GroupsPage() {
         description: 'Региональная группа для обсуждения азиатских водных инициатив',
         type: 'official',
         category: 'regional',
-        imageUrl: null,
+        imageUrl: undefined,
         creatorId: 1,
         memberCount: 37,
         isActive: true,
@@ -70,7 +70,7 @@ export default function GroupsPage() {
         description: 'Группа для научных дискуссий о технологиях очистки воды',
         type: 'public',
         category: 'professional',
-        imageUrl: null,
+        imageUrl: undefined,
         creatorId: 2,
         memberCount: 27,
         isActive: true,
@@ -82,7 +82,7 @@ export default function GroupsPage() {
         description: 'Обучающие материалы по ESG-стандартам и водным ресурсам',
         type: 'public',
         category: 'education',
-        imageUrl: null,
+        imageUrl: undefined,
         creatorId: 2,
         memberCount: 86,
         isActive: true,
@@ -94,7 +94,7 @@ export default function GroupsPage() {
         description: 'Закрытый клуб для инвесторов в водные проекты',
         type: 'private',
         category: 'investment',
-        imageUrl: null,
+        imageUrl: undefined,
         creatorId: 3,
         memberCount: 18,
         isActive: true,
@@ -276,25 +276,25 @@ export default function GroupsPage() {
         {/* Заголовок страницы */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center">
-            <div className="hexagon h-12 w-12 bg-gradient-to-r from-primary/30 to-secondary/30 
-              flex items-center justify-center mr-4">
-              <UsersRound className="h-6 w-6 text-primary" />
+            <div className="hexagon h-10 w-10 sm:h-12 sm:w-12 bg-gradient-to-r from-primary/30 to-secondary/30 
+              flex items-center justify-center mr-3 sm:mr-4">
+              <UsersRound className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Группы</h1>
-              <p className="text-white/60">Участвуйте в официальных и пользовательских DAO-группах</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-white">Группы</h1>
+              <p className="text-xs sm:text-sm text-white/60">Участвуйте в официальных и пользовательских DAO-группах</p>
             </div>
           </div>
           
           <div className="flex space-x-2">
             <Dialog open={showFilterDialog} onOpenChange={setShowFilterDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
-                  <Filter className="h-4 w-4 mr-2" />
-                  {selectedFilter ? getGroupCategoryName(selectedFilter) : "Фильтр"}
+                <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10 h-9 sm:h-10">
+                  <Filter className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">{selectedFilter ? getGroupCategoryName(selectedFilter) : "Фильтр"}</span>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-card border-primary/20 text-white">
+              <DialogContent className="bg-card border-primary/20 text-white max-w-[90vw] sm:max-w-md">
                 <DialogHeader>
                   <DialogTitle>Фильтр по категории</DialogTitle>
                 </DialogHeader>
@@ -351,9 +351,9 @@ export default function GroupsPage() {
               </DialogContent>
             </Dialog>
             
-            <Button className="bg-primary hover:bg-primary/90">
-              <Plus className="h-4 w-4 mr-2" />
-              Создать группу
+            <Button className="bg-primary hover:bg-primary/90 h-9 sm:h-10" size="sm">
+              <Plus className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Создать группу</span>
             </Button>
           </div>
         </div>
@@ -467,7 +467,7 @@ export default function GroupsPage() {
                 <div className="hexagon h-12 w-12 bg-primary/20 animate-pulse"></div>
               </div>
             ) : filteredGroups.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {filteredGroups.map(renderGroupCard)}
               </div>
             ) : (
@@ -487,69 +487,69 @@ export default function GroupsPage() {
         {/* Присоединенные группы */}
         <div className="mt-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Ваше участие</h2>
-            <Button variant="link" className="text-primary hover:text-primary/80">
+            <h2 className="text-lg sm:text-xl font-bold text-white">Ваше участие</h2>
+            <Button variant="link" className="text-primary hover:text-primary/80 p-0 h-auto text-sm sm:text-base">
               Все мои группы
-              <ChevronRight className="h-4 w-4 ml-1" />
+              <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1" />
             </Button>
           </div>
           
-          <ScrollArea className="h-[180px] bg-card/20 rounded-lg border border-primary/20 p-4">
-            <div className="space-y-3">
-              <div className="p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
+          <ScrollArea className="h-[170px] sm:h-[180px] bg-card/20 rounded-lg border border-primary/20 p-3 sm:p-4">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="p-2 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
                 <div className="flex items-center">
-                  <div className="mr-3 w-10 h-10 rounded-lg flex items-center justify-center bg-primary/20 text-primary">
-                    <Globe className="h-5 w-5" />
+                  <div className="mr-2 sm:mr-3 w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-primary/20 text-primary">
+                    <Globe className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-white">Глобальная DAO-группа</h3>
-                    <p className="text-xs text-white/60">Официальная группа · 156 участников</p>
+                    <h3 className="font-medium text-white text-sm sm:text-base">Глобальная DAO-группа</h3>
+                    <p className="text-[10px] sm:text-xs text-white/60">Официальная группа · 156 участников</p>
                   </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20">
+                <div className="flex space-x-1 sm:space-x-2">
+                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
                     Активная
                   </Badge>
-                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20">
-                    <Bell className="h-3 w-3 mr-1" />
+                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
+                    <Bell className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
                     3
                   </Badge>
                 </div>
               </div>
               
-              <div className="p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
+              <div className="p-2 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
                 <div className="flex items-center">
-                  <div className="mr-3 w-10 h-10 rounded-lg flex items-center justify-center bg-secondary/20 text-secondary">
-                    <School className="h-5 w-5" />
+                  <div className="mr-2 sm:mr-3 w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-secondary/20 text-secondary">
+                    <School className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-white">Образовательные курсы</h3>
-                    <p className="text-xs text-white/60">Публичная группа · 86 участников</p>
+                    <h3 className="font-medium text-white text-sm sm:text-base">Образовательные курсы</h3>
+                    <p className="text-[10px] sm:text-xs text-white/60">Публичная группа · 86 участников</p>
                   </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20">
+                <div className="flex space-x-1 sm:space-x-2">
+                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
                     Активная
                   </Badge>
-                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20">
-                    <Pin className="h-3 w-3 mr-1" />
+                  <Badge variant="outline" className="bg-pink-500/10 text-pink-400 border-pink-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
+                    <Pin className="h-2.5 w-2.5 sm:h-3 sm:w-3 mr-0.5 sm:mr-1" />
                     1
                   </Badge>
                 </div>
               </div>
               
-              <div className="p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
+              <div className="p-2 sm:p-3 bg-card/40 rounded-lg flex items-center justify-between hover:bg-card/60 transition-colors">
                 <div className="flex items-center">
-                  <div className="mr-3 w-10 h-10 rounded-lg flex items-center justify-center bg-accent/20 text-accent">
-                    <Briefcase className="h-5 w-5" />
+                  <div className="mr-2 sm:mr-3 w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-accent/20 text-accent">
+                    <Briefcase className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-white">Научное сообщество</h3>
-                    <p className="text-xs text-white/60">Публичная группа · 27 участников</p>
+                    <h3 className="font-medium text-white text-sm sm:text-base">Научное сообщество</h3>
+                    <p className="text-[10px] sm:text-xs text-white/60">Публичная группа · 27 участников</p>
                   </div>
                 </div>
-                <div className="flex space-x-2">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20">
+                <div className="flex space-x-1 sm:space-x-2">
+                  <Badge variant="outline" className="bg-green-500/10 text-green-400 border-green-400/20 text-[10px] sm:text-xs py-0 px-1.5 sm:px-2 h-5 sm:h-6">
                     Активная
                   </Badge>
                 </div>
@@ -561,46 +561,47 @@ export default function GroupsPage() {
         {/* Рекомендуемые группы */}
         <div className="mt-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white">Рекомендуемые</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">Рекомендуемые</h2>
           </div>
           
-          <ScrollArea className="h-[220px]">
-            <div className="flex space-x-6 pb-4">
+          <ScrollArea className="h-[200px] sm:h-[220px]">
+            <div className="flex space-x-4 sm:space-x-6 pb-4">
               {Array.isArray(filteredGroups) && filteredGroups.length > 0 ? (
                 <>
                   {filteredGroups.slice(0, 5).map(group => (
-                    <Card key={group.id} className="min-w-[280px] glassmorphism-dark">
-                      <CardHeader className="pb-2">
+                    <Card key={group.id} className="min-w-[260px] sm:min-w-[280px] glassmorphism-dark">
+                      <CardHeader className="pb-2 p-3 sm:p-4">
                         <div className="flex justify-between items-start">
-                          <Badge variant="outline" className={`${getGroupTypeColor(group.type)}`}>
+                          <Badge variant="outline" className={`${getGroupTypeColor(group.type)} text-xs sm:text-sm`}>
                             {getGroupTypeName(group.type)}
                           </Badge>
                         </div>
-                        <CardTitle className="text-lg text-white mt-2">{group.name}</CardTitle>
+                        <CardTitle className="text-base sm:text-lg text-white mt-2">{group.name}</CardTitle>
                       </CardHeader>
                       
-                      <CardContent>
-                        <CardDescription className="text-white/70 line-clamp-2 h-10">
+                      <CardContent className="px-3 py-1 sm:px-6 sm:py-2">
+                        <CardDescription className="text-white/70 line-clamp-2 text-xs sm:text-sm h-8 sm:h-10">
                           {group.description}
                         </CardDescription>
                       </CardContent>
                       
-                      <CardFooter className="flex justify-between items-center">
-                        <Badge variant="outline" className="text-white/70 bg-white/5">
+                      <CardFooter className="flex justify-between items-center p-3 sm:p-4">
+                        <Badge variant="outline" className="text-white/70 bg-white/5 text-xs">
                           {group.memberCount} участников
                         </Badge>
-                        <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary">
-                          <UserPlus className="h-4 w-4 mr-1" />
-                          Присоединиться
+                        <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary h-8 text-xs sm:text-sm">
+                          <UserPlus className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                          <span className="hidden sm:inline">Присоединиться</span>
+                          <span className="sm:hidden inline">+</span>
                         </Button>
                       </CardFooter>
                     </Card>
                   ))}
                 </>
               ) : (
-                <div className="min-w-[280px] p-6 border border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center text-center">
-                  <UsersRound className="h-8 w-8 text-white/30 mb-2" />
-                  <p className="text-white/70">Нет доступных групп</p>
+                <div className="min-w-[260px] sm:min-w-[280px] p-4 sm:p-6 border border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center text-center">
+                  <UsersRound className="h-6 w-6 sm:h-8 sm:w-8 text-white/30 mb-2" />
+                  <p className="text-white/70 text-sm">Нет доступных групп</p>
                 </div>
               )}
             </div>

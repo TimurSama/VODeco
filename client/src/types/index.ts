@@ -151,7 +151,7 @@ export interface Group {
   category: string; // 'global', 'regional', 'professional', 'education', 'investment'
   memberCount: number;
   creatorId?: number;
-  imageUrl?: string;
+  imageUrl?: string | null;
   isActive: boolean;
   createdAt: Date;
 }
