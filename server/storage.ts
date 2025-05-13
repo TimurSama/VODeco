@@ -103,6 +103,9 @@ export class MemStorage implements IStorage {
     this.events = new Map();
     this.votes = new Map();
     this.investments = new Map();
+    this.groups = new Map();
+    this.groupMembers = new Map();
+    this.groupPosts = new Map();
     
     this.currentUserId = 1;
     this.currentResourceId = 1;
@@ -111,9 +114,13 @@ export class MemStorage implements IStorage {
     this.currentEventId = 1;
     this.currentVoteId = 1;
     this.currentInvestmentId = 1;
+    this.currentGroupId = 1;
+    this.currentGroupMemberId = 1;
+    this.currentGroupPostId = 1;
     
     // Seed the database with some initial data
-    this.seedData();
+    // Вызываем асинхронную функцию, но не ждем ее завершения в конструкторе
+    this.seedData().catch(err => console.error("Error seeding data:", err));
   }
 
   // User operations
@@ -321,8 +328,147 @@ export class MemStorage implements IStorage {
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
   
+  // Group operations
+  async getGroup(id: number): Promise<Group | undefined> {
+    return this.groups.get(id);
+  }
+  
+  async getAllGroups(): Promise<Group[]> {
+    return Array.from(this.groups.values());
+  }
+  
+  async getGroupsByCategory(category: string): Promise<Group[]> {
+    const groups = Array.from(this.groups.values());
+    return groups.filter(group => group.category === category);
+  }
+  
+  async getGroupsByType(type: string): Promise<Group[]> {
+    const groups = Array.from(this.groups.values());
+    return groups.filter(group => group.type === type);
+  }
+  
+  async createGroup(group: InsertGroup): Promise<Group> {
+    const id = this.currentGroupId++;
+    const createdAt = new Date();
+    const newGroup: Group = { ...group, id, createdAt, memberCount: 0, isActive: true };
+    this.groups.set(id, newGroup);
+    return newGroup;
+  }
+  
+  async updateGroup(id: number, data: Partial<Group>): Promise<Group | undefined> {
+    const group = this.groups.get(id);
+    if (!group) return undefined;
+    
+    const updatedGroup = { ...group, ...data };
+    this.groups.set(id, updatedGroup);
+    return updatedGroup;
+  }
+  
+  // Group member operations
+  async getGroupMembers(groupId: number): Promise<GroupMember[]> {
+    const members = Array.from(this.groupMembers.values());
+    return members.filter(member => member.groupId === groupId);
+  }
+  
+  async getUserGroups(userId: number): Promise<Group[]> {
+    const members = Array.from(this.groupMembers.values())
+      .filter(member => member.userId === userId);
+      
+    const groupIds = members.map(member => member.groupId);
+    return Array.from(this.groups.values())
+      .filter(group => groupIds.includes(group.id));
+  }
+  
+  async addGroupMember(member: InsertGroupMember): Promise<GroupMember> {
+    const id = this.currentGroupMemberId++;
+    const joinedAt = new Date();
+    const newMember: GroupMember = { ...member, id, joinedAt };
+    this.groupMembers.set(id, newMember);
+    
+    // Update member count in the group
+    const group = this.groups.get(member.groupId);
+    if (group) {
+      group.memberCount = (group.memberCount || 0) + 1;
+      this.groups.set(group.id, group);
+    }
+    
+    return newMember;
+  }
+  
+  async updateGroupMemberRole(groupId: number, userId: number, role: string): Promise<GroupMember | undefined> {
+    for (const member of this.groupMembers.values()) {
+      if (member.groupId === groupId && member.userId === userId) {
+        const updatedMember = { ...member, role };
+        this.groupMembers.set(member.id, updatedMember);
+        return updatedMember;
+      }
+    }
+    return undefined;
+  }
+  
+  async removeGroupMember(groupId: number, userId: number): Promise<boolean> {
+    let found = false;
+    for (const [key, member] of this.groupMembers.entries()) {
+      if (member.groupId === groupId && member.userId === userId) {
+        this.groupMembers.delete(key);
+        found = true;
+        
+        // Update member count in the group
+        const group = this.groups.get(groupId);
+        if (group && group.memberCount > 0) {
+          group.memberCount -= 1;
+          this.groups.set(groupId, group);
+        }
+        
+        break;
+      }
+    }
+    return found;
+  }
+  
+  // Group post operations
+  async getGroupPosts(groupId: number): Promise<GroupPost[]> {
+    const posts = Array.from(this.groupPosts.values());
+    return posts.filter(post => post.groupId === groupId)
+      .sort((a, b) => {
+        // Sort by pinned status first, then by date (newest first)
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      });
+  }
+  
+  async getGroupPost(id: number): Promise<GroupPost | undefined> {
+    return this.groupPosts.get(id);
+  }
+  
+  async createGroupPost(post: InsertGroupPost): Promise<GroupPost> {
+    const id = this.currentGroupPostId++;
+    const createdAt = new Date();
+    const newPost: GroupPost = { ...post, id, createdAt, updatedAt: null };
+    this.groupPosts.set(id, newPost);
+    return newPost;
+  }
+  
+  async updateGroupPost(id: number, data: Partial<GroupPost>): Promise<GroupPost | undefined> {
+    const post = this.groupPosts.get(id);
+    if (!post) return undefined;
+    
+    const updatedPost = { 
+      ...post, 
+      ...data,
+      updatedAt: new Date()
+    };
+    this.groupPosts.set(id, updatedPost);
+    return updatedPost;
+  }
+  
+  async deleteGroupPost(id: number): Promise<boolean> {
+    return this.groupPosts.delete(id);
+  }
+  
   // Seed initial data for development
-  private seedData() {
+  private async seedData() {
     // Seed water resources
     const waterResourcesData: InsertWaterResource[] = [
       {
@@ -521,6 +667,124 @@ export class MemStorage implements IStorage {
     eventsData.forEach(event => {
       this.createEvent(event);
     });
+    
+    // Seed groups data
+    const groupsData = [
+      {
+        name: 'Глобальная DAO-группа',
+        description: 'Официальная группа для всех участников VODeco DAO',
+        type: 'official',
+        category: 'global',
+        imageUrl: null,
+        creatorId: 1
+      },
+      {
+        name: 'Европейский регион',
+        description: 'Региональная группа для обсуждения европейских водных инициатив',
+        type: 'official',
+        category: 'regional',
+        imageUrl: null,
+        creatorId: 1
+      },
+      {
+        name: 'Азиатский регион',
+        description: 'Региональная группа для обсуждения азиатских водных инициатив',
+        type: 'official',
+        category: 'regional',
+        imageUrl: null,
+        creatorId: 1
+      },
+      {
+        name: 'Научное сообщество',
+        description: 'Группа для научных дискуссий о технологиях очистки воды',
+        type: 'public',
+        category: 'professional',
+        imageUrl: null,
+        creatorId: 2
+      },
+      {
+        name: 'Образовательные курсы',
+        description: 'Обучающие материалы по ESG-стандартам и водным ресурсам',
+        type: 'public',
+        category: 'education',
+        imageUrl: null,
+        creatorId: 3
+      },
+      {
+        name: 'Инвестиционное сообщество',
+        description: 'Закрытая группа для инвесторов с обсуждением проектов и ROI',
+        type: 'private',
+        category: 'investment',
+        imageUrl: null,
+        creatorId: 4
+      }
+    ];
+
+    // Create groups and store their IDs
+    const groupIds: number[] = [];
+    for (const group of groupsData) {
+      const createdGroup = await this.createGroup(group);
+      groupIds.push(createdGroup.id);
+    }
+
+    // Add group members
+    if (groupIds.length > 0) {
+      // Add creator as owner
+      await this.addGroupMember({ groupId: groupIds[0], userId: 1, role: 'owner' });
+      await this.addGroupMember({ groupId: groupIds[1], userId: 1, role: 'owner' });
+      await this.addGroupMember({ groupId: groupIds[2], userId: 1, role: 'owner' });
+      await this.addGroupMember({ groupId: groupIds[3], userId: 2, role: 'owner' });
+      await this.addGroupMember({ groupId: groupIds[4], userId: 3, role: 'owner' });
+      await this.addGroupMember({ groupId: groupIds[5], userId: 4, role: 'owner' });
+      
+      // Add some members
+      await this.addGroupMember({ groupId: groupIds[0], userId: 2, role: 'moderator' });
+      await this.addGroupMember({ groupId: groupIds[0], userId: 3, role: 'member' });
+      await this.addGroupMember({ groupId: groupIds[0], userId: 4, role: 'member' });
+      await this.addGroupMember({ groupId: groupIds[1], userId: 2, role: 'member' });
+      await this.addGroupMember({ groupId: groupIds[3], userId: 1, role: 'member' });
+      await this.addGroupMember({ groupId: groupIds[4], userId: 1, role: 'member' });
+      await this.addGroupMember({ groupId: groupIds[4], userId: 2, role: 'member' });
+    }
+
+    // Add sample posts
+    if (groupIds.length > 0) {
+      await this.createGroupPost({
+        groupId: groupIds[0],
+        authorId: 1,
+        title: 'Добро пожаловать в VODeco DAO!',
+        content: 'Это официальная группа для всех участников экосистемы VODeco. Здесь мы будем публиковать важные объявления и обсуждать глобальные инициативы.',
+        type: 'announcement',
+        isPinned: true
+      });
+
+      await this.createGroupPost({
+        groupId: groupIds[0],
+        authorId: 2,
+        title: 'Новые функции в платформе',
+        content: 'Мы рады представить вам новые функции нашей платформы, включая расширенную аналитику и улучшенную визуализацию данных.',
+        type: 'post',
+        isPinned: false
+      });
+
+      await this.createGroupPost({
+        groupId: groupIds[3],
+        authorId: 2,
+        title: 'Исследование новых методов фильтрации',
+        content: 'В этом посте мы рассмотрим последние научные достижения в области фильтрации и очистки воды с использованием нанотехнологий.',
+        type: 'post',
+        isPinned: true
+      });
+
+      await this.createGroupPost({
+        groupId: groupIds[4],
+        authorId: 3,
+        title: 'Начало нового курса по ESG-стандартам',
+        content: 'Приглашаем всех на новый образовательный курс по ESG-стандартам в области управления водными ресурсами. Курс начнется 15 апреля.',
+        type: 'announcement',
+        isPinned: true
+      });
+    }
   }
 }
 

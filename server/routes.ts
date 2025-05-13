@@ -8,7 +8,10 @@ import {
   insertProposalSchema, 
   insertEventSchema, 
   insertVoteSchema, 
-  insertInvestmentSchema 
+  insertInvestmentSchema,
+  insertGroupSchema,
+  insertGroupMemberSchema,
+  insertGroupPostSchema
 } from "@shared/schema";
 import { z } from "zod";
 
@@ -416,6 +419,333 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.json(investments);
     } catch (error) {
       console.error("Error getting investments by project:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // === Groups API ===
+
+  // Get all groups
+  app.get("/api/groups", async (req, res) => {
+    try {
+      // Фильтры
+      const category = req.query.category as string;
+      const type = req.query.type as string;
+      
+      if (category) {
+        const groups = await storage.getGroupsByCategory(category);
+        return res.json(groups);
+      } else if (type) {
+        const groups = await storage.getGroupsByType(type);
+        return res.json(groups);
+      } else {
+        const groups = await storage.getAllGroups();
+        return res.json(groups);
+      }
+    } catch (error) {
+      console.error("Error getting groups:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get a specific group by ID
+  app.get("/api/groups/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid group ID" });
+      }
+      
+      const group = await storage.getGroup(id);
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+      
+      return res.json(group);
+    } catch (error) {
+      console.error("Error getting group:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create a new group
+  app.post("/api/groups", async (req, res) => {
+    try {
+      const groupData = insertGroupSchema.safeParse(req.body);
+      if (!groupData.success) {
+        return res.status(400).json({ 
+          message: "Invalid group data", 
+          errors: groupData.error.format() 
+        });
+      }
+      
+      const newGroup = await storage.createGroup(groupData.data);
+      
+      // Добавим создателя как владельца группы
+      if (newGroup.creatorId) {
+        await storage.addGroupMember({
+          groupId: newGroup.id,
+          userId: newGroup.creatorId,
+          role: 'owner'
+        });
+      }
+      
+      return res.status(201).json(newGroup);
+    } catch (error) {
+      console.error("Error creating group:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update a group
+  app.patch("/api/groups/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid group ID" });
+      }
+      
+      const group = await storage.getGroup(id);
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+      
+      const updatedGroup = await storage.updateGroup(id, req.body);
+      return res.json(updatedGroup);
+    } catch (error) {
+      console.error("Error updating group:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get members of a group
+  app.get("/api/groups/:id/members", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid group ID" });
+      }
+      
+      const group = await storage.getGroup(id);
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+      
+      const members = await storage.getGroupMembers(id);
+      return res.json(members);
+    } catch (error) {
+      console.error("Error getting group members:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Add member to a group
+  app.post("/api/groups/:id/members", async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.id);
+      if (isNaN(groupId)) {
+        return res.status(400).json({ message: "Invalid group ID" });
+      }
+      
+      const group = await storage.getGroup(groupId);
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+      
+      const memberData = insertGroupMemberSchema.safeParse({
+        ...req.body,
+        groupId
+      });
+      
+      if (!memberData.success) {
+        return res.status(400).json({ 
+          message: "Invalid member data", 
+          errors: memberData.error.format() 
+        });
+      }
+      
+      const newMember = await storage.addGroupMember(memberData.data);
+      return res.status(201).json(newMember);
+    } catch (error) {
+      console.error("Error adding group member:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update a member's role
+  app.patch("/api/groups/:groupId/members/:userId", async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const userId = parseInt(req.params.userId);
+      
+      if (isNaN(groupId) || isNaN(userId)) {
+        return res.status(400).json({ message: "Invalid IDs" });
+      }
+      
+      const roleSchema = z.object({
+        role: z.enum(['owner', 'moderator', 'member'])
+      });
+      
+      const roleData = roleSchema.safeParse(req.body);
+      if (!roleData.success) {
+        return res.status(400).json({ 
+          message: "Invalid role data", 
+          errors: roleData.error.format() 
+        });
+      }
+      
+      const updatedMember = await storage.updateGroupMemberRole(
+        groupId, 
+        userId, 
+        roleData.data.role
+      );
+      
+      if (!updatedMember) {
+        return res.status(404).json({ message: "Member not found in this group" });
+      }
+      
+      return res.json(updatedMember);
+    } catch (error) {
+      console.error("Error updating member role:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Remove a member from a group
+  app.delete("/api/groups/:groupId/members/:userId", async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.groupId);
+      const userId = parseInt(req.params.userId);
+      
+      if (isNaN(groupId) || isNaN(userId)) {
+        return res.status(400).json({ message: "Invalid IDs" });
+      }
+      
+      const removed = await storage.removeGroupMember(groupId, userId);
+      if (!removed) {
+        return res.status(404).json({ message: "Member not found in this group" });
+      }
+      
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error removing group member:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get posts for a group
+  app.get("/api/groups/:id/posts", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid group ID" });
+      }
+      
+      const group = await storage.getGroup(id);
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+      
+      const posts = await storage.getGroupPosts(id);
+      return res.json(posts);
+    } catch (error) {
+      console.error("Error getting group posts:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create a post in a group
+  app.post("/api/groups/:id/posts", async (req, res) => {
+    try {
+      const groupId = parseInt(req.params.id);
+      if (isNaN(groupId)) {
+        return res.status(400).json({ message: "Invalid group ID" });
+      }
+      
+      const group = await storage.getGroup(groupId);
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+      
+      const postData = insertGroupPostSchema.safeParse({
+        ...req.body,
+        groupId
+      });
+      
+      if (!postData.success) {
+        return res.status(400).json({ 
+          message: "Invalid post data", 
+          errors: postData.error.format() 
+        });
+      }
+      
+      const newPost = await storage.createGroupPost(postData.data);
+      return res.status(201).json(newPost);
+    } catch (error) {
+      console.error("Error creating group post:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update a post
+  app.patch("/api/groups/posts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
+      const post = await storage.getGroupPost(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      const updatedPost = await storage.updateGroupPost(id, req.body);
+      return res.json(updatedPost);
+    } catch (error) {
+      console.error("Error updating post:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Delete a post
+  app.delete("/api/groups/posts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
+      const post = await storage.getGroupPost(id);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+      
+      const deleted = await storage.deleteGroupPost(id);
+      return res.json({ success: deleted });
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get groups for a user
+  app.get("/api/users/:id/groups", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const groups = await storage.getUserGroups(id);
+      return res.json(groups);
+    } catch (error) {
+      console.error("Error getting user groups:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
