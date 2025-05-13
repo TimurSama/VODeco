@@ -274,24 +274,24 @@ export default function GroupsPage() {
     <div className="w-full px-2 sm:px-4 py-4 sm:py-6 max-w-[100vw] overflow-hidden">
       <div className="flex flex-col space-y-4 sm:space-y-6 w-full overflow-hidden">
         {/* Заголовок страницы */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 sm:gap-4">
           <div className="flex items-center">
-            <div className="hexagon h-10 w-10 sm:h-12 sm:w-12 bg-gradient-to-r from-primary/30 to-secondary/30 
-              flex items-center justify-center mr-3 sm:mr-4">
-              <UsersRound className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <div className="hexagon h-8 w-8 sm:h-10 sm:w-10 bg-gradient-to-r from-primary/30 to-secondary/30 
+              flex items-center justify-center mr-2">
+              <UsersRound className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
             </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white">Группы</h1>
-              <p className="text-xs sm:text-sm text-white/60">Участвуйте в официальных и пользовательских DAO-группах</p>
+            <div className="max-w-[calc(100%-2.5rem)]">
+              <h1 className="text-lg sm:text-xl font-bold text-white truncate">Группы</h1>
+              <p className="text-[10px] sm:text-xs text-white/60 truncate">Участвуйте в DAO-группах</p>
             </div>
           </div>
           
-          <div className="flex space-x-2">
+          <div className="flex space-x-1 sm:space-x-2">
             <Dialog open={showFilterDialog} onOpenChange={setShowFilterDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10 h-9 sm:h-10">
-                  <Filter className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{selectedFilter ? getGroupCategoryName(selectedFilter) : "Фильтр"}</span>
+                <Button variant="outline" size="sm" className="border-primary/30 text-primary hover:bg-primary/10 h-7 sm:h-9 px-1 sm:px-2 min-w-0">
+                  <Filter className="h-3.5 w-3.5 sm:mr-1" />
+                  <span className="hidden sm:inline text-xs">{selectedFilter ? getGroupCategoryName(selectedFilter) : "Фильтр"}</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-card border-primary/20 text-white max-w-[90vw] sm:max-w-md">
@@ -351,19 +351,19 @@ export default function GroupsPage() {
               </DialogContent>
             </Dialog>
             
-            <Button className="bg-primary hover:bg-primary/90 h-9 sm:h-10" size="sm">
-              <Plus className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Создать группу</span>
+            <Button className="bg-primary hover:bg-primary/90 h-7 sm:h-9 px-1 sm:px-2 text-[10px] sm:text-xs" size="sm">
+              <Plus className="h-3.5 w-3.5 sm:mr-1" />
+              <span className="hidden sm:inline">Создать</span>
             </Button>
           </div>
         </div>
         
         {/* Поисковая строка */}
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-white/50" />
+          <Search className="absolute left-2 top-[0.35rem] h-3.5 w-3.5 sm:left-3 sm:top-3 sm:h-4 sm:w-4 text-white/50" />
           <Input 
-            className="pl-10 bg-card/40 border-primary/20 text-white placeholder:text-white/40"
-            placeholder="Найти группу по названию или описанию..." 
+            className="pl-7 sm:pl-10 py-1 h-7 sm:h-10 bg-card/40 border-primary/20 text-white placeholder:text-white/40 text-xs sm:text-sm"
+            placeholder="Найти группу..." 
             value={searchQuery}
             onChange={handleSearch}
           />
@@ -371,26 +371,26 @@ export default function GroupsPage() {
         
         {/* Вкладки типов групп */}
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-card/40 border border-primary/20 w-full max-w-full overflow-auto flex-wrap sm:flex-nowrap mb-1">
-            <TabsTrigger value="all" className="data-[state=active]:bg-primary/20 flex-1">
-              <UsersRound className="h-4 w-4 mr-1 sm:mr-2" />
-              <span className="sm:inline hidden">Все группы</span>
-              <span className="sm:hidden inline">Все</span>
+          <TabsList className="bg-card/40 border border-primary/20 w-full h-8 sm:h-10 overflow-hidden min-w-0 p-0.5 sm:p-1">
+            <TabsTrigger value="all" className="data-[state=active]:bg-primary/20 flex-1 h-6 sm:h-8 text-[10px] sm:text-xs px-0 sm:px-2 min-w-0">
+              <UsersRound className="h-3 w-3 mr-0 sm:mr-1" />
+              <span className="sm:inline hidden">Все</span>
+              <span className="sm:hidden inline text-[10px]">Все</span>
             </TabsTrigger>
-            <TabsTrigger value="official" className="data-[state=active]:bg-primary/20 flex-1">
-              <Users className="h-4 w-4 mr-1 sm:mr-2" />
-              <span className="sm:inline hidden">Официальные</span>
-              <span className="sm:hidden inline">Офиц.</span>
+            <TabsTrigger value="official" className="data-[state=active]:bg-primary/20 flex-1 h-6 sm:h-8 text-[10px] sm:text-xs px-0 sm:px-2 min-w-0">
+              <Users className="h-3 w-3 mr-0 sm:mr-1" />
+              <span className="sm:inline hidden">Офиц.</span>
+              <span className="sm:hidden inline text-[10px]">Оф</span>
             </TabsTrigger>
-            <TabsTrigger value="public" className="data-[state=active]:bg-primary/20 flex-1">
-              <Globe className="h-4 w-4 mr-1 sm:mr-2" />
-              <span className="sm:inline hidden">Публичные</span>
-              <span className="sm:hidden inline">Публ.</span>
+            <TabsTrigger value="public" className="data-[state=active]:bg-primary/20 flex-1 h-6 sm:h-8 text-[10px] sm:text-xs px-0 sm:px-2 min-w-0">
+              <Globe className="h-3 w-3 mr-0 sm:mr-1" />
+              <span className="sm:inline hidden">Публ.</span>
+              <span className="sm:hidden inline text-[10px]">Пб</span>
             </TabsTrigger>
-            <TabsTrigger value="private" className="data-[state=active]:bg-primary/20 flex-1">
-              <Lock className="h-4 w-4 mr-1 sm:mr-2" />
-              <span className="sm:inline hidden">Закрытые</span>
-              <span className="sm:hidden inline">Закр.</span>
+            <TabsTrigger value="private" className="data-[state=active]:bg-primary/20 flex-1 h-6 sm:h-8 text-[10px] sm:text-xs px-0 sm:px-2 min-w-0">
+              <Lock className="h-3 w-3 mr-0 sm:mr-1" />
+              <span className="sm:inline hidden">Закр.</span>
+              <span className="sm:hidden inline text-[10px]">Зк</span>
             </TabsTrigger>
           </TabsList>
           
