@@ -13,6 +13,7 @@ import WalletPage from "@/pages/WalletPage";
 import GloboPage from "@/pages/GloboPage";
 import DAOPage from "@/pages/DAOPage";
 import AccountPage from "@/pages/AccountPage";
+import GroupsPage from "@/pages/GroupsPage";
 
 function Router() {
   return (
@@ -22,7 +23,7 @@ function Router() {
       <Route path="/wallet" component={WalletPage} />
       <Route path="/messages" component={NotFound} />
       <Route path="/contacts" component={NotFound} />
-      <Route path="/groups" component={NotFound} />
+      <Route path="/groups" component={GroupsPage} />
       <Route path="/profile" component={NotFound} />
       <Route path="/preview" component={NotFound} />
       <Route path="/dao" component={DAOPage} />

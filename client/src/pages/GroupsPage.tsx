@@ -28,11 +28,35 @@ export default function GroupsPage() {
     const fetchGroups = async () => {
       setLoading(true);
       try {
-        const data = await apiRequest<Group[]>('GET', '/api/groups');
-        setGroups(data);
-        setFilteredGroups(data);
+        console.log("Начало запроса API для групп");
+        // Версия без дженерика, так как в предыдущем вызове была ошибка типа
+        const response = await fetch('/api/groups', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log("Полученные данные:", data);
+        
+        // Проверка, что data - это массив
+        if (Array.isArray(data)) {
+          setGroups(data);
+          setFilteredGroups(data);
+        } else {
+          console.error("Получены данные в неправильном формате:", data);
+          setGroups([]);
+          setFilteredGroups([]);
+        }
       } catch (error) {
         console.error("Ошибка при загрузке групп:", error);
+        setGroups([]);
+        setFilteredGroups([]);
       } finally {
         setLoading(false);
       }
@@ -465,34 +489,43 @@ export default function GroupsPage() {
           
           <ScrollArea className="h-[220px]">
             <div className="flex space-x-6 pb-4">
-              {filteredGroups.slice(0, 5).map(group => (
-                <Card key={group.id} className="min-w-[280px] glassmorphism-dark">
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between items-start">
-                      <Badge variant="outline" className={`${getGroupTypeColor(group.type)}`}>
-                        {getGroupTypeName(group.type)}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-lg text-white mt-2">{group.name}</CardTitle>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <CardDescription className="text-white/70 line-clamp-2 h-10">
-                      {group.description}
-                    </CardDescription>
-                  </CardContent>
-                  
-                  <CardFooter className="flex justify-between items-center">
-                    <Badge variant="outline" className="text-white/70 bg-white/5">
-                      {group.memberCount} участников
-                    </Badge>
-                    <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary">
-                      <UserPlus className="h-4 w-4 mr-1" />
-                      Присоединиться
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
+              {Array.isArray(filteredGroups) && filteredGroups.length > 0 ? (
+                <>
+                  {filteredGroups.slice(0, 5).map(group => (
+                    <Card key={group.id} className="min-w-[280px] glassmorphism-dark">
+                      <CardHeader className="pb-2">
+                        <div className="flex justify-between items-start">
+                          <Badge variant="outline" className={`${getGroupTypeColor(group.type)}`}>
+                            {getGroupTypeName(group.type)}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-lg text-white mt-2">{group.name}</CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <CardDescription className="text-white/70 line-clamp-2 h-10">
+                          {group.description}
+                        </CardDescription>
+                      </CardContent>
+                      
+                      <CardFooter className="flex justify-between items-center">
+                        <Badge variant="outline" className="text-white/70 bg-white/5">
+                          {group.memberCount} участников
+                        </Badge>
+                        <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary">
+                          <UserPlus className="h-4 w-4 mr-1" />
+                          Присоединиться
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </>
+              ) : (
+                <div className="min-w-[280px] p-6 border border-dashed border-white/20 rounded-lg flex flex-col items-center justify-center text-center">
+                  <UsersRound className="h-8 w-8 text-white/30 mb-2" />
+                  <p className="text-white/70">Нет доступных групп</p>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </div>

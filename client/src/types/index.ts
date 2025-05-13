@@ -141,3 +141,37 @@ export interface StakingOption {
   minAmount: number;
   lockPeriod: number; // in days
 }
+
+// Group Types
+export interface Group {
+  id: number;
+  name: string;
+  type: string; // 'official', 'public', 'private'
+  description: string;
+  category: string; // 'global', 'regional', 'professional', 'education', 'investment'
+  memberCount: number;
+  creatorId?: number;
+  imageUrl?: string;
+  isActive: boolean;
+  createdAt: Date;
+}
+
+export interface GroupMember {
+  id: number;
+  groupId: number;
+  userId: number;
+  role: string; // 'owner', 'moderator', 'member'
+  joinedAt: Date;
+}
+
+export interface GroupPost {
+  id: number;
+  groupId: number;
+  authorId: number;
+  title: string;
+  content: string;
+  type: string; // 'announcement', 'discussion', 'question', etc.
+  isPinned: boolean;
+  createdAt: Date;
+  updatedAt: Date | null;
+}
