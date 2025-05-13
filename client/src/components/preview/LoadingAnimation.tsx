@@ -1,190 +1,137 @@
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 
 interface LoadingAnimationProps {
-  onExplore: () => void;
+  onComplete: () => void;
 }
 
-export default function LoadingAnimation({ onExplore }: LoadingAnimationProps) {
-  const [animationStage, setAnimationStage] = useState(0);
-  const [showButtons, setShowButtons] = useState(false);
-  
-  useEffect(() => {
-    // Имитация последовательной анимации
-    const timer1 = setTimeout(() => setAnimationStage(1), 1000); // Капля падает
-    const timer2 = setTimeout(() => setAnimationStage(2), 2000); // Капля разбивается
-    const timer3 = setTimeout(() => setAnimationStage(3), 3000); // Формируется логотип
-    const timer4 = setTimeout(() => setShowButtons(true), 4000); // Появляются кнопки
-    
-    return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
-    };
-  }, []);
-
-  // Анимация капли
-  const dropVariants = {
-    initial: { y: -200, opacity: 0 },
+export default function LoadingAnimation({ onComplete }: LoadingAnimationProps) {
+  // Анимация для логотипа и текста
+  const logoVariants = {
+    initial: { scale: 0.8, opacity: 0 },
     animate: { 
-      y: 0, 
+      scale: 1, 
       opacity: 1,
-      transition: { 
-        duration: 1,
-        ease: "easeOut" 
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
       }
     },
-    splash: {
-      scale: [1, 1.5, 0],
-      opacity: [1, 0.8, 0],
-      transition: { 
+    exit: {
+      scale: 1.2,
+      opacity: 0,
+      transition: {
         duration: 0.5,
+        ease: "easeIn"
+      }
+    }
+  };
+
+  // Анимация для волны
+  const waveVariants = {
+    initial: { scaleY: 0, opacity: 0 },
+    animate: { 
+      scaleY: 1, 
+      opacity: [0, 0.5, 0.8, 0.5, 0],
+      transition: {
+        duration: 2,
+        repeat: 1,
+        ease: "easeInOut"
       }
     }
   };
   
-  // Анимация линий логотипа
-  const lineVariants = {
-    initial: { opacity: 0, pathLength: 0 },
-    animate: (i: number) => ({
-      opacity: 1,
-      pathLength: 1,
-      transition: { 
-        delay: 2 + (i * 0.15),
-        duration: 0.5,
-        ease: "easeInOut" 
+  // Анимация для загрузочной линии
+  const loadingLineVariants = {
+    initial: { width: "0%" },
+    animate: { 
+      width: "100%",
+      transition: {
+        duration: 3,
+        ease: "easeInOut"
       }
-    })
-  };
-  
-  // Анимация текста
-  const textVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { 
-        delay: 3 + (i * 0.2),
-        duration: 0.5,
-        ease: "easeOut" 
-      }
-    })
-  };
-  
-  // Анимация кнопок
-  const buttonVariants = {
-    initial: { opacity: 0, scale: 0.8 },
-    animate: (i: number) => ({
-      opacity: 1,
-      scale: 1,
-      transition: { 
-        delay: 4 + (i * 0.2),
-        duration: 0.5,
-        ease: "backOut" 
-      }
-    })
+    }
   };
 
+  // Завершаем анимацию через 3.5 секунды
+  setTimeout(() => {
+    onComplete();
+  }, 3500);
+
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-black">
-      <div className="relative h-52 w-52 mb-10">
-        {/* Анимированная капля */}
-        {animationStage < 2 && (
-          <motion.div
-            className="absolute top-0 left-1/2 transform -translate-x-1/2"
-            variants={dropVariants}
-            initial="initial"
-            animate={animationStage === 0 ? "initial" : "animate"}
-            exit="splash"
-          >
-            <div className="w-6 h-6 rounded-full bg-primary filter blur-[1px]" />
-          </motion.div>
-        )}
-        
-        {/* Логотип DAO VODeco из 6 линий */}
-        {animationStage >= 2 && (
-          <motion.svg 
-            viewBox="0 0 100 100" 
-            className="w-full h-full absolute"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Слои капли */}
-            {[...Array(6)].map((_, i) => (
-              <motion.path
-                key={i}
-                d={`M50,20 Q${45 + i*2},${40 + i*3} ${40 + i*3},${60 + i*2} Q${50},${80 + i} ${60 - i*3},${60 + i*2} Q${55 - i*2},${40 + i*3} 50,20`}
-                stroke="rgba(20, 184, 166, ${0.5 + i * 0.08})"
-                strokeWidth="1"
-                fill="none"
-                variants={lineVariants}
-                initial="initial"
-                animate={animationStage >= 2 ? "animate" : "initial"}
-                custom={i}
-              />
-            ))}
-          </motion.svg>
-        )}
-      </div>
+    <div className="w-full h-full flex flex-col items-center justify-center bg-background overflow-hidden">
+      {/* Фоновый градиент */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
+      <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
       
-      {/* Текст лого */}
-      <div className="mb-12">
+      <div className="relative z-10 flex flex-col items-center">
+        {/* Логотип */}
         <motion.div
-          className="text-4xl font-bold tracking-wider relative text-white"
-          variants={textVariants}
+          className="relative mb-10"
+          variants={logoVariants}
           initial="initial"
-          animate={animationStage >= 3 ? "animate" : "initial"}
-          custom={0}
+          animate="animate"
+          exit="exit"
         >
-          dao V<span className="text-primary">O</span>Deco
-        </motion.div>
-      </div>
-      
-      {/* Кнопки */}
-      {showButtons && (
-        <div className="flex flex-col items-center space-y-4">
+          <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30">
+            <span className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
+              VOD
+            </span>
+          </div>
+          
+          {/* Анимированные волны */}
           <motion.div
-            variants={textVariants}
+            className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-40 h-8 z-0"
+            variants={waveVariants}
             initial="initial"
             animate="animate"
-            custom={1}
-            className="text-xl font-light tracking-widest text-white/80"
           >
-            WELCOME
+            <svg viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M0 10 Q 25 0, 50 10 T 100 10"
+                fill="none"
+                stroke="rgba(20, 184, 166, 0.5)"
+                strokeWidth="2"
+              />
+            </svg>
           </motion.div>
-          
-          <div className="space-y-3">
-            <motion.div
-              variants={buttonVariants}
-              initial="initial"
-              animate="animate"
-              custom={0}
-            >
-              <Button variant="outline" className="min-w-[200px]" size="lg">
-                Login
-              </Button>
-            </motion.div>
-            
-            <motion.div
-              variants={buttonVariants}
-              initial="initial" 
-              animate="animate"
-              custom={1}
-            >
-              <Button 
-                className="min-w-[200px] bg-primary hover:bg-primary/90" 
-                size="lg"
-                onClick={onExplore}
-              >
-                Explore +100💧
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-      )}
+        </motion.div>
+        
+        {/* Название */}
+        <motion.h1
+          className="text-3xl font-bold mb-10 text-white"
+          variants={logoVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <span className="text-primary">VOD</span>eco
+        </motion.h1>
+        
+        {/* Загрузочная линия */}
+        <motion.div
+          className="w-48 h-1 bg-primary/20 rounded-full overflow-hidden mb-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <motion.div
+            className="h-full bg-primary"
+            variants={loadingLineVariants}
+            initial="initial"
+            animate="animate"
+          />
+        </motion.div>
+        
+        {/* Текст загрузки */}
+        <motion.p
+          className="text-sm text-white/60"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          Инициализация экосистемы
+        </motion.p>
+      </div>
     </div>
   );
 }

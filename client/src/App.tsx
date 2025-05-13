@@ -14,6 +14,7 @@ import GloboPage from "@/pages/GloboPage";
 import DAOPage from "@/pages/DAOPage";
 import AccountPage from "@/pages/AccountPage";
 import GroupsPage from "@/pages/GroupsPage";
+import PreviewPage from "@/pages/PreviewPage";
 
 function Router() {
   return (
@@ -25,7 +26,7 @@ function Router() {
       <Route path="/contacts" component={NotFound} />
       <Route path="/groups" component={GroupsPage} />
       <Route path="/profile" component={NotFound} />
-      <Route path="/preview" component={NotFound} />
+      <Route path="/preview" component={PreviewPage} />
       <Route path="/dao" component={DAOPage} />
       <Route path="/interactions" component={NotFound} />
       <Route path="/token-hub" component={NotFound} />

@@ -54,7 +54,7 @@ export default function FinalCallScreen({ onContinue }: FinalCallScreenProps) {
         duration: 20,
         ease: "linear",
         repeat: Infinity,
-        repeatType: "reverse"
+        repeatType: "mirror"
       }
     }
   };

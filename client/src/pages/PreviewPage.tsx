@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "wouter";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -22,7 +22,7 @@ export default function PreviewPage() {
   const [tokens, setTokens] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   
   // Максимальное количество экранов
   const totalStages = 10;
@@ -85,7 +85,7 @@ export default function PreviewPage() {
   // Обработка финального перехода
   const handleFinalContinue = () => {
     addTokens(50);
-    navigate('/dashboard');
+    setLocation('/dashboard');
   };
   
   return (

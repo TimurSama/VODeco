@@ -1,140 +1,112 @@
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Atom, Skull, Droplet } from 'lucide-react';
 
 interface PlanetCrisisScreenProps {
   onNext: () => void;
 }
 
 export default function PlanetCrisisScreen({ onNext }: PlanetCrisisScreenProps) {
-  const [showStats, setShowStats] = useState(false);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => setShowStats(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
-  
-  // Анимация планеты
-  const planetVariants = {
-    initial: { scale: 0.8, opacity: 0 },
+  const statistics = [
+    { 
+      icon: <Droplet className="h-6 w-6 text-primary" />, 
+      value: "2.2 млрд.",
+      description: "людей не имеют доступа к чистой питьевой воде"
+    },
+    { 
+      icon: <Skull className="h-6 w-6 text-primary" />, 
+      value: "3.6 млн.",
+      description: "людей ежегодно умирают от болезней, связанных с некачественной водой"
+    },
+    { 
+      icon: <Atom className="h-6 w-6 text-primary" />, 
+      value: "80%",
+      description: "сточных вод сбрасываются в водоемы без очистки"
+    }
+  ];
+
+  // Анимация заголовка
+  const titleVariants = {
+    initial: { opacity: 0, y: -20 },
     animate: { 
-      scale: 1, 
-      opacity: 1,
+      opacity: 1, 
+      y: 0,
       transition: {
-        duration: 1.2,
+        duration: 0.8,
         ease: "easeOut"
       }
     }
   };
   
-  // Анимация плиток с информацией
-  const tileVariants = {
-    initial: { opacity: 0, y: 30 },
-    animate: (i: number) => ({
-      opacity: 1,
+  // Анимация блоков статистики
+  const statVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: (i: number) => ({ 
+      opacity: 1, 
       y: 0,
-      transition: { 
-        delay: 1.5 + (i * 0.2),
-        duration: 0.6,
-        ease: "easeOut" 
+      transition: {
+        delay: 0.2 + (i * 0.2),
+        duration: 0.5,
+        ease: "easeOut"
       }
     })
   };
 
-  // Данные о водных катастрофах (4 плитки)
-  const crisisData = [
-    {
-      title: "Водные ресурсы",
-      stats: [
-        "71% поверхности Земли — вода",
-        "0.02% массы планеты — вода",
-        "0.0006% — пригодная пресная",
-        "0.0002% — реально доступная"
-      ]
-    },
-    {
-      title: "Человеческое влияние",
-      stats: [
-        "1.2 млн смертей в год",
-        "2.8 млн км³ воды уничтожено",
-        "400 млн тонн токсинов в год",
-        "2.2 млрд человек без чистой воды"
-      ]
-    },
-    {
-      title: "Текущий кризис",
-      stats: [
-        "25% пресной воды утрачены",
-        "30% населения без доступа",
-        "65% пашни под угрозой",
-        "80% сточных вод без очистки"
-      ]
-    },
-    {
-      title: "Прогноз",
-      stats: [
-        "2030 — водные конфликты",
-        "2040 — глобальный дефицит",
-        "2050 — 70% экосистем в кризисе",
-        "2060 — риск экологического коллапса"
-      ]
-    }
-  ];
-
   return (
     <div 
-      className="w-full h-full flex flex-col items-center justify-center p-4 md:p-8 relative overflow-hidden"
+      className="w-full h-full flex flex-col items-center justify-center relative p-4"
       onClick={onNext}
     >
-      {/* Фоновые эффекты кризиса */}
-      <div className="absolute inset-0 bg-gradient-to-b from-red-900/20 to-background z-0"></div>
-      <div className="absolute inset-0 bg-[url('/smog-texture.svg')] opacity-10 z-0"></div>
+      {/* Фоновый градиент */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
+      <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
       
-      <div className="relative z-10 max-w-7xl w-full flex flex-col items-center">
-        {/* Вращающаяся планета */}
+      <div className="relative z-10 max-w-4xl w-full">
+        {/* Заголовок */}
         <motion.div
-          className="relative mb-8 mt-6 w-56 h-56 md:w-72 md:h-72"
-          variants={planetVariants}
+          className="text-center mb-16"
+          variants={titleVariants}
           initial="initial"
           animate="animate"
         >
-          <div className="absolute inset-0 rounded-full bg-blue-600 opacity-60 overflow-hidden">
-            <div 
-              className="absolute inset-0 bg-[url('/earth-texture.jpg')] bg-cover"
-              style={{
-                animation: 'spin 30s linear infinite',
-                filter: 'sepia(0.3) brightness(0.8) saturate(0.6)'
-              }}
-            ></div>
-            <div className="absolute inset-0 bg-red-900/30"></div>
-          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            Планета в кризисе
+          </h2>
+          <p className="text-lg text-white/70">
+            Водный кризис — бомба замедленного действия
+          </p>
         </motion.div>
         
-        {/* Плитки с информацией */}
-        {showStats && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-            {crisisData.map((tile, index) => (
-              <motion.div
-                key={index}
-                className="bg-card/40 backdrop-blur-sm rounded-lg p-5 border border-white/10"
-                variants={tileVariants}
-                initial="initial"
-                animate="animate"
-                custom={index}
-              >
-                <h3 className="text-primary text-lg font-semibold mb-3">{tile.title}</h3>
-                <ul className="space-y-2">
-                  {tile.stats.map((stat, statIndex) => (
-                    <li key={statIndex} className="text-white/80 text-sm flex items-start">
-                      <span className="mr-2 text-primary">•</span>
-                      {stat}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        )}
+        {/* Блоки статистики */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {statistics.map((stat, index) => (
+            <motion.div
+              key={index}
+              className="bg-card/30 backdrop-blur-sm rounded-lg border border-primary/20 p-6 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 transition-all cursor-pointer"
+              variants={statVariants}
+              custom={index}
+              initial="initial"
+              animate="animate"
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            >
+              <div className="p-2 rounded-full bg-primary/10 w-fit mb-4">
+                {stat.icon}
+              </div>
+              <h3 className="text-3xl font-bold text-white mb-2">{stat.value}</h3>
+              <p className="text-white/70">{stat.description}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
+      
+      {/* Декоративный элемент */}
+      <motion.div 
+        className="absolute bottom-4 right-4 text-white/50 text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+      >
+        Нажмите для продолжения +5💧
+      </motion.div>
     </div>
   );
 }
