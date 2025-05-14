@@ -78,13 +78,15 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
       console.log("Showing plate 4");
       setCurrentPlate(4);
       setRedLevel(100); // 100% покраснения с четвертой плиткой
-      
-      // Показываем кнопку сразу после отображения последней плитки
-      setTimeout(() => {
-        console.log("Showing button after plate 4");
-        setShowButton(true);
-      }, 1000);
     }, 8000);
+    
+    // Показываем кнопку через 5 секунд после последней плитки
+    const timerButton = setTimeout(() => {
+      console.log("Showing button 5 seconds after plate 4");
+      if (currentPlate >= 4) {
+        setShowButton(true);
+      }
+    }, 13000);
     
     return () => {
       clearTimeout(initialTimer);
@@ -92,6 +94,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
       clearTimeout(timer2);
       clearTimeout(timer3);
       clearTimeout(timer4);
+      clearTimeout(timerButton);
     };
   }, []);
   
@@ -112,16 +115,16 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   
   // Дополнительная проверка, чтобы кнопка точно показалась
   useEffect(() => {
-    // Эта проверка запустится через 10 секунд после загрузки компонента
+    // Эта проверка запустится через 15 секунд после загрузки компонента
     const finalBackupTimer = setTimeout(() => {
-      if (currentPlate >= 4 && !showButton) {
-        console.log("FINAL BACKUP: Forcing button display after timeout");
+      if (!showButton) {
+        console.log("FINAL BACKUP: Forcing button display after 15 seconds");
         setShowButton(true);
       }
-    }, 10000);
+    }, 15000);
     
     return () => clearTimeout(finalBackupTimer);
-  }, []);
+  }, [showButton]);
   
   // Анимация для плиток
   const plateVariants = {
@@ -233,21 +236,24 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   };
 
   return (
-    <div className="min-h-[120vh] w-full flex flex-col items-center overflow-y-auto pb-32 pt-6">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
       {/* Фоновый градиент */}
       <div className="fixed inset-0 bg-gradient-to-br from-primary/5 via-background to-background -z-10"></div>
       <div className="fixed inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15 -z-10"></div>
       
-      <div className="relative z-10 w-full max-w-4xl px-2 flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-4xl px-2 flex flex-col items-center" style={{ maxHeight: '95vh' }}>
         {/* Верхний ряд - первые две плитки */}
-        <div className="grid grid-cols-2 gap-2 w-full mb-4">
+        <div className="grid grid-cols-2 gap-2 w-full mb-3">
           {renderStatPlate(1, plates[0])}
           {renderStatPlate(2, plates[1])}
         </div>
         
         {/* Центральный элемент - 3D глобус с возможными гексагонами */}
-        <div className="mb-6 transition-all duration-500 relative" style={{ transform: showButton ? 'scale(0.95)' : 'scale(1)' }}>
-          <ThreeGlobe redLevel={redLevel} size={180} />
+        <div className="relative my-3" style={{ 
+          transform: showButton ? 'scale(0.95)' : 'scale(1)', 
+          transition: 'transform 0.5s ease'
+        }}>
+          <ThreeGlobe redLevel={redLevel} size={170} />
           
           {/* Гексагональные элементы вокруг восстановленной планеты */}
           {showHexagons && (
@@ -263,7 +269,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
                   style={{
                     width: '40px',
                     height: '34px',
-                    transform: `rotate(${index * 60}deg) translateY(-120px) rotate(-${index * 60}deg)`,
+                    transform: `rotate(${index * 60}deg) translateY(-100px) rotate(-${index * 60}deg)`,
                     transformOrigin: 'center center'
                   }}
                 >
@@ -280,31 +286,40 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
               ))}
             </div>
           )}
+          
+          {/* Гарантированно видимая кнопка над глобусом */}
+          {showButton && !hidePlates && (
+            <motion.div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+              variants={buttonVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={{
+                filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.7))',
+                pointerEvents: 'auto'
+              }}
+            >
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-black font-bold px-8 py-4 text-lg rounded-full shadow-xl whitespace-nowrap"
+                onClick={handleSaveClick}
+                style={{
+                  border: '2px solid rgba(255,255,255,0.6)',
+                  boxShadow: '0 0 20px rgba(20,184,166,0.8)',
+                  cursor: 'pointer'
+                }}
+              >
+                Спасти планету +50💧
+              </Button>
+            </motion.div>
+          )}
         </div>
         
         {/* Нижний ряд - остальные две плитки */}
-        <div className="grid grid-cols-2 gap-2 w-full mb-6">
+        <div className="grid grid-cols-2 gap-2 w-full mt-3">
           {renderStatPlate(3, plates[2])}
           {renderStatPlate(4, plates[3])}
         </div>
-        
-        {/* Кнопка спасения планеты */}
-        {showButton && !hidePlates && (
-          <motion.div
-            className="mt-2 mb-10 pt-2"
-            variants={buttonVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <Button 
-              className="bg-primary hover:bg-primary/90 text-black font-bold px-6 py-3 text-base rounded-full shadow-lg"
-              onClick={handleSaveClick}
-            >
-              Спасти планету +50💧
-            </Button>
-          </motion.div>
-        )}
       </div>
     </div>
   );
