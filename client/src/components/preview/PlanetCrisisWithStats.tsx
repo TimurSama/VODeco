@@ -149,12 +149,12 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   };
 
   return (
-    <div className="min-h-screen w-full relative flex flex-col items-center justify-center pt-16 pb-6">
+    <div className="min-h-screen w-full relative flex flex-col items-center overflow-y-auto py-10">
       {/* Фоновый градиент */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background"></div>
-      <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
+      <div className="fixed inset-0 bg-gradient-to-br from-primary/5 via-background to-background -z-10"></div>
+      <div className="fixed inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15 -z-10"></div>
       
-      <div className="relative z-10 w-full max-w-4xl p-4 flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-4xl p-4 flex flex-col items-center my-8">
         {/* Верхний ряд - первые две плитки */}
         <div className="grid grid-cols-2 gap-3 w-full mb-6">
           {renderStatPlate(1, plates[0])}
@@ -163,7 +163,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         
         {/* Центральный элемент - 3D глобус */}
         <div className="mb-6 transition-all duration-500" style={{ transform: showButton ? 'scale(0.9)' : 'scale(1)' }}>
-          <ThreeGlobe redLevel={redLevel} size={220} />
+          <ThreeGlobe redLevel={redLevel} size={200} />
         </div>
         
         {/* Нижний ряд - остальные две плитки */}
@@ -175,7 +175,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         {/* Кнопка спасения планеты */}
         {showButton && (
           <motion.div
-            className="mt-2"
+            className="mt-4 mb-8"
             variants={buttonVariants}
             initial="initial"
             animate="animate"
@@ -184,7 +184,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
               className="bg-primary hover:bg-primary/90 text-black font-medium px-6 py-4 text-base rounded-full"
               onClick={handleSaveClick}
             >
-              Спасти планету +50💧
+              Спасти планету +5💧
             </Button>
           </motion.div>
         )}
