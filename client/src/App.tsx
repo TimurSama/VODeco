@@ -48,7 +48,7 @@ function Router() {
 function SettingsPageWithFooter() {
   return (
     <>
-      <NotFound />
+      <SettingsPage />
       <Footer />
     </>
   );
@@ -57,7 +57,7 @@ function SettingsPageWithFooter() {
 function SupportPageWithFooter() {
   return (
     <>
-      <NotFound />
+      <SupportPage />
       <Footer />
     </>
   );
@@ -77,7 +77,7 @@ function App() {
               <Router />
             </main>
           </div>
-          <Footer />
+          {/* Footer перемещен в отдельные компоненты SupportPageWithFooter и SettingsPageWithFooter */}
         </div>
         <Toaster />
       </TooltipProvider>
