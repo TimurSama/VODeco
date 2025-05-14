@@ -788,4 +788,330 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { db } from "./db";
+import { eq, sql } from "drizzle-orm";
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async getUserByWalletAddress(walletAddress: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+  
+  async getWaterResource(id: number): Promise<WaterResource | undefined> {
+    const [resource] = await db.select().from(waterResources).where(eq(waterResources.id, id));
+    return resource || undefined;
+  }
+  
+  async getAllWaterResources(): Promise<WaterResource[]> {
+    return await db.select().from(waterResources);
+  }
+  
+  async createWaterResource(resource: InsertWaterResource): Promise<WaterResource> {
+    const [waterResource] = await db
+      .insert(waterResources)
+      .values(resource)
+      .returning();
+    return waterResource;
+  }
+  
+  async updateWaterResource(id: number, data: Partial<WaterResource>): Promise<WaterResource | undefined> {
+    const [updatedResource] = await db
+      .update(waterResources)
+      .set(data)
+      .where(eq(waterResources.id, id))
+      .returning();
+    return updatedResource || undefined;
+  }
+  
+  async getProject(id: number): Promise<Project | undefined> {
+    const [project] = await db.select().from(projects).where(eq(projects.id, id));
+    return project || undefined;
+  }
+  
+  async getAllProjects(): Promise<Project[]> {
+    return await db.select().from(projects);
+  }
+  
+  async createProject(project: InsertProject): Promise<Project> {
+    const [newProject] = await db
+      .insert(projects)
+      .values(project)
+      .returning();
+    return newProject;
+  }
+  
+  async updateProjectFunding(id: number, additionalFunding: number): Promise<Project | undefined> {
+    const [project] = await db
+      .update(projects)
+      .set({
+        fundingProgress: sql`${projects.fundingProgress} + ${additionalFunding}`
+      })
+      .where(eq(projects.id, id))
+      .returning();
+    return project || undefined;
+  }
+  
+  async getProposal(id: number): Promise<Proposal | undefined> {
+    const [proposal] = await db.select().from(proposals).where(eq(proposals.id, id));
+    return proposal || undefined;
+  }
+  
+  async getActiveProposals(): Promise<Proposal[]> {
+    return await db.select().from(proposals).where(eq(proposals.status, "Active"));
+  }
+  
+  async getRecentDecisions(): Promise<Proposal[]> {
+    return await db
+      .select()
+      .from(proposals)
+      .where(sql`${proposals.status} IN ('Passed', 'Failed')`)
+      .orderBy(sql`${proposals.createdAt} DESC`)
+      .limit(5);
+  }
+  
+  async createProposal(proposal: InsertProposal): Promise<Proposal> {
+    const [newProposal] = await db
+      .insert(proposals)
+      .values(proposal)
+      .returning();
+    return newProposal;
+  }
+  
+  async voteOnProposal(vote: InsertVote): Promise<Vote> {
+    // First insert the vote
+    const [newVote] = await db
+      .insert(votes)
+      .values(vote)
+      .returning();
+
+    // Then update the proposal's votes
+    if (vote.voteType === 'yes') {
+      await db
+        .update(proposals)
+        .set({
+          votesYes: sql`${proposals.votesYes} + ${vote.votingPower}`,
+          quorum: sql`${proposals.quorum} + ${vote.votingPower}`
+        })
+        .where(eq(proposals.id, vote.proposalId));
+    } else {
+      await db
+        .update(proposals)
+        .set({
+          votesNo: sql`${proposals.votesNo} + ${vote.votingPower}`,
+          quorum: sql`${proposals.quorum} + ${vote.votingPower}`
+        })
+        .where(eq(proposals.id, vote.proposalId));
+    }
+    
+    return newVote;
+  }
+  
+  async updateProposalStatus(id: number, status: string): Promise<Proposal | undefined> {
+    const [proposal] = await db
+      .update(proposals)
+      .set({ status })
+      .where(eq(proposals.id, id))
+      .returning();
+    return proposal || undefined;
+  }
+  
+  async getEvent(id: number): Promise<Event | undefined> {
+    const [event] = await db.select().from(events).where(eq(events.id, id));
+    return event || undefined;
+  }
+  
+  async getUpcomingEvents(): Promise<Event[]> {
+    return await db
+      .select()
+      .from(events)
+      .where(sql`${events.date} > NOW()`)
+      .orderBy(sql`${events.date} ASC`);
+  }
+  
+  async createEvent(event: InsertEvent): Promise<Event> {
+    const [newEvent] = await db
+      .insert(events)
+      .values(event)
+      .returning();
+    return newEvent;
+  }
+  
+  async createInvestment(investment: InsertInvestment): Promise<Investment> {
+    const [newInvestment] = await db
+      .insert(investments)
+      .values(investment)
+      .returning();
+      
+    // Update project funding progress
+    await db
+      .update(projects)
+      .set({
+        fundingProgress: sql`${projects.fundingProgress} + ${investment.amount}`
+      })
+      .where(eq(projects.id, investment.projectId));
+      
+    return newInvestment;
+  }
+  
+  async getInvestmentsByUser(userId: number): Promise<Investment[]> {
+    return await db.select().from(investments).where(eq(investments.userId, userId));
+  }
+  
+  async getInvestmentsByProject(projectId: number): Promise<Investment[]> {
+    return await db.select().from(investments).where(eq(investments.projectId, projectId));
+  }
+  
+  async getGroup(id: number): Promise<Group | undefined> {
+    const [group] = await db.select().from(groups).where(eq(groups.id, id));
+    return group || undefined;
+  }
+  
+  async getAllGroups(): Promise<Group[]> {
+    return await db.select().from(groups);
+  }
+  
+  async getGroupsByCategory(category: string): Promise<Group[]> {
+    return await db.select().from(groups).where(eq(groups.category, category));
+  }
+  
+  async getGroupsByType(type: string): Promise<Group[]> {
+    return await db.select().from(groups).where(eq(groups.type, type));
+  }
+  
+  async createGroup(group: InsertGroup): Promise<Group> {
+    const [newGroup] = await db
+      .insert(groups)
+      .values(group)
+      .returning();
+    return newGroup;
+  }
+  
+  async updateGroup(id: number, data: Partial<Group>): Promise<Group | undefined> {
+    const [updatedGroup] = await db
+      .update(groups)
+      .set(data)
+      .where(eq(groups.id, id))
+      .returning();
+    return updatedGroup || undefined;
+  }
+  
+  async getGroupMembers(groupId: number): Promise<GroupMember[]> {
+    return await db.select().from(groupMembers).where(eq(groupMembers.groupId, groupId));
+  }
+  
+  async getUserGroups(userId: number): Promise<Group[]> {
+    const userMemberships = await db
+      .select()
+      .from(groupMembers)
+      .where(eq(groupMembers.userId, userId));
+      
+    const groupIds = userMemberships.map(m => m.groupId);
+    
+    if (groupIds.length === 0) return [];
+    
+    return await db
+      .select()
+      .from(groups)
+      .where(sql`${groups.id} IN (${groupIds.join(',')})`);
+  }
+  
+  async addGroupMember(member: InsertGroupMember): Promise<GroupMember> {
+    const [newMember] = await db
+      .insert(groupMembers)
+      .values(member)
+      .returning();
+      
+    // Increment member count
+    await db
+      .update(groups)
+      .set({
+        memberCount: sql`${groups.memberCount} + 1`
+      })
+      .where(eq(groups.id, member.groupId));
+      
+    return newMember;
+  }
+  
+  async updateGroupMemberRole(groupId: number, userId: number, role: string): Promise<GroupMember | undefined> {
+    const [updatedMember] = await db
+      .update(groupMembers)
+      .set({ role })
+      .where(sql`${groupMembers.groupId} = ${groupId} AND ${groupMembers.userId} = ${userId}`)
+      .returning();
+    return updatedMember || undefined;
+  }
+  
+  async removeGroupMember(groupId: number, userId: number): Promise<boolean> {
+    const result = await db
+      .delete(groupMembers)
+      .where(sql`${groupMembers.groupId} = ${groupId} AND ${groupMembers.userId} = ${userId}`);
+      
+    // Decrement member count
+    await db
+      .update(groups)
+      .set({
+        memberCount: sql`${groups.memberCount} - 1`
+      })
+      .where(eq(groups.id, groupId));
+      
+    return true;
+  }
+  
+  async getGroupPosts(groupId: number): Promise<GroupPost[]> {
+    return await db
+      .select()
+      .from(groupPosts)
+      .where(eq(groupPosts.groupId, groupId))
+      .orderBy(sql`${groupPosts.createdAt} DESC`);
+  }
+  
+  async getGroupPost(id: number): Promise<GroupPost | undefined> {
+    const [post] = await db.select().from(groupPosts).where(eq(groupPosts.id, id));
+    return post || undefined;
+  }
+  
+  async createGroupPost(post: InsertGroupPost): Promise<GroupPost> {
+    const [newPost] = await db
+      .insert(groupPosts)
+      .values(post)
+      .returning();
+    return newPost;
+  }
+  
+  async updateGroupPost(id: number, data: Partial<GroupPost>): Promise<GroupPost | undefined> {
+    const [updatedPost] = await db
+      .update(groupPosts)
+      .set({
+        ...data,
+        updatedAt: new Date()
+      })
+      .where(eq(groupPosts.id, id))
+      .returning();
+    return updatedPost || undefined;
+  }
+  
+  async deleteGroupPost(id: number): Promise<boolean> {
+    await db.delete(groupPosts).where(eq(groupPosts.id, id));
+    return true;
+  }
+}
+
+export const storage = new DatabaseStorage();

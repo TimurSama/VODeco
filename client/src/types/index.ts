@@ -63,9 +63,18 @@ export interface WaterResource {
   qualityIndex: number;
   flowRate: number;
   isActive: boolean;
-  coordinates: [number, number]; // [latitude, longitude]
+  latitude: number;
+  longitude: number;
   description?: string;
   imageUrl?: string;
+  // Investment parameters
+  totalFunding?: number;
+  availableForDAO?: number;
+  fundingProgress?: number;
+  irr?: number; // Interest Rate of Return in %
+  participantsCount?: number;
+  projectType?: string; // pump station, treatment plant, etc.
+  investmentStatus?: string; // 'open', 'closed', 'fully-funded'
 }
 
 export enum ResourceStatus {
