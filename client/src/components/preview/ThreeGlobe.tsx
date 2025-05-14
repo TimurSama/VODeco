@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // Импортируем ThreeGlobe как модуль любого типа, поскольку он не имеет TypeScript-определений
 import ThreeGlobeLib from 'three-globe';
@@ -15,7 +15,7 @@ interface GlobeObject extends THREE.Object3D {
   hexPolygonResolution: (resolution: number) => GlobeObject;
   hexPolygonMargin: (margin: number) => GlobeObject;
   hexPolygonColor: (callback: ObjAccessor<string | THREE.Color>) => GlobeObject;
-  material: () => THREE.Material & { emissiveIntensity?: number };
+  material: () => THREE.Material & { emissiveIntensity?: number; emissive?: THREE.Color; color?: THREE.Color; };
 }
 
 interface ThreeGlobeProps {
@@ -30,6 +30,27 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  
+  // Состояние для отслеживания загрузки текстуры
+  const [textureLoaded, setTextureLoaded] = useState(true);
+  
+  // Создаем красный фильтр для планеты при высоком уровне кризиса
+  const createRedFilter = () => {
+    if (redLevel > 80 && globeRef.current) {
+      try {
+        const material = globeRef.current.material && typeof globeRef.current.material === 'function' 
+          ? globeRef.current.material() 
+          : null;
+          
+        if (material && material.color instanceof THREE.Color) {
+          // Устанавливаем насыщенный красный цвет
+          material.color.setRGB(1.0, 0.2, 0.1);
+        }
+      } catch (error) {
+        console.log('Could not apply red filter to globe material');
+      }
+    }
+  };
 
   // Инициализация сцены Three.js
   useEffect(() => {
@@ -62,7 +83,26 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
     // Приводим к нашему интерфейсу для типизации
     const Globe = new ThreeGlobeLib() as unknown as GlobeObject;
     
-    Globe.globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+    // Используем всегда базовое изображение земли, но применяем фильтры для красной планеты
+    const earthImg = '//unpkg.com/three-globe/example/img/earth-blue-marble.jpg';
+    
+    // Создаем текстуру и отслеживаем ошибки
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
+      earthImg,
+      (texture) => {
+        // Текстура загружена успешно
+        setTextureLoaded(true);
+      },
+      undefined,
+      (error) => {
+        // Ошибка загрузки текстуры
+        console.error('Error loading texture:', error);
+        setTextureLoaded(false);
+      }
+    );
+    
+    Globe.globeImageUrl(earthImg)
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
       .atmosphereColor(new THREE.Color(0x3a228a))
       .atmosphereAltitude(0.25)
@@ -71,9 +111,9 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
       .hexPolygonMargin(0.7)
       .hexPolygonColor(() => {
         // Цвет hex-сетки зависит от уровня красноты
-        const r = Math.min(0.9 + (redLevel / 200), 1);
-        const g = Math.max(0.2 - (redLevel / 120), 0);
-        const b = Math.max(0.4 - (redLevel / 120), 0);
+        const r = Math.min(0.9 + (redLevel / 150), 1);
+        const g = Math.max(0.1 - (redLevel / 100), 0);
+        const b = Math.max(0.3 - (redLevel / 100), 0);
         return new THREE.Color(r, g, b);
       });
       
@@ -137,22 +177,50 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
   const adjustRedLevel = (level: number) => {
     if (!globeRef.current) return;
     
-    // Настраиваем цвета атмосферы в зависимости от уровня красноты
-    const r = Math.min(0.2 + (level / 80), 0.8);
-    const g = Math.max(0.1 - (level / 400), 0);
-    const b = Math.max(0.4 - (level / 150), 0.1);
+    // Применяем специальный красный фильтр при максимальном уровне
+    if (level > 80) {
+      createRedFilter();
+    }
+    
+    // Более агрессивное покраснение атмосферы
+    const r = Math.min(0.3 + (level / 50), 1.0);
+    const g = Math.max(0.1 - (level / 150), 0);
+    const b = Math.max(0.4 - (level / 100), 0);
     
     globeRef.current.atmosphereColor(new THREE.Color(r, g, b));
     
-    // Эффект дыма и загрязнения через насыщенность
+    // Эффект дыма и загрязнения через насыщенность и цвет
     try {
       // В некоторых случаях material может быть недоступен, поэтому используем try-catch
       const material = globeRef.current.material && typeof globeRef.current.material === 'function' 
         ? globeRef.current.material() 
         : null;
       
-      if (material && 'emissiveIntensity' in material) {
-        material.emissiveIntensity = Math.max(0.4 - (level / 180), 0.15);
+      if (material) {
+        // Дополнительная корректировка эмиссии
+        if ('emissiveIntensity' in material) {
+          material.emissiveIntensity = Math.max(0.6 - (level / 150), 0.2);
+        }
+        
+        // Добавляем красный оттенок к материалу
+        if ('emissive' in material && material.emissive instanceof THREE.Color) {
+          const redTint = Math.min(level / 100, 1.0); 
+          material.emissive.setRGB(redTint, 0, 0);
+        }
+        
+        // Изменяем основной цвет материала для более интенсивного красного
+        if ('color' in material && material.color instanceof THREE.Color) {
+          if (level > 75) {
+            // Более интенсивное покраснение при высоких уровнях
+            const redIntensity = (level - 75) / 25; // 0-1 для уровней 75-100
+            const blueGreen = Math.max(0.5 - (redIntensity * 0.5), 0);
+            material.color.setRGB(1.0, blueGreen, blueGreen);
+          } else if (level > 50) {
+            // Умеренное покраснение для средних уровней
+            const redIntensity = (level - 50) / 25; // 0-1 для уровней 50-75
+            material.color.lerp(new THREE.Color(1, 0.7 - redIntensity*0.3, 0.7 - redIntensity*0.4), 0.4);
+          }
+        }
       }
     } catch (error) {
       console.log('Material not available yet');
@@ -165,13 +233,21 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
         if (child instanceof THREE.DirectionalLight) {
           // Основной свет меняется в зависимости от уровня красноты
           if (child.position.x === 1 && child.position.y === 1) {
-            const hue = 0.6 - (level / 170); // Смещение от синего к красному
-            child.color.setHSL(hue, 0.6, 0.5);
-            child.intensity = 1.5 + (level / 80); // Усиливаем интенсивность с уровнем красноты
+            // Смещение от голубого/белого к насыщенному красному
+            const hue = Math.max(0.0, 0.6 - (level / 100)); 
+            const saturation = Math.min(0.6 + (level / 150), 1.0);
+            const lightness = 0.5;
+            child.color.setHSL(hue, saturation, lightness);
+            child.intensity = 2.0 + (level / 60); // Усиливаем интенсивность с уровнем красноты
           }
-          // Дополнительный свет меняет интенсивность, но сохраняет цвет
+          // Дополнительный свет меняет интенсивность и цвет
           else if (child.position.x === -1) {
-            child.intensity = Math.max(0.8 - (level / 150), 0.2);
+            if (level > 50) {
+              // Постепенно делаем дополнительный свет красноватым
+              const redRatio = (level - 50) / 50; // от 0 до 1 для level от 50 до 100
+              child.color.setRGB(1, Math.max(0.7 - redRatio*0.7, 0), Math.max(0.8 - redRatio*0.8, 0));
+            }
+            child.intensity = Math.max(0.8 - (level / 150), 0.3);
           }
         }
       });

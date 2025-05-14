@@ -75,6 +75,7 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
     
     // Показываем кнопку после всех плиток
     const timerButton = setTimeout(() => {
+      console.log("Showing button now");
       setShowButton(true);
     }, 9000);
     
@@ -87,6 +88,19 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
       clearTimeout(timerButton);
     };
   }, []);
+  
+  // Убеждаемся, что кнопка точно показывается, если отображаются все плитки
+  useEffect(() => {
+    if (currentPlate >= 4 && !showButton) {
+      // Если все плитки видны, но кнопка еще не показана - показываем ее
+      const forceShowButtonTimer = setTimeout(() => {
+        console.log("Force showing button");
+        setShowButton(true);
+      }, 1500);
+      
+      return () => clearTimeout(forceShowButtonTimer);
+    }
+  }, [currentPlate, showButton]);
   
   // Анимация для плиток
   const plateVariants = {
