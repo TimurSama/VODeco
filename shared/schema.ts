@@ -35,7 +35,15 @@ export const waterResources = pgTable("water_resources", {
   latitude: real("latitude").notNull(),
   longitude: real("longitude").notNull(),
   description: text("description"),
-  imageUrl: text("image_url")
+  imageUrl: text("image_url"),
+  // Инвестиционные параметры
+  totalFunding: real("total_funding"),
+  availableForDAO: real("available_for_dao"),
+  fundingProgress: integer("funding_progress").default(0),
+  irr: real("irr"),                     // Estimated Annual Return
+  participantsCount: integer("participants_count").default(0),
+  projectType: text("project_type"),    // pump station, treatment plant, etc.
+  investmentStatus: text("investment_status").default("open"), // open, closed, fully-funded
 });
 
 export const insertWaterResourceSchema = createInsertSchema(waterResources).pick({
@@ -50,6 +58,12 @@ export const insertWaterResourceSchema = createInsertSchema(waterResources).pick
   longitude: true,
   description: true,
   imageUrl: true,
+  totalFunding: true,
+  availableForDAO: true,
+  fundingProgress: true,
+  irr: true,
+  projectType: true,
+  investmentStatus: true,
 });
 
 // Investment Projects table
