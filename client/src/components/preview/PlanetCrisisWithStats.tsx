@@ -11,6 +11,8 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   const [currentPlate, setCurrentPlate] = useState(0);
   const [showButton, setShowButton] = useState(false);
   const [redLevel, setRedLevel] = useState(0); // Уровень "покраснения" глобуса (0-100%)
+  const [showHexagons, setShowHexagons] = useState(false);
+  const [hidePlates, setHidePlates] = useState(false);
   
   // Данные для информационных плиток
   const plates = [
@@ -42,6 +44,11 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   
   // Последовательное появление плиток и увеличение уровня красноты
   useEffect(() => {
+    // Начальная задержка
+    const initialTimer = setTimeout(() => {
+      // Планета изначально голубая (redLevel = 0)
+    }, 1000);
+    
     // Показываем первую плитку и начинаем покраснение
     const timer1 = setTimeout(() => {
       setCurrentPlate(1);
@@ -69,9 +76,10 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
     // Показываем кнопку после всех плиток
     const timerButton = setTimeout(() => {
       setShowButton(true);
-    }, 9500);
+    }, 9000);
     
     return () => {
+      clearTimeout(initialTimer);
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);
@@ -90,6 +98,14 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         duration: 0.8,
         ease: "easeOut"
       }
+    },
+    exit: {
+      opacity: 0,
+      y: -10,
+      transition: {
+        duration: 0.5,
+        ease: "easeIn"
+      }
     }
   };
   
@@ -103,29 +119,62 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         duration: 0.5,
         ease: "backOut"
       }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.9,
+      transition: {
+        duration: 0.3,
+        ease: "easeIn"
+      }
+    }
+  };
+  
+  // Анимация для гексагонов
+  const hexagonVariants = {
+    initial: { opacity: 0, scale: 0 },
+    animate: { 
+      opacity: [0, 0.8, 0.6],
+      scale: 1,
+      transition: {
+        duration: 1.2,
+        ease: "easeOut"
+      }
     }
   };
   
   // Обработка нажатия на кнопку спасения
   const handleSaveClick = () => {
+    // Скрываем плитки
+    setHidePlates(true);
+    
     // Анимируем восстановление планеты
     setRedLevel(0);
+    
+    // Убираем кнопку
+    setShowButton(false);
+    
+    // Показываем гексагоны вокруг планеты
+    setTimeout(() => {
+      setShowHexagons(true);
+    }, 1000);
     
     // После анимации вызываем коллбэк
     setTimeout(() => {
       onSave();
-    }, 2000);
+    }, 3000);
   };
 
   // Функция для генерации плитки со статистикой
   const renderStatPlate = (plateIndex: number, plateData: string[]) => {
-    if (currentPlate >= plateIndex) {
+    if (currentPlate >= plateIndex && !hidePlates) {
       return (
         <motion.div
           className="bg-card/40 backdrop-blur-sm rounded-lg border border-primary/30 p-2.5 shadow-md"
           variants={plateVariants}
           initial="initial"
           animate="animate"
+          exit="exit"
           key={`plate-${plateIndex}`}
         >
           <h3 className="text-sm md:text-base font-bold text-primary mb-1.5">{
@@ -161,9 +210,41 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
           {renderStatPlate(2, plates[1])}
         </div>
         
-        {/* Центральный элемент - 3D глобус */}
-        <div className="mb-6 transition-all duration-500" style={{ transform: showButton ? 'scale(0.95)' : 'scale(1)' }}>
+        {/* Центральный элемент - 3D глобус с возможными гексагонами */}
+        <div className="mb-6 transition-all duration-500 relative" style={{ transform: showButton ? 'scale(0.95)' : 'scale(1)' }}>
           <ThreeGlobe redLevel={redLevel} size={180} />
+          
+          {/* Гексагональные элементы вокруг восстановленной планеты */}
+          {showHexagons && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center">
+              {/* Ряд гексагонов вокруг планеты */}
+              {Array.from({ length: 6 }).map((_, index) => (
+                <motion.div
+                  key={index}
+                  className="absolute"
+                  variants={hexagonVariants}
+                  initial="initial"
+                  animate="animate"
+                  style={{
+                    width: '40px',
+                    height: '34px',
+                    transform: `rotate(${index * 60}deg) translateY(-120px) rotate(-${index * 60}deg)`,
+                    transformOrigin: 'center center'
+                  }}
+                >
+                  <svg viewBox="0 0 60 60" className="w-full h-full">
+                    <path
+                      d="M30 0 L60 15 L60 45 L30 60 L0 45 L0 15 Z"
+                      stroke="#14b8a6"
+                      strokeWidth="2"
+                      fill="#14b8a6"
+                      fillOpacity="0.15"
+                    />
+                  </svg>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
         
         {/* Нижний ряд - остальные две плитки */}
@@ -173,18 +254,19 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         </div>
         
         {/* Кнопка спасения планеты */}
-        {showButton && (
+        {showButton && !hidePlates && (
           <motion.div
             className="mt-2 mb-10 pt-2"
             variants={buttonVariants}
             initial="initial"
             animate="animate"
+            exit="exit"
           >
             <Button 
               className="bg-primary hover:bg-primary/90 text-black font-bold px-6 py-3 text-base rounded-full shadow-lg"
               onClick={handleSaveClick}
             >
-              Спасти планету +5💧
+              Спасти планету +50💧
             </Button>
           </motion.div>
         )}
