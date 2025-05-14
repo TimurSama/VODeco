@@ -62,18 +62,18 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
     // Приводим к нашему интерфейсу для типизации
     const Globe = new ThreeGlobeLib() as unknown as GlobeObject;
     
-    Globe.globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+    Globe.globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
       .atmosphereColor(new THREE.Color(0x3a228a))
-      .atmosphereAltitude(0.15)
+      .atmosphereAltitude(0.25)
       .hexPolygonsData([])
       .hexPolygonResolution(3)
       .hexPolygonMargin(0.7)
       .hexPolygonColor(() => {
         // Цвет hex-сетки зависит от уровня красноты
-        const r = Math.min(0.8 + (redLevel / 200), 1);
-        const g = Math.max(0.3 - (redLevel / 150), 0);
-        const b = Math.max(0.5 - (redLevel / 150), 0);
+        const r = Math.min(0.9 + (redLevel / 200), 1);
+        const g = Math.max(0.2 - (redLevel / 120), 0);
+        const b = Math.max(0.4 - (redLevel / 120), 0);
         return new THREE.Color(r, g, b);
       });
       
@@ -86,13 +86,18 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
     globeRef.current = Globe;
     
     // Добавляем мягкое освещение
-    const ambientLight = new THREE.AmbientLight(0x404040, 3);
+    const ambientLight = new THREE.AmbientLight(0x404040, 4);
     scene.add(ambientLight);
 
     // Динамическое освещение, меняющееся с уровнем красноты
-    const light = new THREE.DirectionalLight(0xffffff, 1);
+    const light = new THREE.DirectionalLight(0xffffff, 1.5);
     light.position.set(1, 1, 1);
     scene.add(light);
+    
+    // Дополнительный свет для подсветки деталей
+    const fillLight = new THREE.DirectionalLight(0x7ec8ff, 0.8);
+    fillLight.position.set(-1, 0.5, -1);
+    scene.add(fillLight);
     
     // Анимация вращения
     const animate = () => {
@@ -133,9 +138,9 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
     if (!globeRef.current) return;
     
     // Настраиваем цвета атмосферы в зависимости от уровня красноты
-    const r = Math.min(0.1 + (level / 100), 0.6);
-    const g = Math.max(0.1 - (level / 500), 0);
-    const b = Math.max(0.5 - (level / 200), 0.2);
+    const r = Math.min(0.2 + (level / 80), 0.8);
+    const g = Math.max(0.1 - (level / 400), 0);
+    const b = Math.max(0.4 - (level / 150), 0.1);
     
     globeRef.current.atmosphereColor(new THREE.Color(r, g, b));
     
@@ -147,7 +152,7 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
         : null;
       
       if (material && 'emissiveIntensity' in material) {
-        material.emissiveIntensity = Math.max(0.3 - (level / 150), 0.1);
+        material.emissiveIntensity = Math.max(0.4 - (level / 180), 0.15);
       }
     } catch (error) {
       console.log('Material not available yet');
@@ -158,9 +163,16 @@ const ThreeGlobe: React.FC<ThreeGlobeProps> = ({ redLevel, size = 240 }) => {
       // Находим световой источник и меняем его цвет
       sceneRef.current.children.forEach((child: THREE.Object3D) => {
         if (child instanceof THREE.DirectionalLight) {
-          const hue = 0.7 - (level / 200); // Смещение от синего к красному
-          child.color.setHSL(hue, 0.5, 0.5);
-          child.intensity = 1 + (level / 100); // Усиливаем интенсивность с уровнем красноты
+          // Основной свет меняется в зависимости от уровня красноты
+          if (child.position.x === 1 && child.position.y === 1) {
+            const hue = 0.6 - (level / 170); // Смещение от синего к красному
+            child.color.setHSL(hue, 0.6, 0.5);
+            child.intensity = 1.5 + (level / 80); // Усиливаем интенсивность с уровнем красноты
+          }
+          // Дополнительный свет меняет интенсивность, но сохраняет цвет
+          else if (child.position.x === -1) {
+            child.intensity = Math.max(0.8 - (level / 150), 0.2);
+          }
         }
       });
     }

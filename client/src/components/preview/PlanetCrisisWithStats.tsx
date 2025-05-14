@@ -122,22 +122,22 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
     if (currentPlate >= plateIndex) {
       return (
         <motion.div
-          className="bg-card/30 backdrop-blur-sm rounded-lg border border-primary/20 p-3"
+          className="bg-card/40 backdrop-blur-sm rounded-lg border border-primary/30 p-2.5 shadow-md"
           variants={plateVariants}
           initial="initial"
           animate="animate"
           key={`plate-${plateIndex}`}
         >
-          <h3 className="text-sm md:text-base font-bold text-white mb-1">{
+          <h3 className="text-sm md:text-base font-bold text-primary mb-1.5">{
             plateIndex === 1 ? "Факты о воде на Земле" :
             plateIndex === 2 ? "Влияние на человечество" :
             plateIndex === 3 ? "Текущее состояние" :
             "Прогноз на будущее"
           }</h3>
-          <ul className="space-y-1">
+          <ul className="space-y-0.5">
             {plateData.map((item, index) => (
-              <li key={index} className="text-white/80 flex items-start text-xs md:text-sm">
-                <span className="text-primary mr-1">•</span>
+              <li key={index} className="text-white/90 flex items-start text-xs">
+                <span className="text-primary mr-1 mt-0.5 text-lg">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -149,25 +149,25 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   };
 
   return (
-    <div className="min-h-screen w-full relative flex flex-col items-center overflow-y-auto py-10">
+    <div className="min-h-[120vh] w-full flex flex-col items-center overflow-y-auto pb-32 pt-6">
       {/* Фоновый градиент */}
       <div className="fixed inset-0 bg-gradient-to-br from-primary/5 via-background to-background -z-10"></div>
       <div className="fixed inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15 -z-10"></div>
       
-      <div className="relative z-10 w-full max-w-4xl p-4 flex flex-col items-center my-8">
+      <div className="relative z-10 w-full max-w-4xl px-2 flex flex-col items-center">
         {/* Верхний ряд - первые две плитки */}
-        <div className="grid grid-cols-2 gap-3 w-full mb-6">
+        <div className="grid grid-cols-2 gap-2 w-full mb-4">
           {renderStatPlate(1, plates[0])}
           {renderStatPlate(2, plates[1])}
         </div>
         
         {/* Центральный элемент - 3D глобус */}
-        <div className="mb-6 transition-all duration-500" style={{ transform: showButton ? 'scale(0.9)' : 'scale(1)' }}>
-          <ThreeGlobe redLevel={redLevel} size={200} />
+        <div className="mb-6 transition-all duration-500" style={{ transform: showButton ? 'scale(0.95)' : 'scale(1)' }}>
+          <ThreeGlobe redLevel={redLevel} size={180} />
         </div>
         
         {/* Нижний ряд - остальные две плитки */}
-        <div className="grid grid-cols-2 gap-3 w-full mb-4">
+        <div className="grid grid-cols-2 gap-2 w-full mb-6">
           {renderStatPlate(3, plates[2])}
           {renderStatPlate(4, plates[3])}
         </div>
@@ -175,13 +175,13 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
         {/* Кнопка спасения планеты */}
         {showButton && (
           <motion.div
-            className="mt-4 mb-8"
+            className="mt-2 mb-10 pt-2"
             variants={buttonVariants}
             initial="initial"
             animate="animate"
           >
             <Button 
-              className="bg-primary hover:bg-primary/90 text-black font-medium px-6 py-4 text-base rounded-full"
+              className="bg-primary hover:bg-primary/90 text-black font-bold px-6 py-3 text-base rounded-full shadow-lg"
               onClick={handleSaveClick}
             >
               Спасти планету +5💧
