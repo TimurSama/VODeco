@@ -15,6 +15,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
   selectedResource 
 }) => {
   const [filter, setFilter] = useState<FilterType>('All');
+  const [showDetail, setShowDetail] = useState<number | null>(null);
 
   // Filter resources based on the selected filter
   const filteredResources = filter === 'All' 
@@ -58,12 +59,24 @@ const ResourceList: React.FC<ResourceListProps> = ({
     return 'text-primary';
   };
 
+  // Форматирование суммы с разделителями тысяч
+  const formatCurrency = (amount?: number): string => {
+    if (amount === undefined) return 'N/A';
+    return `$${amount.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+  };
+
+  // Получить процент выполнения финансирования
+  const getFundingPercent = (resource: WaterResource): number => {
+    if (!resource.totalFunding || !resource.fundingProgress) return 0;
+    return Math.min(100, Math.round((resource.fundingProgress / resource.totalFunding) * 100));
+  };
+
   return (
     <div className="lg:w-5/12">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-space font-medium text-lg text-white">Water Resources</h3>
+        <h3 className="font-space font-medium text-lg text-white">Investment Objects</h3>
         <div className="flex items-center space-x-2">
-          {(['All', 'Critical', 'Stable'] as FilterType[]).map(type => (
+          {(['All', 'Critical', 'Needs Attention', 'Stable'] as FilterType[]).map(type => (
             <button 
               key={type}
               className={`text-white/70 hover:text-primary transition-colors px-3 py-1 text-sm ${
@@ -77,15 +90,20 @@ const ResourceList: React.FC<ResourceListProps> = ({
         </div>
       </div>
       
-      <div className="space-y-4 h-80 overflow-y-auto pr-2">
+      <div className="space-y-4 h-[430px] overflow-y-auto pr-2 custom-scrollbar">
         {filteredResources.length > 0 ? (
           filteredResources.map(resource => (
             <div 
               key={resource.id}
-              className={`bg-background/50 rounded-lg p-4 border-l-4 ${getBorderColorClass(resource.status)} cursor-pointer ${
+              className={`bg-background/50 backdrop-blur-sm rounded-lg p-4 border-l-4 ${getBorderColorClass(resource.status)} cursor-pointer transition-all duration-300 hover:bg-background/70 ${
                 selectedResource?.id === resource.id ? 'ring-1 ring-primary' : ''
               }`}
-              onClick={() => onResourceSelect(resource)}
+              onClick={() => {
+                onResourceSelect(resource);
+                if (showDetail !== resource.id) {
+                  setShowDetail(resource.id);
+                }
+              }}
             >
               <div className="flex justify-between mb-2">
                 <h4 className="font-space font-medium text-white">{resource.name}</h4>
@@ -94,6 +112,8 @@ const ResourceList: React.FC<ResourceListProps> = ({
                 </span>
               </div>
               <p className="text-white/70 text-sm mb-3">{resource.region}, {resource.country}</p>
+              
+              {/* Базовая информация всегда видна */}
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div>
                   <p className="text-white/50">Quality Index</p>
@@ -106,14 +126,68 @@ const ResourceList: React.FC<ResourceListProps> = ({
                   <p className="text-white font-medium">{resource.flowRate} m³/h</p>
                 </div>
                 <div>
-                  <p className="text-white/50">Status</p>
-                  <p className="text-white font-medium">{resource.isActive ? 'Active' : 'Inactive'}</p>
+                  <p className="text-white/50">Type</p>
+                  <p className="text-white font-medium">{resource.projectType || 'Water Resource'}</p>
                 </div>
               </div>
-              <button className="mt-3 text-primary hover:text-accent transition-colors text-xs flex items-center">
-                <span className="material-icons text-xs mr-1">visibility</span>
-                View Details
-              </button>
+              
+              {/* Инвестиционные данные (отображаются, если ресурс выбран) */}
+              {showDetail === resource.id && resource.totalFunding && (
+                <div className="mt-4 pt-3 border-t border-white/10">
+                  <div className="grid grid-cols-2 gap-3 text-xs mb-3">
+                    <div>
+                      <p className="text-white/50">Total Funding Required</p>
+                      <p className="text-white font-medium">{formatCurrency(resource.totalFunding)}</p>
+                    </div>
+                    <div>
+                      <p className="text-white/50">Available for DAO</p>
+                      <p className="text-white font-medium">{formatCurrency(resource.availableForDAO)}</p>
+                    </div>
+                    <div>
+                      <p className="text-white/50">Expected Return (IRR)</p>
+                      <p className="text-primary font-medium">{resource.irr}%</p>
+                    </div>
+                    <div>
+                      <p className="text-white/50">Participants</p>
+                      <p className="text-white font-medium">{resource.participantsCount || 0}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Прогресс финансирования */}
+                  <div className="mt-3">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-white/70">Funding Progress</span>
+                      <span className="text-primary font-medium">{getFundingPercent(resource)}%</span>
+                    </div>
+                    <div className="w-full bg-white/10 rounded-full h-2">
+                      <div 
+                        className="bg-primary h-2 rounded-full"
+                        style={{ width: `${getFundingPercent(resource)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  {/* Кнопка инвестирования */}
+                  <button className="mt-4 bg-primary hover:bg-primary/80 text-black font-medium rounded-md py-2 w-full text-sm transition-colors flex items-center justify-center">
+                    <span className="material-icons mr-1 text-sm">account_balance_wallet</span>
+                    Invest in Project
+                  </button>
+                </div>
+              )}
+              
+              {showDetail !== resource.id && (
+                <button 
+                  className="mt-3 text-primary hover:text-accent transition-colors text-xs flex items-center"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowDetail(resource.id);
+                    onResourceSelect(resource);
+                  }}
+                >
+                  <span className="material-icons text-xs mr-1">visibility</span>
+                  View Investment Details
+                </button>
+              )}
             </div>
           ))
         ) : (
