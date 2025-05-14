@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
+// @ts-ignore - OrbitControls doesn't have proper TypeScript definitions
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { WaterResource, ResourceStatus } from '@/types';
 // @ts-ignore - ThreeGlobe doesn't have TypeScript definitions
@@ -143,6 +144,7 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       .atmosphereColor('#14b8a6') // Turquoise glow
       .atmosphereAltitude(0.15)
       // Set the size and position
+      // @ts-ignore
       .pointOfView({ altitude: 2.5 });
       
     // Scale it properly
@@ -216,8 +218,10 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       // Main points
       .pointsData(globeData)
       .pointColor('color')
+      // @ts-ignore
       .pointRadius('radius')
       .pointsMerge(false)
+      // @ts-ignore
       .pointAltitude('altitude')
       .pointLabel((d: any) => {
         return `
@@ -397,7 +401,7 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       </div>
       
       {/* Tooltip styles */}
-      <style jsx global>{`
+      <style>{`
         .globe-tooltip {
           background: rgba(0, 0, 0, 0.8);
           border: 1px solid #14b8a6;
