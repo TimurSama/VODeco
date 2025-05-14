@@ -44,40 +44,47 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
   
   // Последовательное появление плиток и увеличение уровня красноты
   useEffect(() => {
+    console.log("Starting animation sequence");
+    
     // Начальная задержка
     const initialTimer = setTimeout(() => {
       // Планета изначально голубая (redLevel = 0)
+      console.log("Initial delay completed");
     }, 1000);
     
     // Показываем первую плитку и начинаем покраснение
     const timer1 = setTimeout(() => {
+      console.log("Showing plate 1");
       setCurrentPlate(1);
       setRedLevel(25); // 25% покраснения с первой плиткой
     }, 2000);
     
     // Показываем вторую плитку и увеличиваем покраснение
     const timer2 = setTimeout(() => {
+      console.log("Showing plate 2");
       setCurrentPlate(2);
       setRedLevel(50); // 50% покраснения со второй плиткой
     }, 4000);
     
     // Показываем третью плитку и увеличиваем покраснение
     const timer3 = setTimeout(() => {
+      console.log("Showing plate 3");
       setCurrentPlate(3);
       setRedLevel(75); // 75% покраснения с третьей плиткой
     }, 6000);
     
     // Показываем четвертую плитку и максимальное покраснение
     const timer4 = setTimeout(() => {
+      console.log("Showing plate 4");
       setCurrentPlate(4);
       setRedLevel(100); // 100% покраснения с четвертой плиткой
+      
+      // Показываем кнопку сразу после отображения последней плитки
+      setTimeout(() => {
+        console.log("Showing button after plate 4");
+        setShowButton(true);
+      }, 1000);
     }, 8000);
-    
-    // Показываем кнопку после всех плиток
-    const timerButton = setTimeout(() => {
-      console.log("Showing button now");
-      setShowButton(true);
-    }, 9000);
     
     return () => {
       clearTimeout(initialTimer);
@@ -85,22 +92,36 @@ export default function PlanetCrisisWithStats({ onSave }: PlanetCrisisWithStatsP
       clearTimeout(timer2);
       clearTimeout(timer3);
       clearTimeout(timer4);
-      clearTimeout(timerButton);
     };
   }, []);
   
-  // Убеждаемся, что кнопка точно показывается, если отображаются все плитки
+  // Резервный механизм показа кнопки, если первый не сработал
   useEffect(() => {
     if (currentPlate >= 4 && !showButton) {
-      // Если все плитки видны, но кнопка еще не показана - показываем ее
+      console.log("Backup check: all plates visible, forcing button display");
       const forceShowButtonTimer = setTimeout(() => {
-        console.log("Force showing button");
-        setShowButton(true);
-      }, 1500);
+        if (!showButton) {
+          console.log("Force showing button - backup mechanism");
+          setShowButton(true);
+        }
+      }, 1000);
       
       return () => clearTimeout(forceShowButtonTimer);
     }
   }, [currentPlate, showButton]);
+  
+  // Дополнительная проверка, чтобы кнопка точно показалась
+  useEffect(() => {
+    // Эта проверка запустится через 10 секунд после загрузки компонента
+    const finalBackupTimer = setTimeout(() => {
+      if (currentPlate >= 4 && !showButton) {
+        console.log("FINAL BACKUP: Forcing button display after timeout");
+        setShowButton(true);
+      }
+    }, 10000);
+    
+    return () => clearTimeout(finalBackupTimer);
+  }, []);
   
   // Анимация для плиток
   const plateVariants = {
