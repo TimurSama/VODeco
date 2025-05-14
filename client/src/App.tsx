@@ -15,6 +15,8 @@ import DAOPage from "@/pages/DAOPage";
 import AccountPage from "@/pages/AccountPage";
 import GroupsPage from "@/pages/GroupsPage";
 import PreviewPage from "@/pages/PreviewPage";
+import SettingsPage from "@/pages/SettingsPage";
+import SupportPage from "@/pages/SupportPage";
 
 function Router() {
   return (
@@ -33,12 +35,31 @@ function Router() {
       <Route path="/globo" component={GloboPage} />
       <Route path="/bank" component={NotFound} />
       <Route path="/cabinets" component={NotFound} />
-      <Route path="/settings" component={NotFound} />
-      <Route path="/support" component={NotFound} />
+      <Route path="/settings" component={SettingsPageWithFooter} />
+      <Route path="/support" component={SupportPageWithFooter} />
       <Route path="/docs" component={NotFound} />
       <Route path="/admin" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+  );
+}
+
+// Компоненты-обертки для страниц с Footer
+function SettingsPageWithFooter() {
+  return (
+    <>
+      <NotFound />
+      <Footer />
+    </>
+  );
+}
+
+function SupportPageWithFooter() {
+  return (
+    <>
+      <NotFound />
+      <Footer />
+    </>
   );
 }
 
