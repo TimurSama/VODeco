@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 // @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { WaterResource, ResourceStatus } from '@/types';
+import { WaterResource, ResourceStatus, ResourceCategory } from '@/types';
 // @ts-ignore
 import ThreeGlobe from 'three-globe';
 import { Button } from "@/components/ui/button";
@@ -53,17 +53,22 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
   // Функция для преобразования ресурсов в данные для глобуса
   const getGlobeData = useCallback(() => {
     return resources.map(resource => {
-      // Цвет в зависимости от статуса
-      let color = '#14b8a6'; // Default turquoise
+      // Определяем базовый цвет в зависимости от категории (Path или Investment)
+      let baseColor = '#FFFFFF'; // Белый цвет для объектов "Path" (по умолчанию)
+      
+      if (resource.category === ResourceCategory.INVESTMENT) {
+        baseColor = '#3b82f6'; // Синий цвет для объектов инвестирования
+      }
+      
+      // Модифицируем цвет в зависимости от статуса
+      let color = baseColor;
       
       if (resource.status === ResourceStatus.CRITICAL) {
-        color = '#ef4444'; // Red for critical
-      } else if (resource.status === ResourceStatus.NEEDS_ATTENTION) {
-        color = '#f59e0b'; // Amber for needs attention
-      } else if (resource.status === ResourceStatus.STABLE) {
-        color = '#10b981'; // Green for stable
-      } else if (resource.status === ResourceStatus.EXCELLENT) {
-        color = '#3b82f6'; // Blue for excellent
+        // Для критических ресурсов используем красный цвет независимо от категории
+        color = '#ef4444';
+      } else if (resource.status === ResourceStatus.NEEDS_ATTENTION && resource.category === ResourceCategory.INVESTMENT) {
+        // Для объектов инвестирования, требующих внимания, используем желтый
+        color = '#f59e0b';
       }
       
       return {
@@ -74,6 +79,7 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
         region: resource.region,
         country: resource.country,
         status: resource.status,
+        category: resource.category,
         irr: resource.irr,
         totalFunding: resource.totalFunding,
         availableForDAO: resource.availableForDAO,
@@ -84,8 +90,12 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
         flowRate: resource.flowRate,
         color,
         altitude: 0.05,
-        radius: resource.status === ResourceStatus.CRITICAL ? 0.25 : 
-                resource.status === ResourceStatus.NEEDS_ATTENTION ? 0.2 : 0.15,
+        // Размер маркера зависит от категории и статуса
+        radius: resource.category === ResourceCategory.INVESTMENT ? 
+                (resource.status === ResourceStatus.CRITICAL ? 0.3 : 
+                 resource.status === ResourceStatus.NEEDS_ATTENTION ? 0.25 : 0.2) :
+                (resource.status === ResourceStatus.CRITICAL ? 0.25 : 
+                 resource.status === ResourceStatus.NEEDS_ATTENTION ? 0.2 : 0.15),
       };
     });
   }, [resources]);
