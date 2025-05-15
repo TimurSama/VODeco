@@ -453,11 +453,14 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
                           <Badge
                             variant={
                               resource.status === ResourceStatus.CRITICAL ? 'destructive' :
-                              resource.status === ResourceStatus.NEEDS_ATTENTION ? 'warning' :
-                              resource.status === ResourceStatus.STABLE ? 'success' :
-                              'default'
+                              resource.status === ResourceStatus.EXCELLENT ? 'secondary' :
+                              'outline'
                             }
-                            className="ml-2 whitespace-nowrap"
+                            className={`ml-2 whitespace-nowrap ${
+                              resource.status === ResourceStatus.NEEDS_ATTENTION ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 
+                              resource.status === ResourceStatus.STABLE ? 'bg-green-500/10 text-green-500 border-green-500/20' :
+                              ''
+                            }`}
                           >
                             {resource.status}
                           </Badge>
@@ -678,13 +681,13 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Требуют внимания</span>
-                    <Badge variant="warning">
+                    <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">
                       {resources.filter(r => r.status === ResourceStatus.NEEDS_ATTENTION).length}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Стабильные</span>
-                    <Badge variant="success">
+                    <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">
                       {resources.filter(r => r.status === ResourceStatus.STABLE).length}
                     </Badge>
                   </div>

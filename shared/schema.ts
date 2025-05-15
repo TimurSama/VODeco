@@ -65,6 +65,7 @@ export const insertWaterResourceSchema = createInsertSchema(waterResources).pick
   irr: true,
   projectType: true,
   investmentStatus: true,
+  category: true,
 });
 
 // Investment Projects table
