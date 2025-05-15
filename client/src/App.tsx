@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Switch, Route } from "wouter";
+import { useState, useEffect } from "react";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -27,15 +27,33 @@ import CabinetsPage from "@/pages/CabinetsPage";
 import DocsPage from "@/pages/DocsPage";
 import AdminPanelPage from "@/pages/AdminPanelPage";
 
+// Мобильные страницы
+import MobileMessagesPage from "@/pages/MobileMessagesPage";
+import MobileContactsPage from "@/pages/MobileContactsPage";
+import "./mobile.css"; // Импортируем мобильные стили
+
+// Импортируем наш hook для определения мобильного устройства
+import { useMobileDetect } from "@/hooks/use-mobile-detect";
+
 function Router() {
+  // Используем hook
+  const isMobile = useMobileDetect();
+  
+  useEffect(() => {
+    console.log('Текущее устройство:', isMobile ? 'Мобильное' : 'Десктоп');
+  }, [isMobile]);
+  
   return (
     <Switch>
+      {/* Маршруты с мобильными версиями */}
       <Route path="/messages">
-        <MessagesPage />
+        {isMobile ? <MobileMessagesPage /> : <MessagesPage />}
       </Route>
       <Route path="/contacts">
-        <ContactsPage />
+        {isMobile ? <MobileContactsPage /> : <ContactsPage />}
       </Route>
+      
+      {/* Стандартные маршруты */}
       <Route path="/account">
         <AccountPage />
       </Route>
