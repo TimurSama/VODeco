@@ -312,17 +312,21 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
   // Изменение масштаба
   const handleZoomIn = () => {
     if (!controlsRef.current || !cameraRef.current) return;
-    const currentDistance = controlsRef.current.target.distanceTo(cameraRef.current.position);
-    const target = Math.max(controlsRef.current.minDistance, currentDistance * 0.8);
-    controlsRef.current.dollyIn(1.2);
+    // Вместо dollyIn, напрямую изменяем позицию камеры
+    const direction = new THREE.Vector3();
+    direction.subVectors(cameraRef.current.position, controlsRef.current.target);
+    direction.multiplyScalar(0.2); // Коэффициент приближения
+    cameraRef.current.position.sub(direction);
     controlsRef.current.update();
   };
   
   const handleZoomOut = () => {
     if (!controlsRef.current || !cameraRef.current) return;
-    const currentDistance = controlsRef.current.target.distanceTo(cameraRef.current.position);
-    const target = Math.min(controlsRef.current.maxDistance, currentDistance * 1.2);
-    controlsRef.current.dollyOut(1.2);
+    // Вместо dollyOut, напрямую изменяем позицию камеры
+    const direction = new THREE.Vector3();
+    direction.subVectors(cameraRef.current.position, controlsRef.current.target);
+    direction.multiplyScalar(0.2); // Коэффициент отдаления
+    cameraRef.current.position.add(direction);
     controlsRef.current.update();
   };
   
