@@ -540,6 +540,25 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
                   </Card>
                 </div>
                 
+                <div className="grid grid-cols-2 gap-3 mt-2">
+                  <Card>
+                    <CardContent className="p-3">
+                      <h4 className="text-sm font-medium mb-1">Инвестиционные</h4>
+                      <p className="text-xl font-semibold text-blue-500">
+                        {resources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardContent className="p-3">
+                      <h4 className="text-sm font-medium mb-1">Пути</h4>
+                      <p className="text-xl font-semibold text-slate-300">
+                        {resources.filter(r => r.category === ResourceCategory.PATH).length}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                
                 <div className="mt-4">
                   <h4 className="text-sm font-medium mb-2">Распределение по статусу</h4>
                   <div className="h-8 w-full rounded-md overflow-hidden flex">
