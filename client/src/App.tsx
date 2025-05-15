@@ -17,6 +17,15 @@ import GroupsPage from "@/pages/GroupsPage";
 import PreviewPage from "@/pages/PreviewPage";
 import SettingsPage from "@/pages/SettingsPage";
 import SupportPage from "@/pages/SupportPage";
+import MessagesPage from "@/pages/MessagesPage";
+import ContactsPage from "@/pages/ContactsPage";
+import ProfilePage from "@/pages/ProfilePage";
+import InteractionsPage from "@/pages/InteractionsPage";
+import TokenHubPage from "@/pages/TokenHubPage";
+import BankPage from "@/pages/BankPage";
+import CabinetsPage from "@/pages/CabinetsPage";
+import DocsPage from "@/pages/DocsPage";
+import AdminPanelPage from "@/pages/AdminPanelPage";
 
 function Router() {
   return (
@@ -24,21 +33,21 @@ function Router() {
       <Route path="/" component={Dashboard} />
       <Route path="/account" component={AccountPage} />
       <Route path="/wallet" component={WalletPage} />
-      <Route path="/messages" component={NotFound} />
-      <Route path="/contacts" component={NotFound} />
+      <Route path="/messages" component={MessagesPage} />
+      <Route path="/contacts" component={ContactsPage} />
       <Route path="/groups" component={GroupsPage} />
-      <Route path="/profile" component={NotFound} />
+      <Route path="/profile" component={ProfilePage} />
       <Route path="/preview" component={PreviewPage} />
       <Route path="/dao" component={DAOPage} />
-      <Route path="/interactions" component={NotFound} />
-      <Route path="/token-hub" component={NotFound} />
+      <Route path="/interactions" component={InteractionsPage} />
+      <Route path="/token-hub" component={TokenHubPage} />
       <Route path="/globo" component={GloboPage} />
-      <Route path="/bank" component={NotFound} />
-      <Route path="/cabinets" component={NotFound} />
+      <Route path="/bank" component={BankPage} />
+      <Route path="/cabinets" component={CabinetsPage} />
       <Route path="/settings" component={SettingsPageWithFooter} />
       <Route path="/support" component={SupportPageWithFooter} />
-      <Route path="/docs" component={NotFound} />
-      <Route path="/admin" component={NotFound} />
+      <Route path="/docs" component={DocsPage} />
+      <Route path="/admin" component={AdminPanelPage} />
       <Route component={NotFound} />
     </Switch>
   );
