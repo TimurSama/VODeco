@@ -628,6 +628,7 @@ export default function MobileContactsPage() {
       {/* Фиксированная шапка */}
       <MobileHeader title="Контакты" />
       
+      {/* Поиск */}
       <div className="p-2 border-b border-primary/10">
         <div className="relative">
           <Search className="h-4 w-4 text-foreground/60 absolute left-2 top-1/2 transform -translate-y-1/2" />
@@ -641,307 +642,175 @@ export default function MobileContactsPage() {
         </div>
       </div>
       
-      <div className="p-2">
-        <Input 
-          id="search-input"
-          placeholder="Поиск по имени, организации, тегам..." 
-          className="bg-card/50"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+      {/* Категории и фильтры */}
+      <div className="sticky top-14 z-10 bg-background border-b border-primary/10">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full grid grid-cols-4">
+            <TabsTrigger value="all" className="text-xs">
+              Все
+            </TabsTrigger>
+            <TabsTrigger value="friends" className="text-xs">
+              Друзья
+            </TabsTrigger>
+            <TabsTrigger value="business" className="text-xs">
+              Деловые
+            </TabsTrigger>
+            <TabsTrigger value="groups" className="text-xs">
+              Группы
+            </TabsTrigger>
+          </TabsList>
+          
+          <div className="flex items-center justify-between px-3 pt-2">
+            <div className="text-xs text-foreground/60">
+              {filteredContacts.length} контактов
+            </div>
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center text-xs p-1 h-7"
+              onClick={() => document.getElementById('role-filter')?.click()}
+            >
+              <Filter className="h-3 w-3 mr-1" />
+              Фильтр
+            </Button>
+          </div>
+        </Tabs>
       </div>
       
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full grid grid-cols-4">
-          <TabsTrigger value="all" className="text-xs">
-            Все
-          </TabsTrigger>
-          <TabsTrigger value="friends" className="text-xs">
-            Друзья
-          </TabsTrigger>
-          <TabsTrigger value="business" className="text-xs">
-            Деловые
-          </TabsTrigger>
-          <TabsTrigger value="groups" className="text-xs">
-            Группы
-          </TabsTrigger>
-        </TabsList>
+      {/* Фильтр по роли */}
+      <div className="sticky top-[7.5rem] z-[9] bg-background border-b border-primary/10 px-2 mb-1">
+        <select 
+          id="role-filter"
+          className="hidden"
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+        >
+          <option value="all">Все роли</option>
+          <option value="scientist">Ученые</option>
+          <option value="investor">Инвесторы</option>
+          <option value="operator">Операторы</option>
+          <option value="government">Гос. служащие</option>
+          <option value="community">Активисты</option>
+          <option value="expert">Эксперты</option>
+        </select>
         
-        <div className="flex items-center justify-between px-3 pt-2">
-          <div className="text-xs text-foreground/60">
-            {filteredContacts.length} контактов
-          </div>
-          
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="flex items-center text-xs p-1 h-7"
-            onClick={() => document.getElementById('role-filter')?.click()}
+        <div className="flex gap-1 overflow-x-auto py-1 no-scrollbar">
+          <Badge 
+            variant={roleFilter === 'all' ? 'default' : 'outline'}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => setRoleFilter('all')}
           >
-            <Filter className="h-3 w-3 mr-1" />
-            Фильтр
-          </Button>
-        </div>
-        
-        {/* Фильтр по роли */}
-        <div className="px-2 mb-1">
-          <select 
-            id="role-filter"
-            className="hidden"
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
+            Все роли
+          </Badge>
+          <Badge 
+            variant={roleFilter === 'scientist' ? 'default' : 'outline'}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => setRoleFilter('scientist')}
           >
-            <option value="all">Все роли</option>
-            <option value="scientist">Ученые</option>
-            <option value="investor">Инвесторы</option>
-            <option value="operator">Операторы</option>
-            <option value="government">Гос. служащие</option>
-            <option value="community">Активисты</option>
-            <option value="expert">Эксперты</option>
-          </select>
-          
-          <div className="flex gap-1 overflow-x-auto py-1 no-scrollbar">
-            <Badge 
-              variant={roleFilter === 'all' ? 'default' : 'outline'}
-              className="cursor-pointer whitespace-nowrap"
-              onClick={() => setRoleFilter('all')}
-            >
-              Все роли
-            </Badge>
-            <Badge 
-              variant={roleFilter === 'scientist' ? 'default' : 'outline'}
-              className="cursor-pointer whitespace-nowrap"
-              onClick={() => setRoleFilter('scientist')}
-            >
-              Ученые
-            </Badge>
-            <Badge 
-              variant={roleFilter === 'investor' ? 'default' : 'outline'}
-              className="cursor-pointer whitespace-nowrap"
-              onClick={() => setRoleFilter('investor')}
-            >
-              Инвесторы
-            </Badge>
-            <Badge 
-              variant={roleFilter === 'operator' ? 'default' : 'outline'}
-              className="cursor-pointer whitespace-nowrap"
-              onClick={() => setRoleFilter('operator')}
-            >
-              Операторы
-            </Badge>
-            <Badge 
-              variant={roleFilter === 'government' ? 'default' : 'outline'}
-              className="cursor-pointer whitespace-nowrap"
-              onClick={() => setRoleFilter('government')}
-            >
-              Гос. служащие
-            </Badge>
-            <Badge 
-              variant={roleFilter === 'expert' ? 'default' : 'outline'}
-              className="cursor-pointer whitespace-nowrap"
-              onClick={() => setRoleFilter('expert')}
-            >
-              Эксперты
-            </Badge>
-          </div>
+            Ученые
+          </Badge>
+          <Badge 
+            variant={roleFilter === 'investor' ? 'default' : 'outline'}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => setRoleFilter('investor')}
+          >
+            Инвесторы
+          </Badge>
+          <Badge 
+            variant={roleFilter === 'operator' ? 'default' : 'outline'}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => setRoleFilter('operator')}
+          >
+            Операторы
+          </Badge>
+          <Badge 
+            variant={roleFilter === 'government' ? 'default' : 'outline'}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => setRoleFilter('government')}
+          >
+            Гос. служащие
+          </Badge>
+          <Badge 
+            variant={roleFilter === 'expert' ? 'default' : 'outline'}
+            className="cursor-pointer whitespace-nowrap"
+            onClick={() => setRoleFilter('expert')}
+          >
+            Эксперты
+          </Badge>
         </div>
-        
-        <TabsContent value="all" className="mt-0 p-0">
-          <div className="mobile-list pb-20">
-            {filteredContacts.length > 0 ? (
-              filteredContacts.map(contact => (
-                <div 
-                  key={contact.id} 
-                  className="mobile-list-item"
-                  onClick={() => openContact(contact)}
-                >
-                  <div className="contact-card w-full">
-                    <div className="relative">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-secondary/20 text-secondary">
-                          {contact.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border border-background ${getStatusColor(contact.status)}`}></div>
-                      
-                      {contact.isVerified && (
-                        <div className="absolute top-0 right-0 bg-blue-500 rounded-full p-0.5 border border-background">
-                          <Shield className="h-2 w-2 text-white" />
-                        </div>
-                      )}
+      </div>
+      
+      {/* Список контактов */}
+      <div className="mobile-list pb-20">
+        {filteredContacts.length > 0 ? (
+          filteredContacts.map(contact => (
+            <div 
+              key={contact.id} 
+              className="mobile-list-item"
+              onClick={() => openContact(contact)}
+            >
+              <div className="contact-card w-full">
+                <div className="relative">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-secondary/20 text-secondary">
+                      {contact.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  
+                  <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border border-background ${getStatusColor(contact.status)}`}></div>
+                  
+                  {contact.isVerified && (
+                    <div className="absolute top-0 right-0 bg-blue-500 rounded-full p-0.5 border border-background">
+                      <Shield className="h-2 w-2 text-white" />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex-1 ml-3 min-w-0">
+                  <div className="flex justify-between items-center">
+                    <div className="font-medium text-sm truncate flex items-center">
+                      {contact.name}
+                      {contact.isFavorite && <Star className="h-3 w-3 ml-1 fill-yellow-500 text-yellow-500" />}
                     </div>
                     
-                    <div className="flex-1 ml-3 min-w-0">
-                      <div className="flex justify-between items-center">
-                        <div className="font-medium text-sm truncate flex items-center">
-                          {contact.name}
-                          {contact.isFavorite && <Star className="h-3 w-3 ml-1 fill-yellow-500 text-yellow-500" />}
-                        </div>
-                        
-                        <div className={`connection-badge ${getConnectionDetails(contact.connectionLevel).class}`}>
-                          {contact.connectionLevel}
-                        </div>
-                      </div>
-                      
-                      <div className="text-xs text-foreground/60 truncate">
-                        {getRoleText(contact.role)}
-                        {contact.organization && ` • ${contact.organization}`}
-                      </div>
-                      
-                      {contact.daoMetrics && (
-                        <div className="flex items-center mt-1">
-                          <div className="progress-bar flex-1 mr-1">
-                            <div 
-                              className={`progress-fill ${getTrustClass(contact.daoMetrics.trustScore)}`}
-                              style={{ width: `${contact.daoMetrics.trustScore}%` }}
-                            ></div>
-                          </div>
-                          
-                          <span className="text-[10px] text-foreground/60">
-                            {contact.daoMetrics.trustScore}
-                          </span>
-                        </div>
-                      )}
+                    <div className={`connection-badge ${getConnectionDetails(contact.connectionLevel).class}`}>
+                      {contact.connectionLevel}
                     </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-foreground/60">
-                <p>Контакты не найдены</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="friends" className="mt-0 p-0">
-          <div className="mobile-list pb-20">
-            {filteredContacts.length > 0 ? (
-              filteredContacts.map(contact => (
-                <div 
-                  key={contact.id} 
-                  className="mobile-list-item"
-                  onClick={() => openContact(contact)}
-                >
-                  {/* То же самое содержимое, что и выше */}
-                  <div className="contact-card w-full">
-                    <div className="relative">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-secondary/20 text-secondary">
-                          {contact.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border border-background ${getStatusColor(contact.status)}`}></div>
-                    </div>
-                    
-                    <div className="flex-1 ml-3 min-w-0">
-                      <div className="flex justify-between items-center">
-                        <div className="font-medium text-sm truncate">
-                          {contact.name}
-                        </div>
-                      </div>
-                      
-                      <div className="text-xs text-foreground/60 truncate">
-                        {getRoleText(contact.role)}
-                        {contact.organization && ` • ${contact.organization}`}
-                      </div>
-                    </div>
+                  
+                  <div className="text-xs text-foreground/60 truncate">
+                    {getRoleText(contact.role)}
+                    {contact.organization && ` • ${contact.organization}`}
                   </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-foreground/60">
-                <p>Друзья не найдены</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="business" className="mt-0 p-0">
-          {/* Аналогично вкладке "friends" */}
-          <div className="mobile-list pb-20">
-            {filteredContacts.length > 0 ? (
-              filteredContacts.map(contact => (
-                <div 
-                  key={contact.id} 
-                  className="mobile-list-item"
-                  onClick={() => openContact(contact)}
-                >
-                  <div className="contact-card w-full">
-                    <div className="relative">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-secondary/20 text-secondary">
-                          {contact.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      
-                      <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border border-background ${getStatusColor(contact.status)}`}></div>
-                    </div>
-                    
-                    <div className="flex-1 ml-3 min-w-0">
-                      <div className="font-medium text-sm truncate">
-                        {contact.name}
+                  
+                  {contact.daoMetrics && (
+                    <div className="flex items-center mt-1">
+                      <div className="progress-bar flex-1 mr-1">
+                        <div 
+                          className={`progress-fill ${getTrustClass(contact.daoMetrics.trustScore)}`}
+                          style={{ width: `${contact.daoMetrics.trustScore}%` }}
+                        ></div>
                       </div>
                       
-                      <div className="text-xs text-foreground/60 truncate">
-                        {contact.organization}
-                      </div>
+                      <span className="text-[10px] text-foreground/60">
+                        {contact.daoMetrics.trustScore}
+                      </span>
                     </div>
-                  </div>
+                  )}
                 </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-foreground/60">
-                <p>Деловые контакты не найдены</p>
               </div>
-            )}
+            </div>
+          ))
+        ) : (
+          <div className="p-4 text-center text-foreground/60">
+            <p>Контакты не найдены</p>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="groups" className="mt-0 p-0">
-          {/* Аналогично вкладке "friends" */}
-          <div className="mobile-list pb-20">
-            {filteredContacts.length > 0 ? (
-              filteredContacts.map(contact => (
-                <div 
-                  key={contact.id} 
-                  className="mobile-list-item"
-                  onClick={() => openContact(contact)}
-                >
-                  <div className="contact-card w-full">
-                    <div className="relative">
-                      <Avatar className="h-12 w-12">
-                        <AvatarFallback className="bg-secondary/20 text-secondary">
-                          {contact.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    
-                    <div className="flex-1 ml-3 min-w-0">
-                      <div className="font-medium text-sm truncate">
-                        {contact.name}
-                      </div>
-                      
-                      <div className="text-xs text-foreground/60 truncate">
-                        {contact.organization}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-center text-foreground/60">
-                <p>Контакты из групп не найдены</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
       
       {/* Плавающая кнопка добавления контакта */}
-      <div className="fixed bottom-5 right-5">
+      <div className="fixed bottom-5 right-5 z-20">
         <Button className="h-14 w-14 rounded-full shadow-lg">
           <UserPlus className="h-6 w-6" />
         </Button>
