@@ -30,25 +30,63 @@ import AdminPanelPage from "@/pages/AdminPanelPage";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/account" component={AccountPage} />
-      <Route path="/wallet" component={WalletPage} />
-      <Route path="/messages" component={MessagesPage} />
-      <Route path="/contacts" component={ContactsPage} />
-      <Route path="/groups" component={GroupsPage} />
-      <Route path="/profile" component={ProfilePage} />
-      <Route path="/preview" component={PreviewPage} />
-      <Route path="/dao" component={DAOPage} />
-      <Route path="/interactions" component={InteractionsPage} />
-      <Route path="/token-hub" component={TokenHubPage} />
-      <Route path="/globo" component={GloboPage} />
-      <Route path="/bank" component={BankPage} />
-      <Route path="/cabinets" component={CabinetsPage} />
-      <Route path="/settings" component={SettingsPageWithFooter} />
-      <Route path="/support" component={SupportPageWithFooter} />
-      <Route path="/docs" component={DocsPage} />
-      <Route path="/admin" component={AdminPanelPage} />
-      <Route component={NotFound} />
+      <Route path="/messages">
+        <MessagesPage />
+      </Route>
+      <Route path="/contacts">
+        <ContactsPage />
+      </Route>
+      <Route path="/account">
+        <AccountPage />
+      </Route>
+      <Route path="/wallet">
+        <WalletPage />
+      </Route>
+      <Route path="/groups">
+        <GroupsPage />
+      </Route>
+      <Route path="/profile">
+        <ProfilePage />
+      </Route>
+      <Route path="/preview">
+        <PreviewPage />
+      </Route>
+      <Route path="/dao">
+        <DAOPage />
+      </Route>
+      <Route path="/interactions">
+        <InteractionsPage />
+      </Route>
+      <Route path="/token-hub">
+        <TokenHubPage />
+      </Route>
+      <Route path="/globo">
+        <GloboPage />
+      </Route>
+      <Route path="/bank">
+        <BankPage />
+      </Route>
+      <Route path="/cabinets">
+        <CabinetsPage />
+      </Route>
+      <Route path="/settings">
+        <SettingsPageWithFooter />
+      </Route>
+      <Route path="/support">
+        <SupportPageWithFooter />
+      </Route>
+      <Route path="/docs">
+        <DocsPage />
+      </Route>
+      <Route path="/admin">
+        <AdminPanelPage />
+      </Route>
+      <Route path="/">
+        <Dashboard />
+      </Route>
+      <Route>
+        <NotFound />
+      </Route>
     </Switch>
   );
 }
