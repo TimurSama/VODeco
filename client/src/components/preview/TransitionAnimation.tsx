@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Droplet, Settings, Globe, Hexagon, Activity, Waves } from 'lucide-react';
 
 interface TransitionAnimationProps {
   onComplete: () => void;
@@ -7,7 +8,7 @@ interface TransitionAnimationProps {
 
 export default function TransitionAnimation({ onComplete }: TransitionAnimationProps) {
   const [currentPhase, setCurrentPhase] = useState(0);
-  // Новые фазы анимации: капля воды → шестеренка → планета → гексагон
+  // Фазы анимации: капля воды → шестеренка → планета → гексагон
   const phases = ['droplet', 'gear', 'earth', 'hexagon'];
   
   // Последовательная смена фаз
@@ -15,25 +16,26 @@ export default function TransitionAnimation({ onComplete }: TransitionAnimationP
     if (currentPhase < phases.length) {
       const timer = setTimeout(() => {
         setCurrentPhase(prev => prev + 1);
-      }, 800); // Увеличиваем время задержки для лучшего восприятия
+      }, 1000); // Увеличиваем время задержки для лучшего восприятия
       
       return () => clearTimeout(timer);
     } else {
       // Завершаем анимацию и переходим к основному контенту
       setTimeout(() => {
         onComplete();
-      }, 500);
+      }, 1000);
     }
   }, [currentPhase, onComplete]);
   
   // Анимация для основных элементов
   const elementVariants = {
-    initial: { scale: 0, opacity: 0 },
+    initial: { scale: 0, opacity: 0, rotate: -15 },
     animate: { 
       scale: 1, 
       opacity: 1,
+      rotate: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.7,
         ease: "easeOut"
       }
     },
@@ -47,149 +49,332 @@ export default function TransitionAnimation({ onComplete }: TransitionAnimationP
     }
   };
   
+  // Анимация для пульсации
+  const pulseVariants = {
+    initial: { scale: 1 },
+    animate: { 
+      scale: [1, 1.1, 1],
+      transition: {
+        duration: 2,
+        ease: "easeInOut",
+        repeat: Infinity,
+        repeatType: "reverse" as const
+      }
+    }
+  };
+  
   // Анимация для вращения
   const rotateVariants = {
     initial: { rotate: 0 },
     animate: { 
       rotate: 360,
       transition: {
-        duration: 20,
+        duration: 8,
         ease: "linear",
         repeat: Infinity
       }
     }
   };
   
-  // Анимация для гексагонов
-  const hexagonVariants = (delay: number, scale: number) => ({
-    initial: { scale: 0, opacity: 0 },
+  // Анимация для пунктирных окружностей
+  const circleVariants = (delay: number) => ({
+    initial: { scale: 0.5, opacity: 0 },
     animate: { 
-      scale,
-      opacity: [0, 0.7, 0.5],
+      scale: [0.5, 1.2, 2],
+      opacity: [0, 0.6, 0],
       transition: {
         delay,
-        duration: 1.5,
-        ease: "easeOut"
+        duration: 2,
+        ease: "easeOut",
+        repeat: Infinity
       }
     }
   });
   
-  // Функция для получения SVG изображения в зависимости от текущей фазы
-  const getPhaseSvg = () => {
+  // Анимация для гексагонов (сеть)
+  const hexGridVariants = {
+    initial: { scale: 0, opacity: 0 },
+    animate: { 
+      scale: 20,
+      opacity: [0, 0.2, 0.15],
+      transition: {
+        duration: 2.5,
+        ease: "easeOut"
+      }
+    }
+  };
+  
+  // Анимация для отдельных гексагонов
+  const hexagonVariants = (delay: number, distance: number, angle: number) => {
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+    
+    return {
+      initial: { x: 0, y: 0, scale: 0.2, opacity: 0, rotate: 0 },
+      animate: { 
+        x, 
+        y, 
+        scale: 1, 
+        opacity: [0, 1, 0.7],
+        rotate: angle * (180 / Math.PI),
+        transition: {
+          delay,
+          duration: 1.2,
+          ease: "easeOut"
+        }
+      }
+    };
+  };
+  
+  // Генерация нескольких гексагонов, расходящихся в разных направлениях
+  const generateHexagonDirections = (count: number) => {
+    const hexagons = [];
+    for (let i = 0; i < count; i++) {
+      const angle = (i * 2 * Math.PI) / count;
+      hexagons.push({
+        angle,
+        delay: 0.1 + (i * 0.05),
+        distance: 50 + (i % 3) * 30
+      });
+    }
+    return hexagons;
+  };
+  
+  const hexagonDirections = generateHexagonDirections(12);
+  
+  // Функция для получения контента в зависимости от текущей фазы
+  const getPhaseContent = () => {
     switch (phases[currentPhase]) {
       case 'droplet':
         return (
-          <svg width="60" height="80" viewBox="0 0 60 80" fill="none">
-            <path 
-              d="M30 0 C30 0, 0 40, 0 60 C0 80, 60 80, 60 60 C60 40, 30 0, 30 0 Z" 
-              fill="none" 
-              stroke="#14b8a6" 
-              strokeWidth="2"
-            />
-          </svg>
+          <div className="relative">
+            {/* Пульсирующая капля (используем готовую иконку) */}
+            <motion.div
+              variants={pulseVariants}
+              initial="initial"
+              animate="animate"
+              className="text-primary"
+            >
+              <Droplet size={80} strokeWidth={1.5} />
+            </motion.div>
+            
+            {/* Пунктирные круги вокруг капли */}
+            {[0.1, 0.5, 0.9].map((delay, index) => (
+              <motion.div
+                key={index}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-dashed border-primary/50 rounded-full z-0"
+                variants={circleVariants(delay)}
+                initial="initial"
+                animate="animate"
+                style={{ width: '80px', height: '80px' }}
+              />
+            ))}
+            
+            {/* Волновые линии */}
+            <motion.div
+              className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 text-primary/70"
+              animate={{ y: [0, -5, 0] }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                repeatType: "reverse" 
+              }}
+            >
+              <Waves size={50} />
+            </motion.div>
+          </div>
         );
       case 'gear':
         return (
           <div className="relative">
-            {/* Капля в центре */}
-            <svg width="30" height="40" viewBox="0 0 60 80" fill="none" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <path 
-                d="M30 0 C30 0, 0 40, 0 60 C0 80, 60 80, 60 60 C60 40, 30 0, 30 0 Z" 
-                fill="#14b8a6" 
-                opacity="0.7"
-              />
-            </svg>
+            {/* Центральная капля */}
+            <motion.div
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary/90"
+              animate={{ scale: [1, 0.9, 1] }}
+              transition={{ 
+                duration: 1.5, 
+                repeat: Infinity, 
+                repeatType: "reverse" 
+              }}
+            >
+              <Droplet size={40} />
+            </motion.div>
             
-            {/* Шестеренка вокруг */}
-            <motion.svg 
-              width="70" height="70" 
-              viewBox="0 0 70 70" 
-              fill="none"
+            {/* Вращающаяся шестеренка (используем готовую иконку) */}
+            <motion.div
               variants={rotateVariants}
               initial="initial"
               animate="animate"
+              className="text-primary"
             >
-              <path 
-                d="M35 10 L38 0 L42 10 L52 3 L48 14 L62 13 L50 20 L65 30 L50 40 L62 47 L48 46 L52 57 L42 50 L38 60 L35 50 L28 57 L22 46 L8 47 L20 40 L5 30 L20 20 L8 13 L22 14 L18 3 L28 3 L35 10 Z"
-                stroke="#14b8a6" 
-                strokeWidth="1.5"
-                fill="none"
-              />
-            </motion.svg>
+              <Settings size={100} strokeWidth={1} />
+            </motion.div>
+            
+            {/* Маленькие шестеренки по периметру */}
+            {[0, 60, 120, 180, 240, 300].map((angle, index) => (
+              <motion.div
+                key={index}
+                className="absolute text-primary/70"
+                style={{ 
+                  transformOrigin: 'center',
+                  transform: `rotate(${angle}deg) translate(70px) rotate(-${angle}deg)`,
+                }}
+                animate={{ rotate: angle + 360 }}
+                transition={{ 
+                  duration: 10, 
+                  repeat: Infinity, 
+                  ease: 'linear' 
+                }}
+              >
+                <Settings size={20} />
+              </motion.div>
+            ))}
+            
+            {/* Пульсирующая активность */}
+            <motion.div
+              className="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 text-primary/80"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                repeatType: "reverse" 
+              }}
+            >
+              <Activity size={30} />
+            </motion.div>
           </div>
         );
       case 'earth':
         return (
           <div className="relative">
-            {/* Шестеренка вокруг */}
-            <motion.svg 
-              width="80" height="80" 
-              viewBox="0 0 80 80" 
-              fill="none"
-              variants={rotateVariants}
-              initial="initial"
-              animate="animate"
-              style={{ animationDuration: '30s' }}
+            {/* Планета (используем готовую иконку) */}
+            <motion.div
+              className="text-primary"
+              animate={{ 
+                rotate: 360,
+                transition: { 
+                  duration: 20, 
+                  ease: "linear", 
+                  repeat: Infinity 
+                }
+              }}
             >
-              <path 
-                d="M40 10 L44 0 L48 10 L60 3 L55 15 L70 15 L60 25 L75 40 L60 55 L70 65 L55 65 L60 77 L48 70 L44 80 L40 70 L32 77 L25 65 L10 65 L20 55 L5 40 L20 25 L10 15 L25 15 L20 3 L32 3 L40 10 Z"
-                stroke="#14b8a6" 
-                strokeWidth="1.2"
-                fill="none"
-                opacity="0.5"
-              />
-            </motion.svg>
+              <Globe size={90} strokeWidth={1.5} />
+            </motion.div>
             
             {/* Капля внутри */}
-            <svg width="20" height="25" viewBox="0 0 60 80" fill="none" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <path 
-                d="M30 0 C30 0, 0 40, 0 60 C0 80, 60 80, 60 60 C60 40, 30 0, 30 0 Z" 
-                fill="#14b8a6" 
-                opacity="0.8"
-              />
-            </svg>
+            <motion.div
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary/90"
+              animate={{ scale: [1, 0.9, 1] }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity, 
+                repeatType: "reverse" 
+              }}
+            >
+              <Droplet size={30} />
+            </motion.div>
             
-            {/* Планета Земля вокруг капли */}
-            <svg width="50" height="50" viewBox="0 0 60 60" fill="none" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              <circle cx="30" cy="30" r="28" stroke="#14b8a6" strokeWidth="1.5" fill="none" />
-              <ellipse cx="30" cy="30" rx="15" ry="28" stroke="#14b8a6" strokeWidth="1" fill="none" />
-              <ellipse cx="30" cy="30" rx="28" ry="15" stroke="#14b8a6" strokeWidth="1" fill="none" />
-            </svg>
+            {/* Орбиты вокруг */}
+            {[0, 45, 90].map((angle, index) => (
+              <motion.div
+                key={index}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                style={{ 
+                  width: '150px', 
+                  height: '100px', 
+                  border: '1px dotted rgba(20, 184, 166, 0.5)',
+                  borderRadius: '100%', 
+                  transform: `rotateX(70deg) rotateZ(${angle}deg)`
+                }}
+                animate={{ 
+                  rotateZ: angle + 360,
+                  transition: { 
+                    duration: 15 + index * 5, 
+                    ease: "linear", 
+                    repeat: Infinity 
+                  }
+                }}
+              />
+            ))}
+            
+            {/* Звезды вокруг */}
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <motion.div
+                key={i}
+                className="absolute bg-primary rounded-full"
+                style={{ 
+                  width: 2 + Math.random() * 3,
+                  height: 2 + Math.random() * 3,
+                  left: `${10 + Math.random() * 80}%`,
+                  top: `${10 + Math.random() * 80}%`,
+                }}
+                animate={{ 
+                  opacity: [0.3, 1, 0.3],
+                  scale: [1, 1.3, 1],
+                }}
+                transition={{ 
+                  duration: 1 + Math.random() * 2,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              />
+            ))}
           </div>
         );
       case 'hexagon':
         return (
           <div className="relative">
-            {/* Центральный гексагон */}
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <path 
-                d="M30 0 L60 15 L60 45 L30 60 L0 45 L0 15 Z" 
-                stroke="#14b8a6" 
-                strokeWidth="2"
-                fill="#14b8a6"
-                fillOpacity="0.2"
-              />
-            </svg>
+            {/* Центральный гексагон (используем готовую иконку) */}
+            <motion.div
+              className="text-primary relative z-30"
+              animate={{ 
+                scale: [1, 1.1, 1], 
+                rotate: [0, 10, 0, -10, 0],
+              }}
+              transition={{ 
+                duration: 3, 
+                times: [0, 0.25, 0.5, 0.75, 1],
+                ease: "easeInOut" 
+              }}
+            >
+              <Hexagon size={70} fill="rgba(20, 184, 166, 0.2)" strokeWidth={2} />
+            </motion.div>
             
-            {/* Размножающиеся гексагоны */}
-            {[0.1, 0.2, 0.3, 0.4, 0.5].map((delay, index) => (
+            {/* Гексагоны, разлетающиеся в разные стороны */}
+            {hexagonDirections.map((hex, index) => (
               <motion.div
                 key={index}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                variants={hexagonVariants(delay, 1 + (index * 0.5))}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary/80 z-20"
+                variants={hexagonVariants(hex.delay, hex.distance, hex.angle)}
                 initial="initial"
                 animate="animate"
               >
-                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                  <path 
-                    d="M30 0 L60 15 L60 45 L30 60 L0 45 L0 15 Z" 
-                    stroke="#14b8a6" 
-                    strokeWidth="1"
-                    fill="none"
-                  />
-                </svg>
+                <Hexagon size={30 + (index % 4) * 10} />
               </motion.div>
             ))}
+            
+            {/* Расширяющаяся сетка гексагонов */}
+            <motion.div 
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary/10 z-10"
+              variants={hexGridVariants}
+              initial="initial"
+              animate="animate"
+            >
+              <svg width="60" height="60" viewBox="0 0 60 60">
+                <defs>
+                  <pattern id="hexGrid" width="56" height="100" patternUnits="userSpaceOnUse" patternTransform="scale(0.5)">
+                    <path 
+                      d="M28 66L0 50L0 16L28 0L56 16L56 50L28 66Z M28 33L0 16M28 33L56 16M28 33L28 0M28 33L28 66" 
+                      stroke="currentColor" 
+                      strokeWidth="1"
+                      fill="none"
+                    />
+                  </pattern>
+                </defs>
+                <rect width="60" height="60" fill="url(#hexGrid)" />
+              </svg>
+            </motion.div>
           </div>
         );
       default:
@@ -199,19 +384,24 @@ export default function TransitionAnimation({ onComplete }: TransitionAnimationP
 
   return (
     <div className="h-full w-full bg-black flex items-center justify-center relative overflow-hidden">
-      {/* Центральный элемент в анимации */}
-      <motion.div
-        key={currentPhase}
-        className="relative z-20"
-        variants={elementVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        {getPhaseSvg()}
-      </motion.div>
+      {/* Фоновый градиент */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background opacity-30"></div>
       
-      {/* Волны, расходящиеся от капли на первой фазе */}
+      {/* Центральный элемент в анимации */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentPhase}
+          className="relative z-20"
+          variants={elementVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          {getPhaseContent()}
+        </motion.div>
+      </AnimatePresence>
+      
+      {/* Эффект волны на стадии капли */}
       {currentPhase === 0 && (
         <>
           {[0, 0.2, 0.4, 0.6, 0.8, 1].map((delay, index) => (
@@ -220,13 +410,15 @@ export default function TransitionAnimation({ onComplete }: TransitionAnimationP
               className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-primary/40 rounded-full z-10"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ 
-                scale: [0, 1, 1.5],
+                scale: [0, 1, 2],
                 opacity: [0, 0.8, 0]
               }}
               transition={{
                 delay,
-                duration: 1.5,
-                ease: "easeOut"
+                duration: 2,
+                ease: "easeOut",
+                repeat: Infinity,
+                repeatDelay: 3
               }}
               style={{ width: '10px', height: '10px' }}
             />
@@ -234,12 +426,26 @@ export default function TransitionAnimation({ onComplete }: TransitionAnimationP
         </>
       )}
       
+      {/* Эффект световых лучей */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-radial from-primary/5 to-transparent opacity-0"
+        animate={{ 
+          opacity: [0, 0.2, 0],
+          scale: [0.8, 1.2, 0.8]
+        }}
+        transition={{ 
+          duration: 4, 
+          repeat: Infinity, 
+          repeatType: "reverse" 
+        }}
+      />
+      
       {/* Заполнение фона гексагонами в последней фазе */}
       {currentPhase === phases.length - 1 && (
         <motion.div
           className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-0 z-0"
           animate={{ opacity: 0.15 }}
-          transition={{ delay: 0.3, duration: 1 }}
+          transition={{ delay: 0.5, duration: 1.5 }}
         />
       )}
       
@@ -248,7 +454,7 @@ export default function TransitionAnimation({ onComplete }: TransitionAnimationP
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background opacity-0 z-0"
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 1 }}
+          transition={{ delay: 0.5, duration: 1.5 }}
         />
       )}
     </div>

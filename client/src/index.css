@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Радиальный градиент для анимации */
+.bg-gradient-radial {
+  background-image: radial-gradient(var(--tw-gradient-stops));
+}
+
 @layer utilities {
   /* Кастомный скроллбар для современных браузеров */
   .custom-scrollbar::-webkit-scrollbar {
