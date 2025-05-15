@@ -675,7 +675,7 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Критические</span>
-                    <Badge>
+                    <Badge variant="destructive">
                       {resources.filter(r => r.status === ResourceStatus.CRITICAL).length}
                     </Badge>
                   </div>
@@ -696,6 +696,24 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
                     <Badge variant="secondary">
                       {resources.filter(r => r.status === ResourceStatus.EXCELLENT).length}
                     </Badge>
+                  </div>
+                </div>
+
+                <div className="border-t border-border pt-4 mt-4">
+                  <h4 className="font-medium mb-2 text-sm">Категории ресурсов</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Объекты инвестирования</span>
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-500 border-blue-500/20">
+                        {resources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Объекты пути</span>
+                      <Badge variant="outline" className="bg-slate-300/10 text-slate-300 border-slate-300/20">
+                        {resources.filter(r => r.category === ResourceCategory.PATH).length}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               </div>
