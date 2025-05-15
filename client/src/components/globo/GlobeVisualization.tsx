@@ -142,10 +142,7 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
       // Customize atmosphere to give it a blue glow
       .atmosphereColor('#14b8a6') // Turquoise glow
-      .atmosphereAltitude(0.15)
-      // Set the size and position
-      // @ts-ignore
-      .pointOfView({ altitude: 2.5 });
+      .atmosphereAltitude(0.15);
       
     // Scale it properly
     Globe.scale.set(100, 100, 100);
