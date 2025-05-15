@@ -44,6 +44,7 @@ export const waterResources = pgTable("water_resources", {
   participantsCount: integer("participants_count").default(0),
   projectType: text("project_type"),    // pump station, treatment plant, etc.
   investmentStatus: text("investment_status").default("open"), // open, closed, fully-funded
+  category: text("category"),   // тип маркера: investment или path
 });
 
 export const insertWaterResourceSchema = createInsertSchema(waterResources).pick({

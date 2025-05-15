@@ -75,6 +75,7 @@ export interface WaterResource {
   participantsCount?: number;
   projectType?: string; // pump station, treatment plant, etc.
   investmentStatus?: string; // 'open', 'closed', 'fully-funded'
+  category?: ResourceCategory; // Категория ресурса для определения типа маркера
 }
 
 export enum ResourceStatus {
@@ -82,6 +83,11 @@ export enum ResourceStatus {
   NEEDS_ATTENTION = 'Needs Attention',
   STABLE = 'Stable',
   EXCELLENT = 'Excellent'
+}
+
+export enum ResourceCategory {
+  INVESTMENT = 'investment',  // Объекты для инвестирования (синие маркеры)
+  PATH = 'path'               // Объекты пути (белые маркеры)
 }
 
 // Project Types
