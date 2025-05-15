@@ -102,13 +102,23 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
 
   // Инициализация сцены
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+      console.error("Container ref is null, cannot initialize globe");
+      return;
+    }
     
     try {
+      console.log("Starting 3D globe initialization...");
+      console.log("Container dimensions:", {
+        width: containerRef.current.clientWidth,
+        height: containerRef.current.clientHeight
+      });
+      
       // Создаем сцену
       const scene = new THREE.Scene();
       scene.background = new THREE.Color('#040B1B'); // Темный космос
       sceneRef.current = scene;
+      console.log("Scene created");
       
       // Создаем камеру
       const camera = new THREE.PerspectiveCamera(
@@ -119,6 +129,7 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       );
       camera.position.z = 300;
       cameraRef.current = camera;
+      console.log("Camera created");
       
       // Создаем рендерер
       const renderer = new THREE.WebGLRenderer({ 
@@ -127,25 +138,34 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       });
       renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
       renderer.setPixelRatio(window.devicePixelRatio);
+      console.log("Renderer created");
       
       // Очищаем контейнер если в нем уже что-то есть
       if (containerRef.current.firstChild) {
+        console.log("Clearing existing canvas from container");
         containerRef.current.removeChild(containerRef.current.firstChild);
       }
       
       containerRef.current.appendChild(renderer.domElement);
       rendererRef.current = renderer;
+      console.log("Canvas added to container");
       
-      // Создаем управление камерой
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-      controls.rotateSpeed = 0.5;
-      controls.minDistance = 120;
-      controls.maxDistance = 400;
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.5;
-      controlsRef.current = controls;
+      try {
+        // Создаем управление камерой
+        console.log("Creating OrbitControls...");
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.rotateSpeed = 0.5;
+        controls.minDistance = 120;
+        controls.maxDistance = 400;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+        controlsRef.current = controls;
+        console.log("OrbitControls created successfully", controls);
+      } catch (controlError) {
+        console.error("Failed to create OrbitControls:", controlError);
+      }
     
       // Добавляем освещение
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -157,15 +177,22 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
       
       // Создаем глобус
       try {
-        const Globe = new ThreeGlobe()
-          .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
-          .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
-          .atmosphereColor('#14b8a6')
-          .atmosphereAltitude(0.15);
+        console.log("Creating ThreeGlobe instance...");
+        const Globe = new ThreeGlobe();
         
+        console.log("Setting globe properties...");
+        Globe.globeImageUrl('https://unpkg.com/three-globe@2.28.0/example/img/earth-night.jpg');
+        Globe.bumpImageUrl('https://unpkg.com/three-globe@2.28.0/example/img/earth-topology.png');
+        Globe.atmosphereColor('#14b8a6');
+        Globe.atmosphereAltitude(0.15);
+        
+        console.log("Setting globe scale...");
         Globe.scale.set(100, 100, 100);
+        
+        console.log("Adding globe to scene...");
         scene.add(Globe);
         globeRef.current = Globe;
+        console.log("Globe added successfully");
       } catch (error) {
         console.error('Error initializing globe:', error);
       }
@@ -311,23 +338,23 @@ const GlobeVisualization: React.FC<GlobeVisualizationProps> = ({ resources, onRe
   
   // Изменение масштаба
   const handleZoomIn = () => {
-    if (!controlsRef.current || !cameraRef.current) return;
-    // Вместо dollyIn, напрямую изменяем позицию камеры
-    const direction = new THREE.Vector3();
-    direction.subVectors(cameraRef.current.position, controlsRef.current.target);
-    direction.multiplyScalar(0.2); // Коэффициент приближения
-    cameraRef.current.position.sub(direction);
-    controlsRef.current.update();
+    if (!cameraRef.current) return;
+    // Напрямую изменяем позицию камеры для приближения
+    const zoomFactor = 0.8;
+    cameraRef.current.position.multiplyScalar(zoomFactor);
+    if (controlsRef.current) {
+      controlsRef.current.update();
+    }
   };
   
   const handleZoomOut = () => {
-    if (!controlsRef.current || !cameraRef.current) return;
-    // Вместо dollyOut, напрямую изменяем позицию камеры
-    const direction = new THREE.Vector3();
-    direction.subVectors(cameraRef.current.position, controlsRef.current.target);
-    direction.multiplyScalar(0.2); // Коэффициент отдаления
-    cameraRef.current.position.add(direction);
-    controlsRef.current.update();
+    if (!cameraRef.current) return;
+    // Напрямую изменяем позицию камеры для отдаления
+    const zoomFactor = 1.2;
+    cameraRef.current.position.multiplyScalar(zoomFactor);
+    if (controlsRef.current) {
+      controlsRef.current.update();
+    }
   };
   
   const handleRotate = () => {
