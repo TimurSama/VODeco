@@ -213,7 +213,73 @@
   .wallet-btn:hover::after {
     left: 100%;
   }
-
+  
+  /* Мобильный интерфейс */
+  .mobile-full-height {
+    min-height: calc(100vh - 60px);
+    height: calc(100vh - 60px);
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+  
+  .mobile-list {
+    @apply w-full divide-y divide-primary/10;
+  }
+  
+  .mobile-list-item {
+    @apply py-3 px-3 w-full flex items-center;
+  }
+  
+  .mobile-list-item-active {
+    @apply bg-primary/10;
+  }
+  
+  .full-width {
+    width: 100vw;
+    max-width: 100vw;
+  }
+  
+  /* Индикаторы уровней и прогресса */
+  .connection-badge {
+    @apply text-xs font-medium rounded-full h-5 min-w-5 flex items-center justify-center;
+  }
+  
+  .connection-level-1 {
+    @apply bg-green-500 text-white;
+  }
+  
+  .connection-level-2 {
+    @apply bg-yellow-500 text-white;
+  }
+  
+  .connection-level-3 {
+    @apply bg-red-500 text-white;
+  }
+  
+  .trust-score {
+    @apply rounded-md py-1 px-2 text-xs text-white font-medium;
+  }
+  
+  .trust-high {
+    @apply bg-green-500/70;
+  }
+  
+  .trust-medium {
+    @apply bg-yellow-500/70;
+  }
+  
+  .trust-low {
+    @apply bg-red-500/70;
+  }
+  
+  .progress-indicator {
+    @apply w-full h-1 bg-foreground/10 rounded-full overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full;
+  }
+  
   @keyframes pulse-glow {
     0% { filter: brightness(1); }
     100% { filter: brightness(1.3); }
