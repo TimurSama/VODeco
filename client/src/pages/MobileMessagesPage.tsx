@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { 
-  MessageSquare, BellDot, Bot, User, Users, Search, 
+  MessageSquare, Bot, User, Users, Search, 
   ArrowLeft, Send, MoreVertical, Plus, Globe
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import MobileHeader from '@/components/layout/MobileHeader';
 import "../mobile.css";
 
 // Типы сообщений
@@ -272,6 +273,8 @@ const mockNotifications: Notification[] = [
   },
 ];
 
+
+
 export default function MobileMessagesPage() {
   // Состояния
   const [activeTab, setActiveTab] = useState('chats');
@@ -323,20 +326,22 @@ export default function MobileMessagesPage() {
     
     return (
       <div className="mobile-full-screen flex flex-col bg-background">
-        {/* Шапка чата */}
-        <div className="p-3 border-b border-primary/10 flex items-center">
-          <Button variant="ghost" size="icon" onClick={backToList}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          
-          <Avatar className="h-8 w-8 ml-1">
+        {/* Шапка */}
+        <MobileHeader 
+          title={chat?.name} 
+          showBackButton={true} 
+          onBack={backToList} 
+        />
+        
+        {/* Инфо о чате */}
+        <div className="px-3 py-2 border-b border-primary/10 flex items-center">
+          <Avatar className="h-8 w-8 mr-2">
             <AvatarFallback className="bg-secondary/20 text-secondary">
               {chat?.name.charAt(0) || 'U'}
             </AvatarFallback>
           </Avatar>
           
-          <div className="ml-2 flex-1">
-            <div className="font-medium text-sm">{chat?.name}</div>
+          <div className="flex-1">
             <div className="text-xs text-foreground/60">
               {chat?.type === 'personal' ? 'Личный чат' : 
                chat?.type === 'group' ? 'Групповой чат' : 
@@ -414,20 +419,26 @@ export default function MobileMessagesPage() {
   // Список чатов
   return (
     <div className="mobile-full-screen bg-background">
-      <div className="flex justify-between items-center p-3">
-        <h1 className="text-xl font-bold flex items-center">
-          <MessageSquare className="h-5 w-5 mr-2 text-primary" />
-          Сообщения
-        </h1>
-        
-        <div className="flex">
-          <Button variant="ghost" size="icon">
-            <Search className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <Plus className="h-5 w-5" />
-          </Button>
+      {/* Фиксированная шапка */}
+      <MobileHeader 
+        title="Сообщения" 
+        notificationCount={mockNotifications.filter(n => !n.read).length}
+      />
+      
+      <div className="flex justify-between items-center px-3 py-2">
+        <div className="flex-1">
+          <div className="relative">
+            <Search className="h-4 w-4 text-foreground/60 absolute left-2 top-1/2 transform -translate-y-1/2" />
+            <Input 
+              placeholder="Поиск чатов и сообщений..." 
+              className="bg-card/50 pl-8"
+            />
+          </div>
         </div>
+        
+        <Button variant="ghost" size="icon" className="ml-2">
+          <Plus className="h-5 w-5" />
+        </Button>
       </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

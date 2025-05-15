@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import MobileHeader from '@/components/layout/MobileHeader';
 import "../mobile.css";
 
 // Типы контактов
@@ -397,21 +398,19 @@ export default function MobileContactsPage() {
     return (
       <div className="mobile-full-screen flex flex-col bg-background overflow-y-auto">
         {/* Шапка профиля */}
-        <div className="p-3 border-b border-primary/10 flex items-center sticky top-0 bg-background z-10">
-          <Button variant="ghost" size="icon" onClick={backToList}>
-            <ArrowLeft className="h-5 w-5" />
+        <MobileHeader 
+          title="Профиль контакта" 
+          showBackButton={true} 
+          onBack={backToList} 
+        />
+        
+        <div className="p-2 flex justify-end border-b border-primary/10 sticky top-14 bg-background z-10">
+          <Button variant="ghost" size="icon">
+            <Star className={`h-5 w-5 ${selectedContact.isFavorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
           </Button>
-          
-          <h2 className="text-lg font-medium ml-2">Профиль контакта</h2>
-          
-          <div className="ml-auto flex gap-2">
-            <Button variant="ghost" size="icon">
-              <Star className={`h-5 w-5 ${selectedContact.isFavorite ? 'fill-yellow-500 text-yellow-500' : ''}`} />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <MoreVertical className="h-5 w-5" />
-            </Button>
-          </div>
+          <Button variant="ghost" size="icon">
+            <MoreVertical className="h-5 w-5" />
+          </Button>
         </div>
         
         {/* Основная информация */}
@@ -626,19 +625,19 @@ export default function MobileContactsPage() {
   // Список контактов
   return (
     <div className="mobile-full-screen bg-background">
-      <div className="flex justify-between items-center p-3 border-b border-primary/10 sticky top-0 bg-background z-10">
-        <h1 className="text-xl font-bold flex items-center">
-          <Users className="h-5 w-5 mr-2 text-primary" />
-          Контакты
-        </h1>
-        
-        <div className="flex">
-          <Button variant="ghost" size="icon">
-            <Search className="h-5 w-5" onClick={() => document.getElementById('search-input')?.focus()} />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <UserPlus className="h-5 w-5" />
-          </Button>
+      {/* Фиксированная шапка */}
+      <MobileHeader title="Контакты" />
+      
+      <div className="p-2 border-b border-primary/10">
+        <div className="relative">
+          <Search className="h-4 w-4 text-foreground/60 absolute left-2 top-1/2 transform -translate-y-1/2" />
+          <Input 
+            id="search-input"
+            placeholder="Поиск по имени, организации, тегам..." 
+            className="bg-card/50 pl-8"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
       </div>
       
