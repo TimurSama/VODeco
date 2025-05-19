@@ -2,25 +2,51 @@ import { pgTable, text, serial, integer, boolean, timestamp, real } from "drizzl
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Session storage table для Replit Auth
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: text("sid").primaryKey(),
+    sess: text("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [{
+    name: "IDX_session_expire",
+    on: table.expire
+  }]
+);
+
 // Users table
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: text("id").primaryKey().notNull(), // ID из Replit Auth (sub claim)
   username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  email: text("email").unique(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  profileImageUrl: text("profile_image_url"),
   walletAddress: text("wallet_address"),
   avatar: text("avatar"),
   role: text("role").default("participant"),
   joined: timestamp("joined").defaultNow(),
-  votingPower: integer("voting_power").default(0)
+  votingPower: integer("voting_power").default(10),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow()
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
+  id: true,
   username: true,
-  password: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  profileImageUrl: true,
   walletAddress: true,
   avatar: true,
   role: true,
+  votingPower: true
 });
+
+export const upsertUserSchema = insertUserSchema.partial();
 
 // Water Resources table
 export const waterResources = pgTable("water_resources", {
