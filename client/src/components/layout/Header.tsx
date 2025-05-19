@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { Menu, UserCircle } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import { AuthStatus } from '@/components/ui/AuthStatus';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -28,12 +29,8 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           </div>
         </Link>
         
-        {/* User Profile */}
-        <Link href="/profile">
-          <button className="text-foreground/70 hover:text-primary transition-colors" aria-label="Профиль пользователя">
-            <UserCircle className="h-6 w-6" />
-          </button>
-        </Link>
+        {/* Authentication Status */}
+        <AuthStatus />
       </div>
     </header>
   );
