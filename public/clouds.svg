@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1024" height="512" viewBox="0 0 1024 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" />
+    </filter>
+  </defs>
+  <g filter="url(#blur)">
+    <!-- Группы облаков -->
+    <ellipse cx="200" cy="150" rx="80" ry="40" fill="white" opacity="0.3" />
+    <ellipse cx="250" cy="130" rx="90" ry="45" fill="white" opacity="0.3" />
+    <ellipse cx="300" cy="160" rx="70" ry="35" fill="white" opacity="0.3" />
+    
+    <ellipse cx="500" cy="100" rx="100" ry="50" fill="white" opacity="0.3" />
+    <ellipse cx="550" cy="80" rx="80" ry="40" fill="white" opacity="0.3" />
+    <ellipse cx="600" cy="110" rx="90" ry="45" fill="white" opacity="0.3" />
+    
+    <ellipse cx="800" cy="200" rx="120" ry="60" fill="white" opacity="0.3" />
+    <ellipse cx="850" cy="180" rx="100" ry="50" fill="white" opacity="0.3" />
+    <ellipse cx="900" cy="220" rx="80" ry="40" fill="white" opacity="0.3" />
+    
+    <ellipse cx="300" cy="350" rx="110" ry="55" fill="white" opacity="0.3" />
+    <ellipse cx="350" cy="330" rx="90" ry="45" fill="white" opacity="0.3" />
+    <ellipse cx="400" cy="360" rx="100" ry="50" fill="white" opacity="0.3" />
+    
+    <ellipse cx="700" cy="400" rx="130" ry="65" fill="white" opacity="0.3" />
+    <ellipse cx="750" cy="380" rx="110" ry="55" fill="white" opacity="0.3" />
+    <ellipse cx="800" cy="410" rx="90" ry="45" fill="white" opacity="0.3" />
+  </g>
+</svg>

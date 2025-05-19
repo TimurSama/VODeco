@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Droplet, Globe } from 'lucide-react';
+import { Droplet } from 'lucide-react';
+import Earth3D from './Earth3D';
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -11,7 +12,7 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
   const [stage, setStage] = useState<'initial' | 'drop' | 'logo' | 'earth' | 'problem' | 'solution' | 'complete'>('initial');
   const [visible, setVisible] = useState(true);
   
-  // Автоматический запуск анимации
+  // Автоматический запуск анимации только в режиме autoStart
   useEffect(() => {
     if (autoStart) {
       // Небольшая задержка перед началом анимации
@@ -23,31 +24,25 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
     }
   }, [autoStart]);
   
-  // Переходы между стадиями анимации
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    
-    if (stage === 'drop') {
-      timer = setTimeout(() => setStage('logo'), 2500);
-    } else if (stage === 'logo') {
-      timer = setTimeout(() => setStage('earth'), 3000);
-    } else if (stage === 'earth') {
-      timer = setTimeout(() => setStage('problem'), 4000);
-    } else if (stage === 'problem') {
-      timer = setTimeout(() => setStage('solution'), 4000);
-    } else if (stage === 'solution') {
-      timer = setTimeout(() => {
-        setStage('complete');
-        setVisible(false);
-        setTimeout(() => onComplete(), 1000);
-      }, 4000);
-    }
-    
-    return () => clearTimeout(timer);
-  }, [stage, onComplete]);
-  
+  // Обработчики переходов между экранами - теперь только по клику
   const handleStart = () => {
     setStage('drop');
+  };
+  
+  const handleNext = () => {
+    if (stage === 'drop') {
+      setStage('logo');
+    } else if (stage === 'logo') {
+      setStage('earth');
+    } else if (stage === 'earth') {
+      setStage('problem');
+    } else if (stage === 'problem') {
+      setStage('solution');
+    } else if (stage === 'solution') {
+      setStage('complete');
+      setVisible(false);
+      setTimeout(() => onComplete(), 1000);
+    }
   };
   
   const handleSkip = () => {
@@ -207,6 +202,7 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
+          onClick={handleNext} // Добавляем обработчик клика для всего экрана
         >
           {/* Фоновая гексагональная сетка */}
           <div className="absolute inset-0 bg-[url('/hexagonal-grid.svg')] opacity-15"></div>
@@ -236,7 +232,10 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                   size="lg" 
                   variant="outline"
                   className="text-primary border-primary hover:bg-primary/20"
-                  onClick={handleStart}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleStart();
+                  }}
                 >
                   Начать
                 </Button>
@@ -278,6 +277,21 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                     }}
                   />
                 ))}
+                
+                {/* Подсказка для клика */}
+                <motion.p
+                  className="absolute bottom-12 text-white/60 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0.7] }}
+                  transition={{ 
+                    delay: 2,
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Нажмите для продолжения
+                </motion.p>
               </div>
             )}
             
@@ -296,9 +310,24 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                   <span className="text-5xl md:text-7xl font-bold ml-2">ECO</span>
                 </div>
                 
-                <p className="text-white/80 text-md md:text-xl">
+                <p className="text-white/80 text-md md:text-xl mb-8">
                   Вода — источник жизни. Цифровая система — её защита.
                 </p>
+                
+                {/* Подсказка для клика */}
+                <motion.p
+                  className="text-white/60 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0.7] }}
+                  transition={{ 
+                    delay: 1,
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Нажмите для продолжения
+                </motion.p>
               </motion.div>
             )}
             
@@ -308,14 +337,15 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                 <motion.div
                   variants={earthVariants}
                   initial="initial"
-                  animate={["animate", "rotate"]}
+                  animate="animate"
                   exit="exit"
                   className="relative mb-8"
                 >
-                  <Globe className="h-48 w-48 md:h-64 md:w-64 text-primary" strokeWidth={1} />
+                  {/* Используем 3D планету вместо значка */}
+                  <Earth3D size={250} highlightWater={true} />
                 </motion.div>
                 
-                <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg">
+                <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg mb-8">
                   {waterFacts.map((fact, i) => (
                     <motion.div
                       key={i}
@@ -330,6 +360,21 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                     </motion.div>
                   ))}
                 </div>
+                
+                {/* Подсказка для клика */}
+                <motion.p
+                  className="text-white/60 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0.7] }}
+                  transition={{ 
+                    delay: 2,
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Нажмите для продолжения
+                </motion.p>
               </div>
             )}
             
@@ -343,18 +388,11 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                   exit="exit"
                   className="relative mb-8"
                 >
-                  <Globe className="h-48 w-48 md:h-64 md:w-64 text-red-500" strokeWidth={1} />
-                  
-                  {/* Эффект трещин на планете */}
-                  <motion.div
-                    className="absolute inset-0 bg-red-500/20"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.2, 0.1] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-                  />
+                  {/* Используем 3D планету в режиме кризиса */}
+                  <Earth3D size={250} crisis={true} />
                 </motion.div>
                 
-                <div className="relative grid grid-cols-1 gap-4 max-w-lg">
+                <div className="relative grid grid-cols-1 gap-4 max-w-lg mb-8">
                   {waterProblems.map((problem, i) => (
                     <motion.div
                       key={i}
@@ -369,6 +407,21 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                     </motion.div>
                   ))}
                 </div>
+                
+                {/* Подсказка для клика */}
+                <motion.p
+                  className="text-white/60 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0.7] }}
+                  transition={{ 
+                    delay: 2,
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Нажмите для продолжения
+                </motion.p>
               </div>
             )}
             
@@ -381,7 +434,8 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  <Globe className="h-48 w-48 md:h-64 md:w-64 text-primary" strokeWidth={1} />
+                  {/* Используем 3D планету с подсвеченной водой */}
+                  <Earth3D size={250} highlightWater={true} rotation={true} />
                   
                   {/* Гексагональная сетка вокруг планеты */}
                   <motion.div
@@ -422,7 +476,7 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1, duration: 0.5 }}
-                  className="text-center max-w-md"
+                  className="text-center max-w-md mb-8"
                 >
                   <h3 className="text-xl font-bold text-primary mb-2">
                     VODeco — экосистема будущего
@@ -431,13 +485,31 @@ export default function LoadingScreen({ onComplete, autoStart = false }: Loading
                     Децентрализованная платформа для управления, защиты и восстановления водных ресурсов
                   </p>
                 </motion.div>
+                
+                {/* Подсказка для клика */}
+                <motion.p
+                  className="text-white/60 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0.7] }}
+                  transition={{ 
+                    delay: 2,
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Нажмите для продолжения
+                </motion.p>
               </div>
             )}
             
             {/* Кнопка пропуска */}
             <motion.button
-              className="absolute bottom-8 right-8 text-xs text-white/50 hover:text-white"
-              onClick={handleSkip}
+              className="absolute bottom-8 right-8 text-xs text-white/50 hover:text-white z-50"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSkip();
+              }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.5 }}
@@ -463,7 +535,7 @@ function Button({
   variant?: 'default' | 'outline'; 
   size?: 'default' | 'lg';
   className?: string; 
-  onClick?: () => void; 
+  onClick?: (e: React.MouseEvent) => void; 
 }) {
   const baseStyle = "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none disabled:opacity-50";
   const variantStyles = {
