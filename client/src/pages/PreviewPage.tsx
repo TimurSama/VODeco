@@ -14,11 +14,13 @@ import ArchitectureScreen from "../components/preview/ArchitectureScreen";
 import TokenomicsScreen from "../components/preview/TokenomicsScreen";
 import ForEveryoneScreen from "../components/preview/ForEveryoneScreen";
 import FinalCallScreen from "../components/preview/FinalCallScreen";
+import PresentationScenario from "../components/preview/PresentationScenario";
 
 // Перечисление этапов презентации
 enum PresentationStage {
   SPLASH_INTRO,       // Начальный экран с логотипом и кнопками
   TRANSITION,         // Анимация перехода между начальным экраном и презентацией
+  NEW_SCENARIO,       // Новый сценарий презентации
   WELCOME,            // Приветствие
   PLANET_CRISIS,      // Информация о планете и водном кризисе
   UNITE_FORCES,       // Объединение сил в единую экосистему
@@ -46,13 +48,22 @@ export default function PreviewPage() {
   
   const handleExplore = () => {
     addTokens(100);
+    // Переход сразу к новому сценарию через анимацию перехода
     setCurrentStage(PresentationStage.TRANSITION);
   };
   
   const handleTransitionComplete = () => {
-    setCurrentStage(PresentationStage.WELCOME);
+    // Вместо Welcome переходим на новый сценарий
+    setCurrentStage(PresentationStage.NEW_SCENARIO);
   };
   
+  const handleNewScenarioComplete = () => {
+    // После завершения нового сценария переходим на дашборд
+    addTokens(150);
+    setLocation('/dashboard');
+  };
+  
+  // Старые обработчики для совместимости
   const handleWelcomeNext = () => {
     addTokens(5);
     setCurrentStage(PresentationStage.PLANET_CRISIS);
@@ -111,23 +122,24 @@ export default function PreviewPage() {
         </motion.div>
       )}
       
-      {/* Индикатор прогресса - показываем, только если мы в основной презентации */}
-      {currentStage > PresentationStage.TRANSITION && (
+      {/* Индикатор прогресса - показываем, только если мы в основной презентации старого формата */}
+      {currentStage > PresentationStage.TRANSITION && 
+       currentStage !== PresentationStage.NEW_SCENARIO && (
         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
           <div className="flex flex-col items-center space-y-2">
             {Array.from({ length: 8 }).map((_, index) => (
               <motion.div
                 key={index}
                 className={`w-2 h-2 rounded-full ${
-                  index === currentStage - 2 
+                  index === currentStage - 3 
                     ? 'bg-primary' 
-                    : index < currentStage - 2 
+                    : index < currentStage - 3 
                       ? 'bg-primary/50' 
                       : 'bg-white/20'
                 }`}
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ 
-                  scale: index === currentStage - 2 ? 1.2 : 1, 
+                  scale: index === currentStage - 3 ? 1.2 : 1, 
                   opacity: 1 
                 }}
                 transition={{ delay: 0.1 * index, duration: 0.3 }}
@@ -165,6 +177,21 @@ export default function PreviewPage() {
           </motion.div>
         )}
         
+        {/* Новый сценарий презентации */}
+        {currentStage === PresentationStage.NEW_SCENARIO && (
+          <motion.div
+            key="new-scenario"
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <PresentationScenario onComplete={handleNewScenarioComplete} />
+          </motion.div>
+        )}
+        
+        {/* Старые экраны презентации для совместимости */}
         {currentStage === PresentationStage.WELCOME && (
           <motion.div
             key="welcome"
