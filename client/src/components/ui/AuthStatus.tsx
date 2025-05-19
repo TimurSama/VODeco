@@ -43,13 +43,13 @@ export function AuthStatus() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center space-x-2">
           <Avatar className="h-6 w-6">
-            {typedUser.profileImageUrl ? (
-              <AvatarImage src={typedUser.profileImageUrl} alt={typedUser.username} />
+            {typedUser?.profileImageUrl ? (
+              <AvatarImage src={typedUser.profileImageUrl} alt={typedUser.username || "Пользователь"} />
             ) : (
-              <AvatarFallback>{typedUser.username?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
+              <AvatarFallback>{typedUser?.username?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
             )}
           </Avatar>
-          <span className="hidden md:inline">{typedUser.username}</span>
+          <span className="hidden md:inline">{typedUser?.username || "Пользователь"}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
