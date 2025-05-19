@@ -46,7 +46,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
   votingPower: true
 });
 
-export const upsertUserSchema = insertUserSchema.partial();
+export const upsertUserSchema = insertUserSchema.partial().extend({
+  id: z.string()
+});
 
 // Water Resources table
 export const waterResources = pgTable("water_resources", {
