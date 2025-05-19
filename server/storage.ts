@@ -14,10 +14,11 @@ import {
 // Define the storage interface
 export interface IStorage {
   // User operations
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByWalletAddress(walletAddress: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  upsertUser(user: Partial<InsertUser> & { id: string }): Promise<User>;
   
   // Water resource operations
   getWaterResource(id: number): Promise<WaterResource | undefined>;
@@ -792,7 +793,7 @@ import { db } from "./db";
 import { eq, sql } from "drizzle-orm";
 
 export class DatabaseStorage implements IStorage {
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
@@ -813,6 +814,33 @@ export class DatabaseStorage implements IStorage {
       .values(insertUser)
       .returning();
     return user;
+  }
+  
+  async upsertUser(userData: Partial<InsertUser> & { id: string }): Promise<User> {
+    // Проверяем существование пользователя
+    const existingUser = await this.getUser(userData.id);
+    
+    if (existingUser) {
+      // Обновляем существующего пользователя
+      const [updatedUser] = await db
+        .update(users)
+        .set({
+          ...userData,
+          updatedAt: new Date()
+        })
+        .where(eq(users.id, userData.id))
+        .returning();
+      return updatedUser;
+    } else {
+      // Создаем нового пользователя с необходимыми полями
+      const newUser = {
+        ...userData,
+        username: userData.username || `user${userData.id}`,
+        votingPower: userData.votingPower || 10
+      } as InsertUser;
+      
+      return await this.createUser(newUser);
+    }
   }
   
   async getWaterResource(id: number): Promise<WaterResource | undefined> {
