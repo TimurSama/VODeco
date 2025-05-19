@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Droplet } from 'lucide-react';
+import { Droplet, Hexagon } from 'lucide-react';
 import Earth3D from './Earth3D';
 
 interface LoadingScreenProps {
