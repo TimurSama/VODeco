@@ -9,6 +9,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "./components/layout/Sidebar";
 import BackgroundProvider from "@/components/layout/BackgroundProvider";
+import AuthPage from "@/pages/auth-page";
+import { AuthProvider } from "@/hooks/useAuth";
 import Dashboard from "@/pages/Dashboard";
 import WalletPage from "@/pages/WalletPage";
 import GloboPage from "@/pages/GloboPage";
@@ -100,6 +102,9 @@ function Router() {
       <Route path="/admin">
         <AdminPanelPage />
       </Route>
+      <Route path="/auth">
+        <AuthPage />
+      </Route>
       <Route path="/">
         <Dashboard />
       </Route>
@@ -134,21 +139,23 @@ function App() {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BackgroundProvider>
-          <div className="min-h-screen flex flex-col">
-            <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
-            <div className="flex flex-grow relative mt-16">
-              <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-              <main className="flex-grow pt-4 px-2">
-                <Router />
-              </main>
+      <AuthProvider>
+        <TooltipProvider>
+          <BackgroundProvider>
+            <div className="min-h-screen flex flex-col">
+              <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+              <div className="flex flex-grow relative mt-16">
+                <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+                <main className="flex-grow pt-4 px-2">
+                  <Router />
+                </main>
+              </div>
+              {/* Footer перемещен в отдельные компоненты SupportPageWithFooter и SettingsPageWithFooter */}
             </div>
-            {/* Footer перемещен в отдельные компоненты SupportPageWithFooter и SettingsPageWithFooter */}
-          </div>
-        </BackgroundProvider>
-        <Toaster />
-      </TooltipProvider>
+          </BackgroundProvider>
+          <Toaster />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
