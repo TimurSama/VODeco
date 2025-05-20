@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { User as UserType } from "@shared/schema";
+import { UserInterface } from "@shared/auth-schema";
 import { User, LogIn, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export function AuthStatus() {
-  const { user, isLoading, isAuthenticated } = useAuth();
-  const typedUser = user as UserType;
+  const { user, isLoading, isAuthenticated, logoutMutation } = useAuth();
+  const [_, setLocation] = useLocation();
+  const typedUser = user as UserInterface;
   
   if (isLoading) {
     return (
@@ -30,7 +31,7 @@ export function AuthStatus() {
       <Button 
         variant="ghost" 
         size="sm"
-        onClick={() => window.location.href = "/api/login"}
+        onClick={() => setLocation("/auth")}
       >
         <LogIn className="h-4 w-4 mr-2" />
         Вход
@@ -66,7 +67,7 @@ export function AuthStatus() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => window.location.href = "/api/logout"}>
+        <DropdownMenuItem onClick={() => logoutMutation.mutate()}>
           <LogOut className="h-4 w-4 mr-2" />
           Выйти
         </DropdownMenuItem>
