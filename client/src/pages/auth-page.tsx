@@ -237,7 +237,7 @@ const RegisterForm = ({ isLoading, onSubmit }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="register-username">Имя пользователя</Label>
+            <Label htmlFor="register-username">{t('auth.username')}</Label>
             <Input
               id="register-username"
               {...register("username")}
@@ -249,7 +249,7 @@ const RegisterForm = ({ isLoading, onSubmit }) => {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t('auth.email')}</Label>
             <Input
               id="email"
               type="email"
@@ -263,26 +263,26 @@ const RegisterForm = ({ isLoading, onSubmit }) => {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">Имя</Label>
+              <Label htmlFor="firstName">{t('auth.firstName')}</Label>
               <Input
                 id="firstName"
                 {...register("firstName")}
-                placeholder="Имя"
+                placeholder={t('auth.firstName')}
                 autoComplete="given-name"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Фамилия</Label>
+              <Label htmlFor="lastName">{t('auth.lastName')}</Label>
               <Input
                 id="lastName"
                 {...register("lastName")}
-                placeholder="Фамилия"
+                placeholder={t('auth.lastName')}
                 autoComplete="family-name"
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="register-password">Пароль</Label>
+            <Label htmlFor="register-password">{t('auth.password')}</Label>
             <Input
               id="register-password"
               type="password"
@@ -299,10 +299,10 @@ const RegisterForm = ({ isLoading, onSubmit }) => {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Регистрация...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('common.register')}...
               </>
             ) : (
-              "Зарегистрироваться"
+              t('common.register')
             )}
           </Button>
         </CardFooter>

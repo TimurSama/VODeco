@@ -43,7 +43,21 @@
     "alreadyAccount": "Already have an account?",
     "loginWithGoogle": "Login with Google",
     "loginWithTelegram": "Login with Telegram",
-    "termsAgree": "By registering, you agree to our Terms and Privacy Policy"
+    "termsAgree": "By registering, you agree to our Terms and Privacy Policy",
+    "orLoginWith": "Or login with",
+    "platformDescription": "Interact with the global community for effective water resource management through a decentralized autonomous organization using blockchain technology.",
+    "google": "Google",
+    "telegram": "Telegram",
+    "features": {
+      "visualization": "3D Visualization",
+      "visualizationDesc": "Interactive three-dimensional map of water resources around the world",
+      "governance": "DAO Governance",
+      "governanceDesc": "Decentralized decision-making for sustainable management",
+      "tokenization": "Tokenization",
+      "tokenizationDesc": "Investment opportunities through blockchain tokens",
+      "eco": "Environmental Initiatives",
+      "ecoDesc": "Support for water conservation and restoration projects"
+    }
   },
   "missions": {
     "title": "Missions",
