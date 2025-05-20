@@ -2,17 +2,7 @@ import { pgTable, text, serial, integer, boolean, timestamp, real } from "drizzl
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Схемы для аутентификации
-export const loginSchema = z.object({
-  username: z.string().min(3, "Имя пользователя должно быть не менее 3 символов"),
-  password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
-});
-
-export const registerSchema = loginSchema.extend({
-  email: z.string().email("Неверный формат email"),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-});
+// Убрали дублирование схем аутентификации
 
 // Session storage table для Replit Auth
 export const sessions = pgTable(
@@ -231,6 +221,8 @@ export const insertInvestmentSchema = createInsertSchema(investments).pick({
   projectId: true,
   amount: true
 });
+
+// Только актуальные типы и схемы сохранены
 
 // Export types
 export type InsertUser = z.infer<typeof insertUserSchema>;

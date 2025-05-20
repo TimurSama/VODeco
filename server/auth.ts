@@ -5,7 +5,8 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User, loginSchema, registerSchema } from "@shared/schema";
+import { User } from "@shared/schema";
+import { loginSchema, registerSchema } from "@shared/auth-schema";
 import { ZodError } from "zod";
 import connectPg from "connect-pg-simple";
 
