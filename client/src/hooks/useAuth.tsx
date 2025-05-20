@@ -1,5 +1,4 @@
-import * as React from "react";
-import { ReactNode, createContext, useContext } from "react";
+import React, { ReactNode, createContext, useContext } from "react";
 import {
   useQuery,
   useMutation,

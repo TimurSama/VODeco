@@ -5,14 +5,14 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User } from "@shared/schema";
+// Используем только типы из auth-schema
 import { UserInterface, loginSchema, registerSchema } from "@shared/auth-schema";
 import { ZodError } from "zod";
 import connectPg from "connect-pg-simple";
 
 declare global {
   namespace Express {
-    interface User extends User {}
+    interface User extends UserInterface {}
   }
 }
 
@@ -132,7 +132,7 @@ export function setupAuth(app: Express) {
     try {
       const credentials = loginSchema.parse(req.body);
       
-      passport.authenticate("local", (err: Error, user: User) => {
+      passport.authenticate("local", (err: Error, user: UserInterface) => {
         if (err) {
           return res.status(500).json({ message: "Ошибка входа" });
         }
