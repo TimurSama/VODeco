@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Redirect } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, registerSchema } from "@shared/schema";
+import { loginSchema, registerSchema } from "@shared/auth-schema";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {

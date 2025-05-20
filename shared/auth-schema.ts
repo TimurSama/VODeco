@@ -16,3 +16,21 @@ export const registerSchema = loginSchema.extend({
 // Типы для аутентификации
 export type LoginData = z.infer<typeof loginSchema>;
 export type RegisterData = z.infer<typeof registerSchema>;
+
+// Определение интерфейса пользователя для согласованности между клиентом и сервером
+export interface UserInterface {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  profileImageUrl?: string | null;
+  walletAddress?: string | null;
+  avatar?: string | null;
+  role?: string | null;
+  votingPower?: number | null;
+  joined?: Date | null;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
+}
