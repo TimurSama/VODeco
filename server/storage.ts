@@ -14,11 +14,11 @@ import {
 // Define the storage interface
 export interface IStorage {
   // User operations
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   getUserByWalletAddress(walletAddress: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  upsertUser(user: Partial<InsertUser> & { id: string }): Promise<User>;
   
   // Water resource operations
   getWaterResource(id: number): Promise<WaterResource | undefined>;

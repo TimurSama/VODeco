@@ -18,9 +18,10 @@ export const sessions = pgTable(
 
 // Users table
 export const users = pgTable("users", {
-  id: text("id").primaryKey().notNull(), // ID из Replit Auth (sub claim)
+  id: serial("id").primaryKey().notNull(),
   username: text("username").notNull().unique(),
-  email: text("email").unique(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
   firstName: text("first_name"),
   lastName: text("last_name"),
   profileImageUrl: text("profile_image_url"),
@@ -29,26 +30,41 @@ export const users = pgTable("users", {
   role: text("role").default("participant"),
   joined: timestamp("joined").defaultNow(),
   votingPower: integer("voting_power").default(10),
+  googleId: text("google_id").unique(),
+  telegramId: text("telegram_id").unique(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow()
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
-  id: true,
   username: true,
   email: true,
+  password: true,
   firstName: true,
   lastName: true,
   profileImageUrl: true,
   walletAddress: true,
   avatar: true,
   role: true,
-  votingPower: true
+  votingPower: true,
+  googleId: true,
+  telegramId: true
+}).omit({ id: true });
+
+export const loginSchema = z.object({
+  email: z.string().email("Требуется корректный email"),
+  password: z.string().min(6, "Пароль должен содержать минимум 6 символов")
 });
 
-export const upsertUserSchema = insertUserSchema.partial().extend({
-  id: z.string()
+export const registerSchema = loginSchema.extend({
+  username: z.string().min(3, "Имя пользователя должно содержать минимум 3 символа"),
+  confirmPassword: z.string().min(6, "Пароль должен содержать минимум 6 символов")
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Пароли не совпадают",
+  path: ["confirmPassword"]
 });
+
+export const upsertUserSchema = insertUserSchema.partial();
 
 // Water Resources table
 export const waterResources = pgTable("water_resources", {
