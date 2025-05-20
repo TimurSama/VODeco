@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { AlertCircle, Award, Bluetooth, CheckCircle, Clock, MapPin, Send, Upload, Droplet, FileText, Camera, Microscope, Brain, AlertTriangle, Landmark, Share2 } from "lucide-react";
 
 export default function MissionsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("missions");
   const [deviceConnected, setDeviceConnected] = useState(false);
   const [deviceData, setDeviceData] = useState<null | {
@@ -32,7 +34,8 @@ export default function MissionsPage() {
 
   // Имитация отправки данных в DAO
   const sendDataToDAO = () => {
-    alert("Данные отправлены в DAO. Начислено 15 VOD токенов!");
+    const message = t('missions.devices.dataSentAlert', 'Данные отправлены в DAO. Начислено 15 VOD токенов!');
+    alert(message);
     setDeviceConnected(false);
     setDeviceData(null);
   };
@@ -151,10 +154,10 @@ export default function MissionsPage() {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-foreground">Миссии</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t('missions.title')}</h1>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="bg-secondary/20 text-secondary-foreground">
-            Уровень: 3
+            {t('missions.level')}: 3
           </Badge>
           <Badge variant="outline" className="bg-primary/20 text-primary-foreground">
             XP: 450/1000

@@ -99,7 +99,8 @@
       "sendToDAO": "Отправить в DAO",
       "ph": "pH воды",
       "turbidity": "Мутность (NTU)",
-      "temperature": "Температура (°C)"
+      "temperature": "Температура (°C)",
+      "dataSentAlert": "Данные отправлены в DAO. Начислено 15 VOD токенов!"
     },
     "rewards": {
       "title": "Airdrop & Награды",

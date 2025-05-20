@@ -99,7 +99,8 @@
       "sendToDAO": "Send to DAO",
       "ph": "Water pH",
       "turbidity": "Turbidity (NTU)",
-      "temperature": "Temperature (°C)"
+      "temperature": "Temperature (°C)",
+      "dataSentAlert": "Data sent to DAO. 15 VOD tokens awarded!"
     },
     "rewards": {
       "title": "Airdrop & Rewards",
