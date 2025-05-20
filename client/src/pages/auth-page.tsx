@@ -44,8 +44,8 @@ const AuthPage = () => {
           onValueChange={setActiveTab}
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
-            <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
+            <TabsTrigger value="login">{t('common.login')}</TabsTrigger>
+            <TabsTrigger value="register">{t('common.register')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login">
@@ -61,28 +61,26 @@ const AuthPage = () => {
       {/* Информационная секция */}
       <div className="flex flex-1 items-center justify-center bg-gradient-to-br from-[#053642]/90 to-[#053642]/70 p-8 text-white">
         <div className="max-w-xl">
-          <h1 className="mb-4 text-4xl font-bold">VODeco - Платформа управления водными ресурсами</h1>
+          <h1 className="mb-4 text-4xl font-bold">{t('auth.welcome')}</h1>
           <p className="mb-6 text-lg">
-            Взаимодействуйте с глобальным сообществом для эффективного управления
-            водными ресурсами через децентрализованную автономную организацию с использованием
-            технологии блокчейн.
+            {t('auth.platformDescription', 'Взаимодействуйте с глобальным сообществом для эффективного управления водными ресурсами через децентрализованную автономную организацию с использованием технологии блокчейн.')}
           </p>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FeatureCard
-              title="3D Визуализация"
-              description="Интерактивная трехмерная карта водных ресурсов по всему миру"
+              title={t('auth.features.visualization', '3D Визуализация')}
+              description={t('auth.features.visualizationDesc', 'Интерактивная трехмерная карта водных ресурсов по всему миру')}
             />
             <FeatureCard
-              title="DAO Управление"
-              description="Децентрализованное принятие решений для устойчивого управления"
+              title={t('auth.features.governance', 'DAO Управление')}
+              description={t('auth.features.governanceDesc', 'Децентрализованное принятие решений для устойчивого управления')}
             />
             <FeatureCard
-              title="Токенизация"
-              description="Инвестиционные возможности через токены блокчейн"
+              title={t('auth.features.tokenization', 'Токенизация')}
+              description={t('auth.features.tokenizationDesc', 'Инвестиционные возможности через токены блокчейн')}
             />
             <FeatureCard
-              title="Экологические инициативы"
-              description="Поддержка проектов сохранения и восстановления воды"
+              title={t('auth.features.eco', 'Экологические инициативы')}
+              description={t('auth.features.ecoDesc', 'Поддержка проектов сохранения и восстановления воды')}
             />
           </div>
         </div>
@@ -92,6 +90,7 @@ const AuthPage = () => {
 };
 
 const LoginForm = ({ isLoading, onSubmit }) => {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
