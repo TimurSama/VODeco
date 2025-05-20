@@ -13,10 +13,10 @@ export default function BackgroundProvider({ children }: BackgroundProviderProps
     <div className="relative min-h-screen bg-[#001520]">
       {/* Анимированный гексагональный фон */}
       <AnimatedHexGrid 
-        baseOpacity={0.15}
-        pulseOpacity={0.25}
-        color="#14b8a6"
-        speed={1}
+        baseOpacity={0.2}
+        pulseOpacity={0.4}
+        color="#00FFFF"
+        speed={1.2}
       />
       
       {/* Основной контент */}

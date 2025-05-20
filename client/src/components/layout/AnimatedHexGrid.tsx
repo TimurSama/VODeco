@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface AnimatedHexGridProps {
@@ -17,128 +17,87 @@ const AnimatedHexGrid = ({
   speed = 1
 }: AnimatedHexGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const requestRef = useRef<number | null>(null);
   const isMobile = useMediaQuery('(max-width: 768px)');
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
+
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    
-    // Устанавливаем размер холста
-    const updateCanvasSize = () => {
-      const { clientWidth, clientHeight } = document.documentElement;
-      canvas.width = clientWidth;
-      canvas.height = clientHeight;
-    };
-    
-    // Обновляем размер холста при изменении размера окна
-    window.addEventListener('resize', updateCanvasSize);
-    updateCanvasSize();
-    
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+    const hexSize = isMobile ? 30 : 40; // Меньше на мобильных устройствах
+    const speedValue = 0.005 * speed;
     let time = 0;
-    const hexSize = isMobile ? 20 : 30; // Меньше на мобильных устройствах
-    const hexHeight = Math.sqrt(3) * hexSize;
-    const hexWidth = 2 * hexSize;
-    const hexVerticalOffset = hexHeight * 0.75;
-    
-    // Рисуем отдельный шестиугольник
-    const drawHexagon = (x: number, y: number, time: number, index: number, row: number) => {
-      if (!ctx) return;
-      
-      // Дополнительные волны на разных частотах
-      const wave1 = Math.sin(time * 0.5 * speed + index * 0.3 + row * 0.2) * 0.5 + 0.5;
-      const wave2 = Math.sin(time * 0.3 * speed + index * 0.1 + row * 0.5) * 0.5 + 0.5;
-      const wave3 = Math.sin(time * 0.7 * speed + index * 0.2 - row * 0.3) * 0.5 + 0.5;
-      
-      // Комбинируем волны для придания органичности
-      const wave = (wave1 * 0.6 + wave2 * 0.3 + wave3 * 0.1);
-      
-      // Параметры шестиугольника
-      const size = hexSize * (0.9 + wave * 0.2); // Пульсация размера
-      const opacity = baseOpacity + wave * (pulseOpacity - baseOpacity);
-      
-      // Начинаем рисовать шестиугольник
+
+    // Преобразуем HEX-цвет в формат rgba
+    const hexToRgba = (hex: string, alpha: number) => {
+      // Удаляем # если она есть
+      hex = hex.replace(/^#/, '');
+
+      let r, g, b;
+      if (hex.length === 3) {
+        // #RGB
+        r = parseInt(hex[0] + hex[0], 16);
+        g = parseInt(hex[1] + hex[1], 16);
+        b = parseInt(hex[2] + hex[2], 16);
+      } else {
+        // #RRGGBB
+        r = parseInt(hex.slice(0, 2), 16);
+        g = parseInt(hex.slice(2, 4), 16);
+        b = parseInt(hex.slice(4, 6), 16);
+      }
+
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
+    const drawHex = (x: number, y: number, radius: number, alpha: number) => {
       ctx.beginPath();
-      
-      // Рисуем вершины шестиугольника
       for (let i = 0; i < 6; i++) {
-        const angle = (Math.PI / 3) * i;
-        const vertexX = x + size * Math.cos(angle);
-        const vertexY = y + size * Math.sin(angle);
-        
-        if (i === 0) {
-          ctx.moveTo(vertexX, vertexY);
-        } else {
-          ctx.lineTo(vertexX, vertexY);
-        }
+        const angle = Math.PI / 3 * i;
+        const dx = x + radius * Math.cos(angle);
+        const dy = y + radius * Math.sin(angle);
+        i === 0 ? ctx.moveTo(dx, dy) : ctx.lineTo(dx, dy);
       }
-      
       ctx.closePath();
-      
-      // Устанавливаем стиль и рисуем шестиугольник
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = opacity;
-      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = hexToRgba(color, alpha);
       ctx.stroke();
-      
-      // Добавляем легкую заливку при высокой волне
-      if (wave > 0.7) {
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.05;
-        ctx.fill();
-      }
-      
-      // Сбрасываем прозрачность
-      ctx.globalAlpha = 1;
     };
-    
-    // Основная функция анимации
-    const animate = () => {
-      if (!ctx) return;
-      
-      // Очищаем холст
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Вычисляем количество шестиугольников для текущего размера холста
-      const columns = Math.ceil(canvas.width / (hexWidth * 0.75)) + 2;
-      const rows = Math.ceil(canvas.height / hexVerticalOffset) + 2;
-      
-      // Рисуем сетку шестиугольников
-      for (let row = -1; row < rows; row++) {
-        for (let col = -1; col < columns; col++) {
-          // Вычисляем координаты центра шестиугольника
-          // Смещаем четные ряды для эффекта сетки
-          const evenRow = row % 2 === 0;
-          const x = col * hexWidth * 0.75 + (evenRow ? hexWidth * 0.375 : 0);
-          const y = row * hexVerticalOffset;
-          
-          // Рисуем шестиугольник
-          drawHexagon(x, y, time, col, row);
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+      time += speedValue;
+
+      const dx = hexSize * Math.sqrt(3);
+      const dy = hexSize * 1.5;
+
+      for (let y = -dy; y < height + dy; y += dy) {
+        for (let x = -dx; x < width + dx; x += dx) {
+          const offsetX = (Math.floor(y / dy) % 2) * (dx / 2);
+          const dist = Math.hypot(x + offsetX - width / 2, y - height / 2);
+          const alphaBase = baseOpacity;
+          const alphaWave = pulseOpacity - baseOpacity;
+          const alpha = alphaBase + alphaWave * Math.sin(dist * 0.05 - time * 2);
+          drawHex(x + offsetX, y, hexSize, alpha);
         }
       }
-      
-      // Увеличиваем время
-      time += 0.01;
-      
-      // Запрашиваем следующий кадр анимации
-      requestRef.current = requestAnimationFrame(animate);
+
+      requestAnimationFrame(render);
     };
-    
-    // Запускаем анимацию
-    animate();
-    
-    // Очистка при размонтировании
-    return () => {
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-      window.removeEventListener('resize', updateCanvasSize);
+
+    render();
+
+    const resize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     };
+
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
   }, [baseOpacity, pulseOpacity, color, speed, isMobile]);
-  
+
   return (
     <canvas
       ref={canvasRef}
