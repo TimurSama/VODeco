@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, registerSchema } from "@shared/auth-schema";
 import { useAuth } from "@/hooks/useAuth";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,6 +27,7 @@ import { Loader2 } from "lucide-react";
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState("login");
   const { user, isLoading, loginMutation, registerMutation } = useAuth();
+  const { t } = useTranslation();
 
   // Если пользователь уже авторизован, перенаправляем на главную страницу
   if (user) {
@@ -42,8 +44,8 @@ const AuthPage = () => {
           onValueChange={setActiveTab}
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Вход</TabsTrigger>
-            <TabsTrigger value="register">Регистрация</TabsTrigger>
+            <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
+            <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login">
