@@ -1,5 +1,5 @@
 import React from 'react';
-import AnimatedHexGrid from './AnimatedHexGrid';
+import HexGrid from '../HexGrid';
 
 interface BackgroundProviderProps {
   children: React.ReactNode;
@@ -12,12 +12,7 @@ export default function BackgroundProvider({ children }: BackgroundProviderProps
   return (
     <div className="relative min-h-screen bg-[#001520]">
       {/* Анимированный гексагональный фон */}
-      <AnimatedHexGrid 
-        baseOpacity={0.2}
-        pulseOpacity={0.4}
-        color="#00FFFF"
-        speed={1.2}
-      />
+      <HexGrid />
       
       {/* Основной контент */}
       <div className="relative z-10">
