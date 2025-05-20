@@ -23,7 +23,7 @@ import SupportPage from "@/pages/SupportPage";
 import MessagesPage from "@/pages/MessagesPage";
 import ContactsPage from "@/pages/ContactsPage";
 import ProfilePage from "@/pages/ProfilePage";
-import InteractionsPage from "@/pages/InteractionsPage";
+import MissionsPage from "@/pages/MissionsPage";
 import TokenHubPage from "@/pages/TokenHubPage";
 import BankPage from "@/pages/BankPage";
 import CabinetsPage from "@/pages/CabinetsPage";
@@ -75,8 +75,8 @@ function Router() {
       <Route path="/dao">
         <DAOPage />
       </Route>
-      <Route path="/interactions">
-        <InteractionsPage />
+      <Route path="/missions">
+        <MissionsPage />
       </Route>
       <Route path="/token-hub">
         <TokenHubPage />

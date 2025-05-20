@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     { name: 'Profile', path: '/profile', icon: UserCircle },
     { name: 'Preview', path: '/preview', icon: Eye },
     { name: 'DAO', path: '/dao', icon: Database },
-    { name: 'Interactions', path: '/interactions', icon: MessagesSquare },
+    { name: 'Миссии', path: '/missions', icon: MessagesSquare },
     { name: 'Token Hub', path: '/token-hub', icon: Bookmark },
     { name: 'Globo', path: '/globo', icon: Globe },
     { name: 'Bank', path: '/bank', icon: BadgeDollarSign },
