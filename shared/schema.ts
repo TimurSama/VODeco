@@ -223,6 +223,8 @@ export const insertInvestmentSchema = createInsertSchema(investments).pick({
 // Export types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+export type LoginData = z.infer<typeof loginSchema>;
+export type RegisterData = z.infer<typeof registerSchema>;
 
 export type InsertWaterResource = z.infer<typeof insertWaterResourceSchema>;
 export type WaterResource = typeof waterResources.$inferSelect;

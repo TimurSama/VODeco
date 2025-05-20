@@ -4,19 +4,18 @@ import {
   useMutation,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { loginSchema, registerSchema } from "@shared/schema";
+import { User, LoginData, RegisterData } from "@shared/schema";
 import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import { User } from "@shared/schema";
-import * as z from "zod";
+import { useToast } from "@/components/ui/use-toast";
 
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   error: Error | null;
-  loginMutation: UseMutationResult<User, Error, z.infer<typeof loginSchema>>;
+  isAuthenticated: boolean;
+  loginMutation: UseMutationResult<User, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
-  registerMutation: UseMutationResult<User, Error, z.output<typeof registerSchema>>;
+  registerMutation: UseMutationResult<User, Error, RegisterData>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -34,42 +33,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (credentials: z.infer<typeof loginSchema>) => {
+    mutationFn: async (credentials: LoginData) => {
       const res = await apiRequest("POST", "/api/login", credentials);
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Ошибка входа");
-      }
       return await res.json();
     },
     onSuccess: (user: User) => {
       queryClient.setQueryData(["/api/user"], user);
+      toast({
+        title: "Успешный вход",
+        description: `Добро пожаловать, ${user.username || 'пользователь'}!`,
+      });
     },
     onError: (error: Error) => {
       toast({
         title: "Ошибка входа",
-        description: error.message || "Проверьте email и пароль",
+        description: error.message,
         variant: "destructive",
       });
     },
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (userData: z.output<typeof registerSchema>) => {
-      const res = await apiRequest("POST", "/api/register", userData);
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Ошибка регистрации");
-      }
+    mutationFn: async (data: RegisterData) => {
+      const res = await apiRequest("POST", "/api/register", data);
       return await res.json();
     },
     onSuccess: (user: User) => {
       queryClient.setQueryData(["/api/user"], user);
+      toast({
+        title: "Регистрация успешна",
+        description: "Ваш аккаунт был успешно создан",
+      });
     },
     onError: (error: Error) => {
       toast({
         title: "Ошибка регистрации",
-        description: error.message || "Пожалуйста, проверьте введенные данные",
+        description: error.message,
         variant: "destructive",
       });
     },
@@ -81,10 +80,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       queryClient.setQueryData(["/api/user"], null);
+      toast({
+        title: "Выход выполнен",
+        description: "Вы успешно вышли из системы",
+      });
     },
     onError: (error: Error) => {
       toast({
-        title: "Ошибка при выходе",
+        title: "Ошибка выхода",
         description: error.message,
         variant: "destructive",
       });
@@ -94,9 +97,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        user: user ?? null,
+        user: user || null,
         isLoading,
         error,
+        isAuthenticated: !!user,
         loginMutation,
         logoutMutation,
         registerMutation,

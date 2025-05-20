@@ -140,6 +140,12 @@ export class MemStorage implements IStorage {
       (user) => user.walletAddress === walletAddress,
     );
   }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.email === email,
+    );
+  }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
@@ -793,7 +799,7 @@ import { db } from "./db";
 import { eq, sql } from "drizzle-orm";
 
 export class DatabaseStorage implements IStorage {
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
@@ -805,6 +811,11 @@ export class DatabaseStorage implements IStorage {
 
   async getUserByWalletAddress(walletAddress: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
+    return user || undefined;
+  }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
     return user || undefined;
   }
 
