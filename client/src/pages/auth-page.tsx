@@ -119,15 +119,15 @@ const LoginForm = ({ isLoading, onSubmit }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Вход в аккаунт</CardTitle>
+        <CardTitle>{t('auth.loginTitle')}</CardTitle>
         <CardDescription>
-          Введите ваше имя пользователя и пароль для доступа к платформе или используйте социальные сети.
+          {t('auth.welcome')}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Имя пользователя</Label>
+            <Label htmlFor="username">{t('auth.username')}</Label>
             <Input
               id="username"
               {...register("username")}
@@ -139,7 +139,7 @@ const LoginForm = ({ isLoading, onSubmit }) => {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Пароль</Label>
+            <Label htmlFor="password">{t('auth.password')}</Label>
             <Input
               id="password"
               type="password"
@@ -157,7 +157,7 @@ const LoginForm = ({ isLoading, onSubmit }) => {
               <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Или войдите через</span>
+              <span className="bg-background px-2 text-muted-foreground">{t('auth.orLoginWith', 'Или войдите через')}</span>
             </div>
           </div>
           
@@ -177,7 +177,7 @@ const LoginForm = ({ isLoading, onSubmit }) => {
                   <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"/>
                 </g>
               </svg>
-              Google
+              {t('auth.google', 'Google')}
             </Button>
             <Button 
               type="button" 
@@ -189,7 +189,7 @@ const LoginForm = ({ isLoading, onSubmit }) => {
               <svg viewBox="0 0 24 24" width="16" height="16" fill="#229ED9">
                 <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"></path>
               </svg>
-              Telegram
+              {t('auth.telegram', 'Telegram')}
             </Button>
           </div>
         </CardContent>
@@ -197,10 +197,10 @@ const LoginForm = ({ isLoading, onSubmit }) => {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Вход...
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('common.login')}...
               </>
             ) : (
-              "Войти"
+              t('common.login')
             )}
           </Button>
         </CardFooter>
@@ -210,6 +210,7 @@ const LoginForm = ({ isLoading, onSubmit }) => {
 };
 
 const RegisterForm = ({ isLoading, onSubmit }) => {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -228,9 +229,9 @@ const RegisterForm = ({ isLoading, onSubmit }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Создать аккаунт</CardTitle>
+        <CardTitle>{t('auth.registerTitle')}</CardTitle>
         <CardDescription>
-          Введите ваши данные для регистрации на платформе.
+          {t('auth.createAccount')}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit(onSubmit)}>
