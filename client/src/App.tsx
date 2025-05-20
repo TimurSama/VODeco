@@ -10,7 +10,7 @@ import Footer from "@/components/layout/Footer";
 import Sidebar from "./components/layout/Sidebar";
 import BackgroundProvider from "@/components/layout/BackgroundProvider";
 import AuthPage from "@/pages/auth-page";
-import { AuthProvider } from "@/hooks/useAuth";
+import { AuthProvider } from "@/hooks/useAuth.tsx";
 import Dashboard from "@/pages/Dashboard";
 import WalletPage from "@/pages/WalletPage";
 import GloboPage from "@/pages/GloboPage";
