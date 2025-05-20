@@ -85,7 +85,7 @@ export function setupAuth(app: Express) {
         if (!user || !(await comparePasswords(password, user.password))) {
           return done(null, false);
         }
-        return done(null, user);
+        return done(null, adaptUserForPassport(user));
       } catch (error) {
         return done(error);
       }
@@ -99,7 +99,7 @@ export function setupAuth(app: Express) {
   passport.deserializeUser(async (id: number, done) => {
     try {
       const user = await storage.getUser(id);
-      done(null, user);
+      done(null, user ? adaptUserForPassport(user) : null);
     } catch (error) {
       done(error);
     }
@@ -133,7 +133,7 @@ export function setupAuth(app: Express) {
       });
 
       // Аутентифицируем пользователя после регистрации
-      req.login(user, (err) => {
+      req.login(adaptUserForPassport(user), (err) => {
         if (err) {
           return res.status(500).json({ message: "Ошибка входа после регистрации" });
         }
