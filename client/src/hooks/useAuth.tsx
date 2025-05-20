@@ -5,19 +5,18 @@ import {
   useMutation,
   UseMutationResult,
 } from "@tanstack/react-query";
-import { User } from "@shared/schema";
-import { LoginData, RegisterData } from "@shared/auth-schema";
+import { UserInterface, LoginData, RegisterData } from "@shared/auth-schema";
 import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 type AuthContextType = {
-  user: User | null;
+  user: UserInterface | null;
   isLoading: boolean;
   error: Error | null;
   isAuthenticated: boolean;
-  loginMutation: UseMutationResult<User, Error, LoginData>;
+  loginMutation: UseMutationResult<UserInterface, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
-  registerMutation: UseMutationResult<User, Error, RegisterData>;
+  registerMutation: UseMutationResult<UserInterface, Error, RegisterData>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -29,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     data: user,
     error,
     isLoading,
-  } = useQuery<User | null, Error>({
+  } = useQuery<UserInterface | null, Error>({
     queryKey: ["/api/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
@@ -39,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await apiRequest("POST", "/api/login", credentials);
       return await res.json();
     },
-    onSuccess: (user: User) => {
+    onSuccess: (user: UserInterface) => {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Успешный вход",
@@ -60,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await apiRequest("POST", "/api/register", data);
       return await res.json();
     },
-    onSuccess: (user: User) => {
+    onSuccess: (user: UserInterface) => {
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Регистрация успешна",
