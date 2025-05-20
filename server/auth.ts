@@ -12,7 +12,25 @@ import connectPg from "connect-pg-simple";
 
 declare global {
   namespace Express {
-    interface User extends UserInterface {}
+    // Расширяем User для совместимости со всеми стратегиями аутентификации
+    interface User {
+      id: number;
+      username: string;
+      email: string;
+      password: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      profileImageUrl?: string | null;
+      walletAddress?: string | null;
+      avatar?: string | null;
+      role?: string | null;
+      votingPower?: number | null;
+      joined?: Date | null;
+      googleId?: string | null;
+      telegramId?: string | null;
+      createdAt?: Date | null;
+      updatedAt?: Date | null;
+    }
   }
 }
 

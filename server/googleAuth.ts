@@ -32,14 +32,14 @@ export function setupGoogleAuth(app: Express) {
         // Извлечение данных профиля
         const email = profile.emails?.[0]?.value;
         if (!email) {
-          return done(new Error("Email not provided by Google"), null);
+          return done(new Error("Email not provided by Google"), false);
         }
 
         // Проверяем, существует ли пользователь с таким email
         const existingUser = await storage.getUserByEmail(email);
         if (existingUser) {
           // Обновляем существующего пользователя, добавляя Google ID
-          user = await storage.updateUserGoogleId(existingUser.id, profile.id);
+          user = await storage.updateUserGoogleId(Number(existingUser.id), profile.id);
         } else {
           // Создаем нового пользователя
           user = await storage.createUser({
@@ -54,9 +54,10 @@ export function setupGoogleAuth(app: Express) {
         }
       }
 
-      return done(null, user);
+      // Cast user to Express.User type to satisfy TypeScript
+      return done(null, user as Express.User);
     } catch (error) {
-      return done(error, null);
+      return done(error, false);
     }
   }));
 
