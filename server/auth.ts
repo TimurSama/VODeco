@@ -31,6 +31,10 @@ async function comparePasswords(supplied: string, stored: string) {
   return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
+// Импортируем стратегии аутентификации Google и Telegram
+import { setupGoogleAuth } from './googleAuth';
+import { setupTelegramAuth } from './telegramAuth';
+
 export function setupAuth(app: Express) {
   // Создаем хранилище сессий в PostgreSQL
   const pgStore = connectPg(session);
@@ -176,9 +180,15 @@ export function setupAuth(app: Express) {
     }
     
     // Возвращаем данные пользователя без пароля
-    const { password, ...userWithoutPassword } = req.user as User;
+    const { password, ...userWithoutPassword } = req.user as UserInterface;
     res.json(userWithoutPassword);
   });
+  
+  // Настройка аутентификации через Google
+  setupGoogleAuth(app);
+  
+  // Настройка аутентификации через Telegram
+  setupTelegramAuth(app);
 }
 
 // Middleware для защиты маршрутов
