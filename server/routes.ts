@@ -17,8 +17,8 @@ import {
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Настройка аутентификации
-  await setupAuth(app);
+  // Настройка нашей собственной системы аутентификации
+  setupAuth(app);
   
   // Create RESTful API routes
   // All routes prefixed with /api

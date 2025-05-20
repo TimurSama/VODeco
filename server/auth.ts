@@ -1,11 +1,19 @@
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
 import { Express, Request, Response, NextFunction } from "express";
+import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { insertUserSchema, loginSchema } from "@shared/schema";
-import session from "express-session";
+import { User, loginSchema, registerSchema } from "@shared/schema";
+import { ZodError } from "zod";
 import connectPg from "connect-pg-simple";
-import { z } from "zod";
+
+declare global {
+  namespace Express {
+    interface User extends User {}
+  }
+}
 
 const scryptAsync = promisify(scrypt);
 
@@ -23,147 +31,159 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
-  // Настройка сессий с хранением в PostgreSQL
-  const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 неделя
+  // Создаем хранилище сессий в PostgreSQL
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
     createTableIfMissing: true,
-    ttl: sessionTtl,
-    tableName: "sessions",
+    tableName: "sessions"
   });
-  
-  app.use(session({
-    secret: process.env.SESSION_SECRET || "vodeco-secret-key-change-in-production",
-    store: sessionStore,
+
+  const sessionSettings: session.SessionOptions = {
+    secret: process.env.SESSION_SECRET || "vodeco-secret-key",
     resave: false,
     saveUninitialized: false,
+    store: sessionStore,
     cookie: {
-      httpOnly: true,
-      maxAge: sessionTtl,
-      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
-    },
-  }));
+      maxAge: 7 * 24 * 60 * 60 * 1000 // одна неделя
+    }
+  };
 
-  // Регистрация
+  app.use(session(sessionSettings));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.use(
+    new LocalStrategy(async (username, password, done) => {
+      try {
+        const user = await storage.getUserByUsername(username);
+        if (!user || !(await comparePasswords(password, user.password))) {
+          return done(null, false);
+        }
+        return done(null, user);
+      } catch (error) {
+        return done(error);
+      }
+    }),
+  );
+
+  passport.serializeUser((user, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id: number, done) => {
+    try {
+      const user = await storage.getUser(id);
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
+  });
+
+  // Регистрация пользователя
   app.post("/api/register", async (req: Request, res: Response) => {
     try {
-      // Парсинг и валидация входных данных
-      const userInput = insertUserSchema.safeParse(req.body);
-      if (!userInput.success) {
-        return res.status(400).json({ 
-          message: "Некорректные данные", 
-          errors: userInput.error.format() 
-        });
+      const userData = registerSchema.parse(req.body);
+      
+      // Проверяем, существует ли уже пользователь с таким именем
+      const existingUserByUsername = await storage.getUserByUsername(userData.username);
+      if (existingUserByUsername) {
+        return res.status(400).json({ message: "Пользователь с таким именем уже существует" });
+      }
+      
+      // Проверяем, существует ли уже пользователь с таким email
+      const existingUserByEmail = await storage.getUserByEmail(userData.email);
+      if (existingUserByEmail) {
+        return res.status(400).json({ message: "Пользователь с таким email уже существует" });
       }
 
-      // Проверка существующего пользователя
-      const existingUser = await storage.getUserByEmail(userInput.data.email);
-      if (existingUser) {
-        return res.status(409).json({ message: "Пользователь с таким email уже существует" });
-      }
-
-      const usernameCheck = await storage.getUserByUsername(userInput.data.username);
-      if (usernameCheck) {
-        return res.status(409).json({ message: "Пользователь с таким именем уже существует" });
-      }
-
-      // Хеширование пароля
-      const hashedPassword = await hashPassword(userInput.data.password);
-
-      // Создание пользователя
+      // Создаем нового пользователя с хешированным паролем
+      const hashedPassword = await hashPassword(userData.password);
       const user = await storage.createUser({
-        ...userInput.data,
+        ...userData,
         password: hashedPassword,
+        role: "participant",
+        joined: new Date(),
+        votingPower: 0
       });
 
-      // Сохраняем ID пользователя в сессии
-      req.session.userId = user.id;
-
-      // Возвращаем данные пользователя (без пароля)
-      const { password, ...userWithoutPassword } = user;
-      res.status(201).json(userWithoutPassword);
+      // Аутентифицируем пользователя после регистрации
+      req.login(user, (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Ошибка входа после регистрации" });
+        }
+        // Возвращаем данные пользователя без пароля
+        const { password, ...userWithoutPassword } = user;
+        return res.status(201).json(userWithoutPassword);
+      });
     } catch (error) {
-      console.error("Ошибка при регистрации:", error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      if (error instanceof ZodError) {
+        return res.status(400).json({ message: "Ошибка валидации", errors: error.errors });
+      }
+      console.error("Ошибка регистрации:", error);
+      res.status(500).json({ message: "Ошибка регистрации" });
     }
   });
 
-  // Вход
+  // Вход пользователя
   app.post("/api/login", async (req: Request, res: Response) => {
     try {
-      // Парсинг и валидация входных данных
-      const credentials = loginSchema.safeParse(req.body);
-      if (!credentials.success) {
-        return res.status(400).json({ 
-          message: "Некорректные данные для входа", 
-          errors: credentials.error.format() 
+      const credentials = loginSchema.parse(req.body);
+      
+      passport.authenticate("local", (err: Error, user: User) => {
+        if (err) {
+          return res.status(500).json({ message: "Ошибка входа" });
+        }
+        if (!user) {
+          return res.status(401).json({ message: "Неверное имя пользователя или пароль" });
+        }
+        
+        req.login(user, (loginErr) => {
+          if (loginErr) {
+            return res.status(500).json({ message: "Ошибка входа в систему" });
+          }
+          
+          // Возвращаем данные пользователя без пароля
+          const { password, ...userWithoutPassword } = user;
+          return res.status(200).json(userWithoutPassword);
         });
-      }
-
-      // Поиск пользователя
-      const user = await storage.getUserByEmail(credentials.data.email);
-      if (!user) {
-        return res.status(401).json({ message: "Неверный email или пароль" });
-      }
-
-      // Проверка пароля
-      const passwordMatch = await comparePasswords(credentials.data.password, user.password);
-      if (!passwordMatch) {
-        return res.status(401).json({ message: "Неверный email или пароль" });
-      }
-
-      // Сохраняем ID пользователя в сессии
-      req.session.userId = user.id;
-
-      // Возвращаем данные пользователя (без пароля)
-      const { password, ...userWithoutPassword } = user;
-      res.status(200).json(userWithoutPassword);
+      })(req, res);
     } catch (error) {
-      console.error("Ошибка при входе:", error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+      if (error instanceof ZodError) {
+        return res.status(400).json({ message: "Ошибка валидации", errors: error.errors });
+      }
+      console.error("Ошибка входа:", error);
+      res.status(500).json({ message: "Ошибка входа" });
     }
   });
 
-  // Выход
+  // Выход пользователя
   app.post("/api/logout", (req: Request, res: Response) => {
-    req.session.destroy((err) => {
+    req.logout((err) => {
       if (err) {
-        console.error("Ошибка при выходе:", err);
-        return res.status(500).json({ message: "Ошибка при выходе" });
+        return res.status(500).json({ message: "Ошибка выхода" });
       }
-      res.clearCookie("connect.sid");
-      res.status(200).json({ message: "Выход успешен" });
+      res.status(200).json({ message: "Выход выполнен успешно" });
     });
   });
 
-  // Получение текущего пользователя
-  app.get("/api/user", async (req: Request, res: Response) => {
-    try {
-      if (!req.session.userId) {
-        return res.status(401).json({ message: "Не авторизован" });
-      }
-
-      const user = await storage.getUser(req.session.userId);
-      if (!user) {
-        return res.status(401).json({ message: "Пользователь не найден" });
-      }
-
-      // Возвращаем данные пользователя (без пароля)
-      const { password, ...userWithoutPassword } = user;
-      res.status(200).json(userWithoutPassword);
-    } catch (error) {
-      console.error("Ошибка при получении пользователя:", error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+  // Получение данных текущего пользователя
+  app.get("/api/user", (req: Request, res: Response) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Не авторизован" });
     }
+    
+    // Возвращаем данные пользователя без пароля
+    const { password, ...userWithoutPassword } = req.user as User;
+    res.json(userWithoutPassword);
   });
 }
 
-// Middleware для проверки аутентификации
+// Middleware для защиты маршрутов
 export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
-  if (!req.session.userId) {
-    return res.status(401).json({ message: "Не авторизован" });
+  if (req.isAuthenticated()) {
+    return next();
   }
-  next();
+  res.status(401).json({ message: "Требуется авторизация" });
 }
