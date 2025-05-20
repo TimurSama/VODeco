@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu } from 'lucide-react';
 import { AuthStatus } from '@/components/ui/AuthStatus';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -29,8 +30,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           </div>
         </Link>
         
-        {/* Authentication Status */}
-        <AuthStatus />
+        {/* Right side: Language and Auth */}
+        <div className="flex items-center space-x-2">
+          <LanguageSwitcher />
+          <AuthStatus />
+        </div>
       </div>
     </header>
   );
