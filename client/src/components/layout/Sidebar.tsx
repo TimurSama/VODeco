@@ -5,6 +5,7 @@ import {
   Globe, BadgeDollarSign, Settings, LayoutDashboard, Eye, HardDrive, Bookmark, MessagesSquare,
   FolderKanban, LifeBuoy, FileText, ShieldAlert
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarProps {
   open: boolean;
@@ -19,29 +20,30 @@ interface SidebarItem {
 
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const [location] = useLocation();
+  const { t } = useTranslation();
 
   const navItems: SidebarItem[] = [
-    { name: 'Account', path: '/account', icon: User },
-    { name: 'Wallet', path: '/wallet', icon: Wallet },
-    { name: 'Messages', path: '/messages', icon: MessageSquare },
-    { name: 'Contacts', path: '/contacts', icon: Users },
-    { name: 'Groups', path: '/groups', icon: Users },
-    { name: 'Profile', path: '/profile', icon: UserCircle },
-    { name: 'Preview', path: '/preview', icon: Eye },
-    { name: 'DAO', path: '/dao', icon: Database },
-    { name: 'Миссии', path: '/missions', icon: MessagesSquare },
-    { name: 'Token Hub', path: '/token-hub', icon: Bookmark },
-    { name: 'Globo', path: '/globo', icon: Globe },
-    { name: 'Bank', path: '/bank', icon: BadgeDollarSign },
-    { name: 'Cabinets', path: '/cabinets', icon: HardDrive },
-    { name: 'Settings', path: '/settings', icon: Settings },
-    { name: 'Support', path: '/support', icon: LifeBuoy },
-    { name: 'Docs', path: '/docs', icon: FileText },
-    { name: 'Admin', path: '/admin', icon: ShieldAlert },
+    { name: t('common.account'), path: '/account', icon: User },
+    { name: t('common.wallet'), path: '/wallet', icon: Wallet },
+    { name: t('common.messages'), path: '/messages', icon: MessageSquare },
+    { name: t('common.contacts'), path: '/contacts', icon: Users },
+    { name: t('common.groups'), path: '/groups', icon: Users },
+    { name: t('common.profile'), path: '/profile', icon: UserCircle },
+    { name: t('common.preview'), path: '/preview', icon: Eye },
+    { name: t('common.dao'), path: '/dao', icon: Database },
+    { name: t('common.missions'), path: '/missions', icon: MessagesSquare },
+    { name: t('common.tokenHub'), path: '/token-hub', icon: Bookmark },
+    { name: t('common.globo'), path: '/globo', icon: Globe },
+    { name: t('common.bank'), path: '/bank', icon: BadgeDollarSign },
+    { name: t('common.cabinets'), path: '/cabinets', icon: HardDrive },
+    { name: t('common.settings'), path: '/settings', icon: Settings },
+    { name: t('common.support'), path: '/support', icon: LifeBuoy },
+    { name: t('common.docs'), path: '/docs', icon: FileText },
+    { name: t('common.admin'), path: '/admin', icon: ShieldAlert },
   ];
 
   // Dashboard is separate to always show at the top
-  const dashboardItem: SidebarItem = { name: 'Dashboard', path: '/', icon: LayoutDashboard };
+  const dashboardItem: SidebarItem = { name: t('common.dashboard'), path: '/', icon: LayoutDashboard };
 
   const isActive = (path: string) => {
     if (path === '/' && location === '/') return true;
@@ -54,11 +56,11 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
       transition-all duration-300 shadow-lg shadow-primary/5 z-30
       ${open ? 'w-64 translate-x-0' : 'w-64 -translate-x-full'}`}>
       <div className="flex items-center justify-between p-3 border-b border-primary/10">
-        <div className="text-primary font-medium">Меню</div>
+        <div className="text-primary font-medium">{t('common.menu')}</div>
         <button 
           onClick={() => setOpen(false)}
           className="p-1 rounded-full hover:bg-primary/10 text-primary/80 hover:text-primary transition-colors"
-          aria-label="Закрыть меню"
+          aria-label={t('common.close')}
         >
           ←
         </button>
