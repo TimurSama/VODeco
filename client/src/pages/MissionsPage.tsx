@@ -160,17 +160,17 @@ export default function MissionsPage() {
             {t('missions.level')}: 3
           </Badge>
           <Badge variant="outline" className="bg-primary/20 text-primary-foreground">
-            XP: 450/1000
+            {t('missions.xp')}: 450/1000
           </Badge>
         </div>
       </div>
 
       <Tabs defaultValue="missions" value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4 mb-6">
-          <TabsTrigger value="missions">Миссии</TabsTrigger>
-          <TabsTrigger value="devices">Устройства</TabsTrigger>
-          <TabsTrigger value="rewards">Награды</TabsTrigger>
-          <TabsTrigger value="feedback">Обратная связь</TabsTrigger>
+          <TabsTrigger value="missions">{t('missions.tabs.missions')}</TabsTrigger>
+          <TabsTrigger value="devices">{t('missions.tabs.devices')}</TabsTrigger>
+          <TabsTrigger value="rewards">{t('missions.tabs.rewards')}</TabsTrigger>
+          <TabsTrigger value="feedback">{t('missions.tabs.feedback')}</TabsTrigger>
         </TabsList>
 
         {/* Раздел миссий */}

@@ -63,6 +63,8 @@
     "title": "Миссии",
     "level": "Уровень",
     "xp": "XP",
+    "yourProgress": "Ваш прогресс",
+    "toLevel": "до уровня",
     "tabs": {
       "missions": "Миссии",
       "devices": "Устройства",

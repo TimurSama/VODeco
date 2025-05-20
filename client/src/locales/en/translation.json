@@ -63,6 +63,8 @@
     "title": "Missions",
     "level": "Level",
     "xp": "XP",
+    "yourProgress": "Your Progress",
+    "toLevel": "to level",
     "tabs": {
       "missions": "Missions",
       "devices": "Devices",
