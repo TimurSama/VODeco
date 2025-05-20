@@ -3,6 +3,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Express } from "express";
 import { storage } from "./storage";
 import { UserInterface } from "@shared/auth-schema";
+import { adaptUserForPassport } from "./auth-utils";
 
 // Функция для настройки Google аутентификации
 export function setupGoogleAuth(app: Express) {
@@ -54,8 +55,8 @@ export function setupGoogleAuth(app: Express) {
         }
       }
 
-      // Cast user to Express.User type to satisfy TypeScript
-      return done(null, user as Express.User);
+      // Используем утилиту для адаптации пользователя к требованиям Passport
+      return done(null, adaptUserForPassport(user));
     } catch (error) {
       return done(error, false);
     }

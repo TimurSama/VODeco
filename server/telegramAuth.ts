@@ -1,6 +1,7 @@
 import { Express, Request, Response, NextFunction } from "express";
 import { storage } from "./storage";
 import crypto from "crypto";
+import { adaptUserForPassport } from "./auth-utils";
 
 // Функция для настройки Telegram аутентификации
 export function setupTelegramAuth(app: Express) {
@@ -47,8 +48,8 @@ export function setupTelegramAuth(app: Express) {
         });
       }
 
-      // Вход пользователя
-      req.login(user, (err) => {
+      // Вход пользователя с использованием адаптера для правильной типизации
+      req.login(adaptUserForPassport(user), (err) => {
         if (err) {
           return res.status(500).json({ message: "Ошибка аутентификации", error: err.message });
         }

@@ -52,6 +52,7 @@ async function comparePasswords(supplied: string, stored: string) {
 // Импортируем стратегии аутентификации Google и Telegram
 import { setupGoogleAuth } from './googleAuth';
 import { setupTelegramAuth } from './telegramAuth';
+import { adaptUserForPassport } from './auth-utils';
 
 export function setupAuth(app: Express) {
   // Создаем хранилище сессий в PostgreSQL
