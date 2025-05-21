@@ -171,6 +171,12 @@
       "daoMembersChange": "+241 this week",
       "vodPrice": "VOD Price",
       "vodPriceChange": "+3.4% (24h)"
+    },
+    "welcome": {
+      "title": "Welcome to",
+      "description": "Decentralized Web3 platform for water resource management based on DAO VOD ECO. Join our ecosystem for monitoring, voting, and participating in water conservation initiatives.",
+      "explore": "Explore",
+      "joinDao": "Join DAO"
     }
   }
 }

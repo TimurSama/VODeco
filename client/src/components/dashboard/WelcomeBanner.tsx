@@ -11,22 +11,22 @@ const WelcomeBanner: React.FC = () => {
       <div className="absolute -right-20 -bottom-20 w-64 h-64 rounded-full bg-primary/5 animate-pulse-slow"></div>
       <div className="relative z-10">
         <h1 className="font-bold text-3xl md:text-4xl mb-3 tracking-tight">
-          Добро пожаловать в <span className="text-primary">VODECO</span>
+          {t('dashboard.welcome.title', 'Добро пожаловать в')} <span className="text-primary">VODECO</span>
         </h1>
         <p className="text-foreground/80 max-w-2xl">
-          Децентрализованная Web3 платформа для управления водными ресурсами на основе DAO VOD ECO. Присоединяйтесь к нашей экосистеме для мониторинга, голосования и участия в инициативах по сохранению водных ресурсов.
+          {t('dashboard.welcome.description', 'Децентрализованная Web3 платформа для управления водными ресурсами на основе DAO VOD ECO. Присоединяйтесь к нашей экосистеме для мониторинга, голосования и участия в инициативах по сохранению водных ресурсов.')}
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/globo">
             <Button className="bg-primary hover:bg-primary/90 text-black font-medium px-5 py-2 rounded-lg transition-colors flex items-center">
               <Globe className="h-4 w-4 mr-2" />
-              Исследовать
+              {t('dashboard.welcome.explore', 'Исследовать')}
             </Button>
           </Link>
           <Link href="/dao">
             <Button variant="outline" className="border border-primary hover:bg-primary/10 text-foreground font-medium px-5 py-2 rounded-lg transition-colors flex items-center">
               <Vote className="h-4 w-4 mr-2" />
-              Присоединиться к DAO
+              {t('dashboard.welcome.joinDao', 'Присоединиться к DAO')}
             </Button>
           </Link>
         </div>
