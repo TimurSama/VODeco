@@ -62,26 +62,27 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
   };
   
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-lg bg-[#040B1B] border border-[#0d2245]">
+    <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-lg bg-[#040B1B] border border-[#0d2245]">
       {/* Карта мира (фоновое изображение) */}
       <div className="absolute inset-0 bg-[#040B1B] opacity-90 z-0">
+        {/* Круги на карте, изображающие глобус */}
         <div className="absolute inset-0 z-10 flex items-center justify-center">
-          <div className="w-[90%] h-[90%] border-[0.5px] border-[#0a4f6e] rounded-full opacity-20" />
-          <div className="absolute w-[60%] h-[60%] border-[0.5px] border-[#0a4f6e] rounded-full opacity-20" />
-          <div className="absolute w-[30%] h-[30%] border-[0.5px] border-[#0a4f6e] rounded-full opacity-20" />
+          <div className="w-[90%] h-[90%] border-2 border-[#0a4f6e] rounded-full opacity-30" />
+          <div className="absolute w-[60%] h-[60%] border-2 border-[#0a4f6e] rounded-full opacity-30" />
+          <div className="absolute w-[30%] h-[30%] border-2 border-[#0a4f6e] rounded-full opacity-30" />
         </div>
         
         {/* Сетка линий долготы */}
-        <div className="absolute inset-0 z-10 flex flex-col justify-around opacity-20">
+        <div className="absolute inset-0 z-10 flex flex-col justify-around opacity-30">
           {Array.from({ length: 9 }).map((_, i) => (
-            <div key={`lat-${i}`} className="w-full h-[0.5px] bg-[#0a4f6e]" />
+            <div key={`lat-${i}`} className="w-full h-[1px] bg-[#0a4f6e]" />
           ))}
         </div>
         
         {/* Сетка линий широты */}
-        <div className="absolute inset-0 z-10 flex flex-row justify-around opacity-20">
+        <div className="absolute inset-0 z-10 flex flex-row justify-around opacity-30">
           {Array.from({ length: 9 }).map((_, i) => (
-            <div key={`lng-${i}`} className="h-full w-[0.5px] bg-[#0a4f6e]" />
+            <div key={`lng-${i}`} className="h-full w-[1px] bg-[#0a4f6e]" />
           ))}
         </div>
       </div>
@@ -91,9 +92,14 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
         {renderMarkers()}
       </div>
       
+      {/* Заголовок карты */}
+      <div className="absolute top-4 left-4 z-30 bg-black/50 p-2 rounded-md text-sm text-white/90">
+        {t('globo.worldMap', 'Карта водных ресурсов')}
+      </div>
+      
       {/* Подсказка по взаимодействию */}
       <div className="absolute bottom-4 right-4 z-30 bg-black/50 p-2 rounded-md text-xs text-white/70">
-        {t('globo.clickToExplore')}
+        {t('globo.clickToExplore', 'Нажмите на маркер для просмотра')}
       </div>
     </div>
   );
