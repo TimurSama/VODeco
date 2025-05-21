@@ -152,15 +152,14 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       // Создаем текстуру для глобуса
       const textureLoader = new THREE.TextureLoader();
       
-      // Создаем земной шар с текстурой ночной земли
+      // Создаем земной шар с базовой текстурой
       const earthGeometry = new THREE.SphereGeometry(100, 64, 64);
       const earthMaterial = new THREE.MeshPhongMaterial({
-        map: textureLoader.load('https://raw.githubusercontent.com/turban/webgl-earth/master/images/2_no_clouds_4k.jpg'),
-        bumpMap: textureLoader.load('https://raw.githubusercontent.com/turban/webgl-earth/master/images/elev_bump_4k.jpg'),
-        bumpScale: 0.8,
-        specularMap: textureLoader.load('https://raw.githubusercontent.com/turban/webgl-earth/master/images/water_4k.png'),
+        // Используем цвет вместо текстур для надежности
+        color: 0x1e3a8a, // темно-синий цвет для океанов
+        emissive: 0x0a192f, // слабое свечение
         specular: new THREE.Color(0x2d4ea0),
-        shininess: 6
+        shininess: 10
       });
       
       const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
@@ -172,7 +171,9 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
         color: 0x14b8a6,
         side: THREE.BackSide,
         transparent: true,
-        opacity: 0.15
+        opacity: 0.3, // Увеличиваем яркость атмосферы
+        emissive: 0x14b8a6,
+        emissiveIntensity: 0.2
       });
       
       const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
@@ -204,27 +205,32 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       resources.forEach(resource => {
         // Определяем цвет и размер маркера в зависимости от категории и статуса
         let color = 0xFFFFFF; // Белый по умолчанию для path
-        let size = 0.5;
+        let size = 1.5; // Увеличиваем базовый размер для лучшей видимости
         
         if (resource.category === ResourceCategory.INVESTMENT) {
           color = 0x3b82f6; // Синий для инвестиционных объектов
-          size = 0.8;
+          size = 2.0;
         }
         
         // Модифицируем цвет в зависимости от статуса
         if (resource.status === ResourceStatus.CRITICAL) {
-          color = 0xef4444; // Красный для критических
+          color = 0xff4444; // Яркий красный для критических
           size *= 1.5;
         } else if (resource.status === ResourceStatus.NEEDS_ATTENTION) {
           if (resource.category === ResourceCategory.INVESTMENT) {
-            color = 0xf59e0b; // Янтарный для инвестиционных, требующих внимания
+            color = 0xffbb00; // Яркий янтарный для инвестиционных, требующих внимания
           }
           size *= 1.2;
         }
         
-        // Создаем маркер
+        // Создаем маркер с эффектом свечения
         const markerGeometry = new THREE.SphereGeometry(size, 16, 16);
-        const markerMaterial = new THREE.MeshBasicMaterial({ color });
+        const markerMaterial = new THREE.MeshPhongMaterial({ 
+          color,
+          emissive: color,
+          emissiveIntensity: 0.5,
+          shininess: 50
+        });
         const marker = new THREE.Mesh(markerGeometry, markerMaterial);
         
         // Преобразуем географические координаты в 3D-координаты

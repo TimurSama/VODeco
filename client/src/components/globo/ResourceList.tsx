@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { WaterResource, ResourceStatus } from '@/types';
 
 interface ResourceListProps {
@@ -14,6 +15,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
   onResourceSelect,
   selectedResource 
 }) => {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState<FilterType>('All');
   const [showDetail, setShowDetail] = useState<number | null>(null);
 
@@ -74,7 +76,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
   return (
     <div className="lg:w-5/12">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-space font-medium text-lg text-white">Investment Objects</h3>
+        <h3 className="font-space font-medium text-lg text-white">{t('globo.resourceList.investmentObjects', 'Инвестиционные объекты')}</h3>
         <div className="flex items-center space-x-2">
           {(['All', 'Critical', 'Needs Attention', 'Stable'] as FilterType[]).map(type => (
             <button 
@@ -84,7 +86,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
               }`}
               onClick={() => setFilter(type)}
             >
-              {type}
+              {t(`globo.resourceList.filters.${type.toLowerCase().replace(' ', '_')}`, type)}
             </button>
           ))}
         </div>
@@ -116,18 +118,18 @@ const ResourceList: React.FC<ResourceListProps> = ({
               {/* Базовая информация всегда видна */}
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div>
-                  <p className="text-white/50">Quality Index</p>
+                  <p className="text-white/50">{t('globo.resourceList.qualityIndex', 'Индекс качества')}</p>
                   <p className={`${getQualityTextClass(resource.qualityIndex)} font-medium`}>
                     {resource.qualityIndex}/100
                   </p>
                 </div>
                 <div>
-                  <p className="text-white/50">Flow Rate</p>
+                  <p className="text-white/50">{t('globo.resourceList.flowRate', 'Расход')}</p>
                   <p className="text-white font-medium">{resource.flowRate} m³/h</p>
                 </div>
                 <div>
-                  <p className="text-white/50">Type</p>
-                  <p className="text-white font-medium">{resource.projectType || 'Water Resource'}</p>
+                  <p className="text-white/50">{t('globo.resourceList.type', 'Тип')}</p>
+                  <p className="text-white font-medium">{t(`globo.resourceList.projectTypes.${resource.projectType?.toLowerCase().replace(/\s+/g, '_')}`, resource.projectType || 'Водный ресурс')}</p>
                 </div>
               </div>
               
@@ -136,19 +138,19 @@ const ResourceList: React.FC<ResourceListProps> = ({
                 <div className="mt-4 pt-3 border-t border-white/10">
                   <div className="grid grid-cols-2 gap-3 text-xs mb-3">
                     <div>
-                      <p className="text-white/50">Total Funding Required</p>
+                      <p className="text-white/50">{t('globo.resourceList.totalFunding', 'Общее финансирование')}</p>
                       <p className="text-white font-medium">{formatCurrency(resource.totalFunding)}</p>
                     </div>
                     <div>
-                      <p className="text-white/50">Available for DAO</p>
+                      <p className="text-white/50">{t('globo.resourceList.availableForDAO', 'Доступно для DAO')}</p>
                       <p className="text-white font-medium">{formatCurrency(resource.availableForDAO)}</p>
                     </div>
                     <div>
-                      <p className="text-white/50">Expected Return (IRR)</p>
+                      <p className="text-white/50">{t('globo.resourceList.expectedReturn', 'Ожидаемая доходность (IRR)')}</p>
                       <p className="text-primary font-medium">{resource.irr}%</p>
                     </div>
                     <div>
-                      <p className="text-white/50">Participants</p>
+                      <p className="text-white/50">{t('globo.resourceList.participants', 'Участники')}</p>
                       <p className="text-white font-medium">{resource.participantsCount || 0}</p>
                     </div>
                   </div>
@@ -156,7 +158,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
                   {/* Прогресс финансирования */}
                   <div className="mt-3">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-white/70">Funding Progress</span>
+                      <span className="text-white/70">{t('globo.resourceList.fundingProgress', 'Прогресс финансирования')}</span>
                       <span className="text-primary font-medium">{getFundingPercent(resource)}%</span>
                     </div>
                     <div className="w-full bg-white/10 rounded-full h-2">
@@ -170,7 +172,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
                   {/* Кнопка инвестирования */}
                   <button className="mt-4 bg-primary hover:bg-primary/80 text-black font-medium rounded-md py-2 w-full text-sm transition-colors flex items-center justify-center">
                     <span className="material-icons mr-1 text-sm">account_balance_wallet</span>
-                    Invest in Project
+                    {t('globo.resourceList.investInProject', 'Инвестировать в проект')}
                   </button>
                 </div>
               )}
@@ -185,7 +187,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
                   }}
                 >
                   <span className="material-icons text-xs mr-1">visibility</span>
-                  View Investment Details
+                  {t('globo.resourceList.viewInvestmentDetails', 'Просмотр деталей инвестиции')}
                 </button>
               )}
             </div>
