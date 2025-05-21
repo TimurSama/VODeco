@@ -159,7 +159,38 @@
     "investmentType": "investment",
     "pathType": "path",
     "selectedInvestment": "Selected investment resource in {{region}} region",
-    "selectedPath": "Selected path resource in {{region}} region"
+    "selectedPath": "Selected path resource in {{region}} region",
+    "resourceList": {
+      "investmentObjects": "Investment Objects",
+      "filters": {
+        "all": "All",
+        "critical": "Critical",
+        "needs_attention": "Needs Attention",
+        "stable": "Stable"
+      },
+      "statuses": {
+        "critical": "Critical",
+        "needs_attention": "Needs Attention",
+        "stable": "Stable"
+      },
+      "qualityIndex": "Quality Index",
+      "flowRate": "Flow Rate",
+      "type": "Type",
+      "projectTypes": {
+        "pumping_station": "Pumping Station",
+        "water_resource": "Water Resource",
+        "filtration_system": "Filtration System",
+        "irrigation_node": "Irrigation Node"
+      },
+      "totalFunding": "Total Funding Required",
+      "availableForDAO": "Available for DAO",
+      "expectedReturn": "Expected Return (IRR)",
+      "participants": "Participants",
+      "fundingProgress": "Funding Progress",
+      "investInProject": "Invest in Project",
+      "viewInvestmentDetails": "View Investment Details",
+      "noResourcesMatch": "No resources match the selected filter."
+    }
   },
   "dashboard": {
     "stats": {

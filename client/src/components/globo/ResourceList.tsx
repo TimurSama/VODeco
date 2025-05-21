@@ -110,7 +110,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
               <div className="flex justify-between mb-2">
                 <h4 className="font-space font-medium text-white">{resource.name}</h4>
                 <span className={`${getStatusBgClass(resource.status)} text-xs px-2 py-1 rounded-md`}>
-                  {resource.status}
+                  {t(`globo.resourceList.statuses.${resource.status.toLowerCase().replace(/\s+/g, '_')}`, resource.status)}
                 </span>
               </div>
               <p className="text-white/70 text-sm mb-3">{resource.region}, {resource.country}</p>
@@ -195,7 +195,7 @@ const ResourceList: React.FC<ResourceListProps> = ({
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-white/50">
             <span className="material-icons text-4xl mb-2">water_drop</span>
-            <p>No resources match the selected filter.</p>
+            <p>{t('globo.resourceList.noResourcesMatch', 'Нет ресурсов, соответствующих выбранному фильтру.')}</p>
           </div>
         )}
       </div>

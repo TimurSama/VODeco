@@ -159,7 +159,38 @@
     "investmentType": "инвестиционный",
     "pathType": "путевой",
     "selectedInvestment": "Выбран инвестиционный ресурс в регионе {{region}}",
-    "selectedPath": "Выбран путевой ресурс в регионе {{region}}"
+    "selectedPath": "Выбран путевой ресурс в регионе {{region}}",
+    "resourceList": {
+      "investmentObjects": "Инвестиционные объекты",
+      "filters": {
+        "all": "Все",
+        "critical": "Критические",
+        "needs_attention": "Требуют внимания",
+        "stable": "Стабильные"
+      },
+      "statuses": {
+        "critical": "Критический",
+        "needs_attention": "Требует внимания",
+        "stable": "Стабильный"
+      },
+      "qualityIndex": "Индекс качества",
+      "flowRate": "Расход",
+      "type": "Тип",
+      "projectTypes": {
+        "pumping_station": "Насосная станция",
+        "water_resource": "Водный ресурс",
+        "filtration_system": "Система фильтрации",
+        "irrigation_node": "Ирригационный узел"
+      },
+      "totalFunding": "Общее финансирование",
+      "availableForDAO": "Доступно для DAO",
+      "expectedReturn": "Ожидаемая доходность (IRR)",
+      "participants": "Участники",
+      "fundingProgress": "Прогресс финансирования",
+      "investInProject": "Инвестировать в проект",
+      "viewInvestmentDetails": "Просмотр деталей инвестиции",
+      "noResourcesMatch": "Нет ресурсов, соответствующих выбранному фильтру."
+    }
   },
   "dashboard": {
     "stats": {
