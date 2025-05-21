@@ -1,26 +1,105 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import * as THREE from 'three';
-// @ts-ignore
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import React, { useState } from 'react';
 import { WaterResource, ResourceStatus, ResourceCategory } from '@/types';
+import { useTranslation } from 'react-i18next';
 
 interface SimpleGlobeProps {
   resources: WaterResource[];
   onResourceSelect: (resource: WaterResource) => void;
 }
 
+// Стилизованная интерактивная карта мира с маркерами
 const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const controlsRef = useRef<OrbitControls | null>(null);
-  const requestRef = useRef<number>(0);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const { t } = useTranslation();
+  const [hoveredMarker, setHoveredMarker] = useState<number | null>(null);
   
   console.log("SimpleGlobe rendered with", resources.length, "resources");
+  
+  // Определяем цвет маркера по статусу и категории
+  const getMarkerColor = (resource: WaterResource) => {
+    if (resource.status === ResourceStatus.CRITICAL) {
+      return 'bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.7)]';
+    } else if (resource.status === ResourceStatus.NEEDS_ATTENTION) {
+      return 'bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.7)]';
+    } else if (resource.category === ResourceCategory.INVESTMENT) {
+      return 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.7)]';
+    } else {
+      return 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.7)]';
+    }
+  };
+  
+  // Преобразуем координаты для отображения на 2D карте
+  const getMarkerPosition = (lat: number, lng: number) => {
+    // Простое линейное преобразование координат в диапазон от 0% до 100%
+    const x = ((lng + 180) / 360) * 100; // долгота от -180 до 180 -> 0 до 100%
+    const y = ((-lat + 90) / 180) * 100; // широта от -90 до 90 -> 100% до 0%
+    return { x, y };
+  };
+  
+  // Рендерим маркеры для ресурсов
+  const renderMarkers = () => {
+    return resources.map((resource) => {
+      const { x, y } = getMarkerPosition(resource.latitude, resource.longitude);
+      const isHovered = hoveredMarker === resource.id;
+      const markerSize = isHovered ? 'w-5 h-5' : 'w-4 h-4';
+      const zIndex = isHovered ? 'z-30' : 'z-20';
+      
+      return (
+        <div
+          key={resource.id}
+          className={`absolute rounded-full ${markerSize} ${getMarkerColor(resource)} ${zIndex} cursor-pointer transition-all duration-300 transform ${isHovered ? 'scale-125' : 'scale-100'}`}
+          style={{ 
+            left: `${x}%`, 
+            top: `${y}%`,
+            transform: 'translate(-50%, -50%)'
+          }}
+          onClick={() => onResourceSelect(resource)}
+          onMouseEnter={() => setHoveredMarker(resource.id)}
+          onMouseLeave={() => setHoveredMarker(null)}
+          title={resource.name}
+        />
+      );
+    });
+  };
+  
+  return (
+    <div className="relative w-full h-full overflow-hidden rounded-lg bg-[#040B1B] border border-[#0d2245]">
+      {/* Карта мира (фоновое изображение) */}
+      <div className="absolute inset-0 bg-[#040B1B] opacity-90 z-0">
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
+          <div className="w-[90%] h-[90%] border-[0.5px] border-[#0a4f6e] rounded-full opacity-20" />
+          <div className="absolute w-[60%] h-[60%] border-[0.5px] border-[#0a4f6e] rounded-full opacity-20" />
+          <div className="absolute w-[30%] h-[30%] border-[0.5px] border-[#0a4f6e] rounded-full opacity-20" />
+        </div>
+        
+        {/* Сетка линий долготы */}
+        <div className="absolute inset-0 z-10 flex flex-col justify-around opacity-20">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={`lat-${i}`} className="w-full h-[0.5px] bg-[#0a4f6e]" />
+          ))}
+        </div>
+        
+        {/* Сетка линий широты */}
+        <div className="absolute inset-0 z-10 flex flex-row justify-around opacity-20">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={`lng-${i}`} className="h-full w-[0.5px] bg-[#0a4f6e]" />
+          ))}
+        </div>
+      </div>
+      
+      {/* Контейнер для маркеров */}
+      <div className="absolute inset-0 z-20">
+        {renderMarkers()}
+      </div>
+      
+      {/* Подсказка по взаимодействию */}
+      <div className="absolute bottom-4 right-4 z-30 bg-black/50 p-2 rounded-md text-xs text-white/70">
+        {t('globo.clickToExplore')}
+      </div>
+    </div>
+  );
+};
 
-  // Инициализация базовой сцены
+export default SimpleGlobe;
   useEffect(() => {
     if (!containerRef.current || isInitialized) return;
     
@@ -42,10 +121,14 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       camera.position.set(0, 0, 250);
       cameraRef.current = camera;
       
-      // Создаем рендерер
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      // Создаем рендерер с правильными настройками для мобильных устройств
+      const renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance'
+      });
       renderer.setSize(width, height);
-      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Ограничиваем pixelRatio для производительности
       
       // Очищаем контейнер если в нем что-то есть
       while(containerRef.current.firstChild) {
@@ -55,13 +138,18 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       containerRef.current.appendChild(renderer.domElement);
       rendererRef.current = renderer;
       
-      // Добавляем освещение
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      // Добавляем сильное освещение для лучшей видимости объектов
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Увеличиваем интенсивность
       scene.add(ambientLight);
       
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0); // Увеличиваем интенсивность
       directionalLight.position.set(1, 1, 1);
       scene.add(directionalLight);
+      
+      // Добавляем дополнительный источник света с другой стороны
+      const backLight = new THREE.DirectionalLight(0xffffff, 0.5);
+      backLight.position.set(-1, -1, -1);
+      scene.add(backLight);
       
       // Создаем управление камерой
       const controls = new OrbitControls(camera, renderer.domElement);
@@ -69,7 +157,7 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       controls.dampingFactor = 0.05;
       controls.rotateSpeed = 0.5;
       controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.5;
+      controls.autoRotateSpeed = 0.8; // Немного увеличиваем скорость вращения
       controlsRef.current = controls;
       
       // Создаем базовый глобус
@@ -78,9 +166,18 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       // Добавляем маркеры ресурсов
       addResourceMarkers(scene);
       
-      // Анимационный цикл
-      const animate = () => {
+      // Анимационный цикл с оптимизациями
+      let lastTime = 0;
+      const FRAME_RATE = 30; // Ограничиваем FPS для мобильных устройств
+      const FRAME_TIME = 1000 / FRAME_RATE;
+      
+      const animate = (time = 0) => {
         requestRef.current = requestAnimationFrame(animate);
+        
+        // Ограничиваем частоту кадров
+        const delta = time - lastTime;
+        if (delta < FRAME_TIME) return;
+        lastTime = time;
         
         if (controlsRef.current) {
           controlsRef.current.update();
@@ -93,16 +190,20 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       
       animate();
       
-      // Обработчик изменения размера окна
+      // Обработчик изменения размера окна с дебаунсом
+      let resizeTimer: number;
       const handleResize = () => {
-        if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
-        
-        const width = containerRef.current.clientWidth;
-        const height = containerRef.current.clientHeight || 500;
-        
-        cameraRef.current.aspect = width / height;
-        cameraRef.current.updateProjectionMatrix();
-        rendererRef.current.setSize(width, height);
+        clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
+          
+          const width = containerRef.current.clientWidth;
+          const height = containerRef.current.clientHeight || 500;
+          
+          cameraRef.current.aspect = width / height;
+          cameraRef.current.updateProjectionMatrix();
+          rendererRef.current.setSize(width, height);
+        }, 250);
       };
       
       window.addEventListener('resize', handleResize);
@@ -114,6 +215,7 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
       return () => {
         console.log("Cleaning up SimpleGlobe");
         window.removeEventListener('resize', handleResize);
+        clearTimeout(resizeTimer);
         cancelAnimationFrame(requestRef.current);
         
         if (rendererRef.current && containerRef.current) {
