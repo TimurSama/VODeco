@@ -1,9 +1,11 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import { Globe, Vote } from 'lucide-react';
 
 const WelcomeBanner: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="border border-primary/10 bg-card/80 backdrop-blur-sm rounded-xl p-6 mb-8 relative overflow-hidden">
       <div className="absolute -right-20 -bottom-20 w-64 h-64 rounded-full bg-primary/5 animate-pulse-slow"></div>

@@ -148,5 +148,29 @@
     "ru": "Русский",
     "en": "English",
     "changeLanguage": "Change Language"
+  },
+  "globo": {
+    "title": "Global Water Resources",
+    "loading": "Loading resources data...",
+    "errorLoading": "Error loading resources",
+    "tryAgain": "Try Again",
+    "errorTitle": "Error loading resources",
+    "errorDescription": "Unable to load water resources data.",
+    "investmentType": "investment",
+    "pathType": "path",
+    "selectedInvestment": "Selected investment resource in {{region}} region",
+    "selectedPath": "Selected path resource in {{region}} region"
+  },
+  "dashboard": {
+    "stats": {
+      "waterResources": "Water Resources",
+      "waterResourcesChange": "+12% from last month",
+      "activeVotes": "Active Votes",
+      "activeVotesChange": "5 closing soon",
+      "daoMembers": "DAO Members",
+      "daoMembersChange": "+241 this week",
+      "vodPrice": "VOD Price",
+      "vodPriceChange": "+3.4% (24h)"
+    }
   }
 }

@@ -160,5 +160,17 @@
     "pathType": "путевой",
     "selectedInvestment": "Выбран инвестиционный ресурс в регионе {{region}}",
     "selectedPath": "Выбран путевой ресурс в регионе {{region}}"
+  },
+  "dashboard": {
+    "stats": {
+      "waterResources": "Водные ресурсы",
+      "waterResourcesChange": "+12% с прошлого месяца",
+      "activeVotes": "Активные голосования",
+      "activeVotesChange": "5 скоро закрываются",
+      "daoMembers": "Участники ДАО",
+      "daoMembersChange": "+241 за эту неделю",
+      "vodPrice": "Цена VOD",
+      "vodPriceChange": "+3.4% (24ч)"
+    }
   }
 }
