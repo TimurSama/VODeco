@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import GlobeVisualization from '@/components/globo/GlobeVisualization';
 import SimpleGlobe from '@/components/globo/SimpleGlobe';
 import ResourceList from '@/components/globo/ResourceList';
