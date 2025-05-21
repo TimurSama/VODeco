@@ -10,6 +10,7 @@ import { getQueryFn } from '@/lib/queryClient';
 import { Button } from '@/components/ui/button';
 
 const GloboPage: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedResource, setSelectedResource] = useState<WaterResource | undefined>();
   const { toast } = useToast();
   
@@ -24,8 +25,8 @@ const GloboPage: React.FC = () => {
     if (error) {
       console.error("Error loading water resources:", error);
       toast({
-        title: 'Error loading resources',
-        description: 'Unable to load water resources data.',
+        title: t('globo.errorTitle', 'Ошибка загрузки ресурсов'),
+        description: t('globo.errorDescription', 'Не удалось загрузить данные о водных ресурсах.'),
         variant: 'destructive'
       });
     }
@@ -48,7 +49,9 @@ const GloboPage: React.FC = () => {
     setSelectedResource(resource);
     toast({
       title: resource.name,
-      description: `Selected ${resource.category === ResourceCategory.INVESTMENT ? 'investment' : 'path'} resource in ${resource.region}`
+      description: resource.category === ResourceCategory.INVESTMENT ? 
+        t('globo.selectedInvestment', 'Выбран инвестиционный ресурс в регионе {{region}}', {region: resource.region}) : 
+        t('globo.selectedPath', 'Выбран путевой ресурс в регионе {{region}}', {region: resource.region})
     });
   };
 
@@ -56,19 +59,19 @@ const GloboPage: React.FC = () => {
     <section id="globo" className="py-8 px-4">
       <div className="container mx-auto">
         <h2 className="text-2xl mb-6 flex items-center text-primary">
-          Global Water Resources
+          {t('globo.title', 'Глобальные водные ресурсы')}
         </h2>
         
         {isLoading ? (
           <div className="text-center py-20">
-            <p className="text-xl mb-4">Loading resources data...</p>
+            <p className="text-xl mb-4">{t('globo.loading', 'Загрузка данных ресурсов...')}</p>
             <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
           </div>
         ) : error ? (
           <div className="text-center py-20">
-            <p className="text-xl mb-4 text-red-500">Error loading resources</p>
+            <p className="text-xl mb-4 text-red-500">{t('globo.errorLoading', 'Ошибка загрузки ресурсов')}</p>
             <Button onClick={() => window.location.reload()}>
-              Try Again
+              {t('globo.tryAgain', 'Попробовать снова')}
             </Button>
           </div>
         ) : (
