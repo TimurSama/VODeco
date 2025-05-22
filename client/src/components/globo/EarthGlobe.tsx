@@ -55,37 +55,118 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     }
     container.appendChild(renderer.domElement);
 
-    // Освещение
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Освещение для лучшего отображения текстур
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 3, 5);
-    scene.add(directionalLight);
+    // Основной свет (имитация солнца)
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    sunLight.position.set(100, 50, 50);
+    sunLight.castShadow = true;
+    scene.add(sunLight);
 
-    // Создание глобуса
-    const globeGeometry = new THREE.SphereGeometry(80, 32, 32);
+    // Дополнительный мягкий свет для освещения темной стороны
+    const fillLight = new THREE.DirectionalLight(0x4a9eff, 0.3);
+    fillLight.position.set(-100, -50, -50);
+    scene.add(fillLight);
+
+    // Создание глобуса с текстурой
+    const globeGeometry = new THREE.SphereGeometry(80, 64, 64);
+    
+    // Создаем простую текстуру Земли процедурно
+    const textureSize = 512;
+    const canvas = document.createElement('canvas');
+    canvas.width = textureSize;
+    canvas.height = textureSize;
+    const ctx = canvas.getContext('2d');
+    
+    if (ctx) {
+      // Основной цвет океанов
+      ctx.fillStyle = '#1e40af'; // Темно-синий
+      ctx.fillRect(0, 0, textureSize, textureSize);
+      
+      // Добавляем континенты простыми формами
+      ctx.fillStyle = '#059669'; // Зеленый для суши
+      
+      // Евразия
+      ctx.beginPath();
+      ctx.ellipse(textureSize * 0.7, textureSize * 0.35, textureSize * 0.25, textureSize * 0.15, 0, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Африка
+      ctx.beginPath();
+      ctx.ellipse(textureSize * 0.55, textureSize * 0.6, textureSize * 0.08, textureSize * 0.2, 0, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Северная Америка
+      ctx.beginPath();
+      ctx.ellipse(textureSize * 0.2, textureSize * 0.3, textureSize * 0.12, textureSize * 0.18, 0, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Южная Америка
+      ctx.beginPath();
+      ctx.ellipse(textureSize * 0.25, textureSize * 0.65, textureSize * 0.06, textureSize * 0.15, 0, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Австралия
+      ctx.beginPath();
+      ctx.ellipse(textureSize * 0.85, textureSize * 0.75, textureSize * 0.05, textureSize * 0.04, 0, 0, 2 * Math.PI);
+      ctx.fill();
+      
+      // Добавляем облака (белые пятна)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      for (let i = 0; i < 20; i++) {
+        const x = Math.random() * textureSize;
+        const y = Math.random() * textureSize;
+        const radius = Math.random() * 30 + 10;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    }
+    
+    // Создаем текстуру из canvas
+    const earthTexture = new THREE.CanvasTexture(canvas);
+    earthTexture.wrapS = THREE.RepeatWrapping;
+    earthTexture.wrapT = THREE.RepeatWrapping;
+    
     const globeMaterial = new THREE.MeshPhongMaterial({
-      color: 0x2563eb,
+      map: earthTexture,
       shininess: 30,
       transparent: true,
-      opacity: 0.9
+      opacity: 0.95
     });
 
     const globeMesh = new THREE.Mesh(globeGeometry, globeMaterial);
     scene.add(globeMesh);
 
-    // Атмосфера
+    // Атмосфера с более реалистичным видом
     const atmosphereGeometry = new THREE.SphereGeometry(82, 32, 32);
     const atmosphereMaterial = new THREE.MeshPhongMaterial({
-      color: 0x14b8a6,
+      color: 0x87ceeb, // Небесно-голубой
       side: THREE.BackSide,
       transparent: true,
-      opacity: 0.15
+      opacity: 0.2,
+      emissive: 0x87ceeb,
+      emissiveIntensity: 0.1
     });
 
     const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
     scene.add(atmosphere);
+
+    // Дополнительное внешнее свечение атмосферы
+    const outerAtmosphereGeometry = new THREE.SphereGeometry(84, 32, 32);
+    const outerAtmosphereMaterial = new THREE.MeshPhongMaterial({
+      color: 0x4a9eff,
+      side: THREE.BackSide,
+      transparent: true,
+      opacity: 0.1,
+      emissive: 0x4a9eff,
+      emissiveIntensity: 0.05
+    });
+
+    const outerAtmosphere = new THREE.Mesh(outerAtmosphereGeometry, outerAtmosphereMaterial);
+    scene.add(outerAtmosphere);
 
     // Управление
     const controls = new OrbitControls(camera, renderer.domElement);
