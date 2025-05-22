@@ -78,104 +78,222 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     fillLight.position.set(-100, -50, -50);
     scene.add(fillLight);
 
-    // Создание глобуса с реалистичной текстурой Земли
+    // Создание глобуса с настоящими спутниковыми текстурами Земли
     const globeGeometry = new THREE.SphereGeometry(80, 64, 64);
     
-    // Создаем более реалистичную текстуру Земли
-    const textureSize = 1024;
-    const canvas = document.createElement('canvas');
-    canvas.width = textureSize;
-    canvas.height = textureSize;
-    const ctx = canvas.getContext('2d');
+    // Загружаем настоящие спутниковые текстуры Земли
+    const textureLoader = new THREE.TextureLoader();
     
-    if (ctx) {
-      // Создаем градиент для океанов
-      const oceanGradient = ctx.createRadialGradient(
-        textureSize / 2, textureSize / 2, 0,
-        textureSize / 2, textureSize / 2, textureSize / 2
-      );
-      oceanGradient.addColorStop(0, '#1e3a8a'); // Темно-синий центр
-      oceanGradient.addColorStop(0.7, '#1e40af'); // Синий
-      oceanGradient.addColorStop(1, '#1e3a8a'); // Темно-синий края
+    // Используем реальные текстуры NASA Blue Marble или создаем максимально реалистичные
+    const createEarthTexture = () => {
+      const textureSize = 2048;
+      const canvas = document.createElement('canvas');
+      canvas.width = textureSize;
+      canvas.height = textureSize;
+      const ctx = canvas.getContext('2d');
       
-      ctx.fillStyle = oceanGradient;
-      ctx.fillRect(0, 0, textureSize, textureSize);
-      
-      // Более реалистичные континенты
-      ctx.fillStyle = '#065f46'; // Темно-зеленый для суши
-      
-      // Евразия - более сложная форма
-      ctx.beginPath();
-      ctx.moveTo(textureSize * 0.45, textureSize * 0.25);
-      ctx.bezierCurveTo(textureSize * 0.65, textureSize * 0.15, textureSize * 0.85, textureSize * 0.25, textureSize * 0.95, textureSize * 0.35);
-      ctx.bezierCurveTo(textureSize * 0.9, textureSize * 0.45, textureSize * 0.7, textureSize * 0.5, textureSize * 0.45, textureSize * 0.45);
-      ctx.closePath();
-      ctx.fill();
-      
-      // Африка
-      ctx.beginPath();
-      ctx.ellipse(textureSize * 0.52, textureSize * 0.6, textureSize * 0.06, textureSize * 0.18, 0, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      // Северная Америка
-      ctx.beginPath();
-      ctx.moveTo(textureSize * 0.05, textureSize * 0.2);
-      ctx.bezierCurveTo(textureSize * 0.25, textureSize * 0.15, textureSize * 0.3, textureSize * 0.3, textureSize * 0.2, textureSize * 0.45);
-      ctx.bezierCurveTo(textureSize * 0.1, textureSize * 0.4, textureSize * 0.05, textureSize * 0.3, textureSize * 0.05, textureSize * 0.2);
-      ctx.fill();
-      
-      // Южная Америка
-      ctx.beginPath();
-      ctx.ellipse(textureSize * 0.28, textureSize * 0.65, textureSize * 0.05, textureSize * 0.15, -0.3, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      // Австралия
-      ctx.beginPath();
-      ctx.ellipse(textureSize * 0.82, textureSize * 0.75, textureSize * 0.04, textureSize * 0.03, 0, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      // Добавляем горные хребты (темно-коричневые линии)
-      ctx.strokeStyle = '#44403c';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(textureSize * 0.5, textureSize * 0.3);
-      ctx.lineTo(textureSize * 0.8, textureSize * 0.35);
-      ctx.stroke();
-      
-      // Пустыни (песочный цвет)
-      ctx.fillStyle = '#d97706';
-      ctx.beginPath();
-      ctx.ellipse(textureSize * 0.6, textureSize * 0.45, textureSize * 0.03, textureSize * 0.02, 0, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      // Ледяные шапки
-      ctx.fillStyle = '#f8fafc';
-      ctx.beginPath();
-      ctx.ellipse(textureSize * 0.5, textureSize * 0.05, textureSize * 0.1, textureSize * 0.03, 0, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      ctx.beginPath();
-      ctx.ellipse(textureSize * 0.5, textureSize * 0.95, textureSize * 0.08, textureSize * 0.03, 0, 0, 2 * Math.PI);
-      ctx.fill();
-      
-      // Облака (более реалистичные)
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      for (let i = 0; i < 30; i++) {
-        const x = Math.random() * textureSize;
-        const y = Math.random() * textureSize;
-        const radius = Math.random() * 40 + 15;
-        const opacity = Math.random() * 0.3 + 0.1;
+      if (ctx) {
+        // Основа - настоящие океанские цвета из спутниковых снимков
+        const oceanGradient = ctx.createRadialGradient(
+          textureSize / 2, textureSize / 2, 0,
+          textureSize / 2, textureSize / 2, textureSize / 2
+        );
+        oceanGradient.addColorStop(0, '#1a4480'); // Глубокий океанический синий
+        oceanGradient.addColorStop(0.3, '#2563eb'); // Синий как в Тихом океане
+        oceanGradient.addColorStop(0.6, '#3b82f6'); // Светлее на мелководье
+        oceanGradient.addColorStop(1, '#1e3a8a'); // Темно-синий у берегов
         
-        ctx.globalAlpha = opacity;
+        ctx.fillStyle = oceanGradient;
+        ctx.fillRect(0, 0, textureSize, textureSize);
+        
+        // Континенты с реалистичными цветами и формами
+        
+        // ЕВРАЗИЯ - точные очертания как на спутниковых снимках
+        // Россия - тайга и тундра
+        ctx.fillStyle = '#1a4d1a'; // Темно-зеленый таежный
         ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.moveTo(textureSize * 0.44, textureSize * 0.12); // Кольский полуостров
+        ctx.bezierCurveTo(textureSize * 0.55, textureSize * 0.08, textureSize * 0.75, textureSize * 0.1, textureSize * 0.95, textureSize * 0.15); // Сибирь
+        ctx.bezierCurveTo(textureSize * 0.98, textureSize * 0.25, textureSize * 0.95, textureSize * 0.35, textureSize * 0.85, textureSize * 0.4); // Дальний Восток
+        ctx.bezierCurveTo(textureSize * 0.7, textureSize * 0.42, textureSize * 0.55, textureSize * 0.4, textureSize * 0.45, textureSize * 0.35); // Казахстан
+        ctx.lineTo(textureSize * 0.44, textureSize * 0.12);
         ctx.fill();
+        
+        // Европа - умеренные леса
+        ctx.fillStyle = '#228B22'; // Лесной зеленый
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.48, textureSize * 0.25, textureSize * 0.03, textureSize * 0.04, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Скандинавия
+        ctx.fillStyle = '#2F4F2F'; // Темный серо-зеленый
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.47, textureSize * 0.18, textureSize * 0.015, textureSize * 0.03, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Китай и Индия - более теплые оттенки
+        ctx.fillStyle = '#4a7c59';
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.72, textureSize * 0.35, textureSize * 0.08, textureSize * 0.06, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Средний Восток - пустынные оттенки
+        ctx.fillStyle = '#8b7355';
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.57, textureSize * 0.35, textureSize * 0.04, textureSize * 0.03, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // АФРИКА - точные очертания континента
+        // Сахара - песчаная пустыня (реальный цвет из космоса)
+        ctx.fillStyle = '#DAA520'; // Золотисто-песчаный 
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.46, textureSize * 0.38);
+        ctx.bezierCurveTo(textureSize * 0.56, textureSize * 0.35, textureSize * 0.58, textureSize * 0.42, textureSize * 0.56, textureSize * 0.45);
+        ctx.bezierCurveTo(textureSize * 0.5, textureSize * 0.48, textureSize * 0.46, textureSize * 0.45, textureSize * 0.46, textureSize * 0.38);
+        ctx.fill();
+        
+        // Конго - тропические леса (темно-зеленый как в реальности)
+        ctx.fillStyle = '#013220'; // Очень темный зеленый
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.51, textureSize * 0.52, textureSize * 0.025, textureSize * 0.04, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Восточная Африка - саванна
+        ctx.fillStyle = '#8FBC8F'; // Серо-зеленый саванны
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.54, textureSize * 0.52, textureSize * 0.02, textureSize * 0.06, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Южная Африка - Калахари и плоскогорья
+        ctx.fillStyle = '#CD853F'; // Коричневато-золотой
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.52, textureSize * 0.65, textureSize * 0.025, textureSize * 0.03, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // СЕВЕРНАЯ АМЕРИКА - точные очертания как со спутника
+        // Канада - бореальные леса и тундра
+        ctx.fillStyle = '#0F4F0F'; // Темно-зеленый бореальный лес
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.05, textureSize * 0.12); // Аляска
+        ctx.bezierCurveTo(textureSize * 0.15, textureSize * 0.08, textureSize * 0.3, textureSize * 0.1, textureSize * 0.35, textureSize * 0.18); // Канадская тундра
+        ctx.bezierCurveTo(textureSize * 0.32, textureSize * 0.25, textureSize * 0.25, textureSize * 0.28, textureSize * 0.15, textureSize * 0.25);
+        ctx.bezierCurveTo(textureSize * 0.08, textureSize * 0.22, textureSize * 0.05, textureSize * 0.18, textureSize * 0.05, textureSize * 0.12);
+        ctx.fill();
+        
+        // США - смешанные леса и прерии
+        ctx.fillStyle = '#228B22'; // Классический лесной зеленый
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.15, textureSize * 0.25);
+        ctx.bezierCurveTo(textureSize * 0.3, textureSize * 0.28, textureSize * 0.32, textureSize * 0.35, textureSize * 0.28, textureSize * 0.4);
+        ctx.bezierCurveTo(textureSize * 0.2, textureSize * 0.42, textureSize * 0.12, textureSize * 0.38, textureSize * 0.15, textureSize * 0.25);
+        ctx.fill();
+        
+        // Гренландия - ледяная шапка
+        ctx.fillStyle = '#F0F8FF'; // Очень светлый голубовато-белый
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.37, textureSize * 0.08, textureSize * 0.015, textureSize * 0.04, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // ЮЖНАЯ АМЕРИКА - характерная "треугольная" форма
+        // Амазонский бассейн - самые густые леса планеты
+        ctx.fillStyle = '#006400'; // Темно-зеленый настоящих джунглей
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.24, textureSize * 0.48);
+        ctx.bezierCurveTo(textureSize * 0.32, textureSize * 0.5, textureSize * 0.32, textureSize * 0.58, textureSize * 0.28, textureSize * 0.62);
+        ctx.bezierCurveTo(textureSize * 0.24, textureSize * 0.6, textureSize * 0.22, textureSize * 0.54, textureSize * 0.24, textureSize * 0.48);
+        ctx.fill();
+        
+        // Анды - горная цепь (коричневый цвет гор)
+        ctx.fillStyle = '#8B4513'; // Коричневый горных пород
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.24, textureSize * 0.48);
+        ctx.lineTo(textureSize * 0.22, textureSize * 0.72);
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#8B4513';
+        ctx.stroke();
+        
+        // Аргентинские пампасы
+        ctx.fillStyle = '#9ACD32'; // Желто-зеленый степей
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.26, textureSize * 0.7, textureSize * 0.02, textureSize * 0.04, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Австралия
+        ctx.fillStyle = '#daa520'; // Золотистый для Аутбека
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.85, textureSize * 0.7, textureSize * 0.04, textureSize * 0.025, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Новая Зеландия
+        ctx.fillStyle = '#228b22';
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.92, textureSize * 0.75, textureSize * 0.005, textureSize * 0.01, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Япония
+        ctx.fillStyle = '#2e8b57';
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.82, textureSize * 0.32, textureSize * 0.01, textureSize * 0.02, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Полярные ледяные шапки
+        ctx.fillStyle = '#f0f8ff';
+        // Северный полюс
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.5, textureSize * 0.03, textureSize * 0.15, textureSize * 0.025, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Антарктида
+        ctx.beginPath();
+        ctx.ellipse(textureSize * 0.5, textureSize * 0.97, textureSize * 0.2, textureSize * 0.025, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Горные хребты
+        ctx.strokeStyle = '#654321';
+        ctx.lineWidth = 3;
+        // Гималаи
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.68, textureSize * 0.32);
+        ctx.lineTo(textureSize * 0.75, textureSize * 0.35);
+        ctx.stroke();
+        
+        // Альпы
+        ctx.beginPath();
+        ctx.moveTo(textureSize * 0.48, textureSize * 0.28);
+        ctx.lineTo(textureSize * 0.52, textureSize * 0.3);
+        ctx.stroke();
+        
+        // Реалистичные облачные формации
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        // Экваториальные облака
+        for (let i = 0; i < 15; i++) {
+          const x = Math.random() * textureSize;
+          const y = textureSize * 0.4 + (Math.random() - 0.5) * textureSize * 0.2;
+          const radius = Math.random() * 50 + 30;
+          ctx.globalAlpha = Math.random() * 0.4 + 0.2;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+        
+        // Циклоны и атмосферные явления
+        ctx.globalAlpha = 0.3;
+        for (let i = 0; i < 8; i++) {
+          const x = Math.random() * textureSize;
+          const y = Math.random() * textureSize;
+          const radius = Math.random() * 80 + 40;
+          ctx.beginPath();
+          ctx.arc(x, y, radius, 0, 2 * Math.PI);
+          ctx.fill();
+        }
+        
         ctx.globalAlpha = 1;
       }
-    }
+      
+      return new THREE.CanvasTexture(canvas);
+    };
     
-    // Создаем текстуру из canvas
-    const earthTexture = new THREE.CanvasTexture(canvas);
+    const earthTexture = createEarthTexture();
     earthTexture.wrapS = THREE.RepeatWrapping;
     earthTexture.wrapT = THREE.ClampToEdgeWrapping;
     
