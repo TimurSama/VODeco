@@ -32,34 +32,41 @@ const SimpleGlobe: React.FC<SimpleGlobeProps> = ({ resources, onResourceSelect }
     
     console.log("Initializing 3D Globe...");
     
-    try {
-      // Создание сцены
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x040B1B);
-      sceneRef.current = scene;
-      
-      // Размеры контейнера
-      const width = containerRef.current.clientWidth;
-      const height = containerRef.current.clientHeight || 600;
-      
-      // Создание камеры
-      const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
-      camera.position.set(0, 0, 250);
-      cameraRef.current = camera;
-      
-      // Создание рендерера
-      const renderer = new THREE.WebGLRenderer({ 
-        antialias: true,
-        alpha: true
-      });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      
-      // Добавление canvas в контейнер
-      while(containerRef.current.firstChild) {
-        containerRef.current.removeChild(containerRef.current.firstChild);
+    // Ждем немного чтобы контейнер полностью загрузился
+    const initTimer = setTimeout(() => {
+      try {
+        if (!containerRef.current) return;
+        
+        // Создание сцены
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x040B1B);
+        sceneRef.current = scene;
+        
+        // Размеры контейнера с fallback значениями
+        const width = containerRef.current.clientWidth || 800;
+        const height = containerRef.current.clientHeight || 600;
+        
+        console.log("Container dimensions:", { width, height });
+        
+        // Создание камеры
+        const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+        camera.position.set(0, 0, 250);
+        cameraRef.current = camera;
+        
+        // Создание рендерера с улучшенными настройками
+        const renderer = new THREE.WebGLRenderer({ 
+          antialias: true,
+          alpha: false,
+          powerPreference: 'high-performance'
+        });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x040B1B, 1);
+        
+        // Добавление canvas в контейнер
+        while(containerRef.current.firstChild) {
+          containerRef.current.removeChild(containerRef.current.firstChild);
+        }
       }
       containerRef.current.appendChild(renderer.domElement);
       rendererRef.current = renderer;

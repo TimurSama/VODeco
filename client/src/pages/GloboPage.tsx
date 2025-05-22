@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import GlobeVisualization from '@/components/globo/GlobeVisualization';
-import SimpleGlobe from '@/components/globo/SimpleGlobe';
+import EarthGlobe from '@/components/globo/EarthGlobe';
 import ResourceList from '@/components/globo/ResourceList';
 import { WaterResource, ResourceStatus, ResourceCategory } from '@/types';
 import { useToast } from '@/hooks/use-toast';
@@ -79,7 +78,7 @@ const GloboPage: React.FC = () => {
             <div className="flex flex-col lg:flex-row gap-6">
               {/* 3D Globe Visualization */}
               <div className="lg:w-2/3">
-                <SimpleGlobe 
+                <EarthGlobe 
                   resources={resources}
                   onResourceSelect={handleResourceSelect} 
                 />
