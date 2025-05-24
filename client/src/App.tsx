@@ -27,6 +27,10 @@ import MissionsPage from "@/pages/MissionsPage";
 import TokenHubPage from "@/pages/TokenHubPage";
 import BankPage from "@/pages/BankPage";
 import CabinetsPage from "@/pages/CabinetsPage";
+import ScientificCabinetPage from "@/pages/ScientificCabinetPage";
+import InvestmentCabinetPage from "@/pages/InvestmentCabinetPage";
+import GovernmentCabinetPage from "@/pages/GovernmentCabinetPage";
+import OperatorCabinetPage from "@/pages/OperatorCabinetPage";
 import DocsPage from "@/pages/DocsPage";
 import AdminPanelPage from "@/pages/AdminPanelPage";
 
@@ -89,6 +93,18 @@ function Router() {
       </Route>
       <Route path="/cabinets">
         <CabinetsPage />
+      </Route>
+      <Route path="/cabinets/scientific">
+        <ScientificCabinetPage />
+      </Route>
+      <Route path="/cabinets/investment">
+        <InvestmentCabinetPage />
+      </Route>
+      <Route path="/cabinets/government">
+        <GovernmentCabinetPage />
+      </Route>
+      <Route path="/cabinets/operator">
+        <OperatorCabinetPage />
       </Route>
       <Route path="/settings">
         <SettingsPageWithFooter />

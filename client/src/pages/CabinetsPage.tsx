@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -138,6 +139,7 @@ const cabinets: Cabinet[] = [
 export default function CabinetsPage() {
   const { t, i18n } = useTranslation();
   const [selectedCabinet, setSelectedCabinet] = useState<string | null>(null);
+  const [, setLocation] = useLocation();
   const isRussian = i18n.language === 'ru';
 
   const getAccessIcon = (accessLevel: string) => {
@@ -222,6 +224,21 @@ export default function CabinetsPage() {
                     <span>{cabinet.progress}%</span>
                   </div>
                   <Progress value={cabinet.progress} className="h-2" />
+                </div>
+              )}
+              
+              {(cabinet.accessLevel === 'available' || cabinet.accessLevel === 'active') && (
+                <div className="mt-3">
+                  <Button 
+                    size="sm" 
+                    className="w-full bg-primary hover:bg-primary/90"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLocation(`/cabinets/${cabinet.id}`);
+                    }}
+                  >
+                    {t('cabinets.enter', 'Войти в кабинет')}
+                  </Button>
                 </div>
               )}
             </CardContent>
@@ -339,8 +356,26 @@ export default function CabinetsPage() {
                   </div>
                   
                   <div className="flex gap-3">
-                    <Button className="bg-primary hover:bg-primary/90">
-                      {t('cabinets.requestAccess', 'Запросить доступ')}
+                    <Button 
+                      className="bg-primary hover:bg-primary/90"
+                      onClick={() => {
+                        const cabinet = cabinets.find(c => c.id === selectedCabinet);
+                        if (cabinet && cabinet.accessLevel === 'available' || cabinet?.accessLevel === 'active') {
+                          setLocation(`/cabinets/${selectedCabinet}`);
+                        }
+                      }}
+                      disabled={(() => {
+                        const cabinet = cabinets.find(c => c.id === selectedCabinet);
+                        return cabinet?.accessLevel === 'locked' || cabinet?.accessLevel === 'pending';
+                      })()}
+                    >
+                      {(() => {
+                        const cabinet = cabinets.find(c => c.id === selectedCabinet);
+                        if (cabinet?.accessLevel === 'available' || cabinet?.accessLevel === 'active') {
+                          return t('cabinets.enter', 'Войти в кабинет');
+                        }
+                        return t('cabinets.requestAccess', 'Запросить доступ');
+                      })()}
                     </Button>
                     <Button variant="outline" className="border-primary/30 text-primary">
                       {t('cabinets.learnMore', 'Узнать больше')}

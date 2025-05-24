@@ -184,10 +184,11 @@ export default function ScientificCabinetPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-background/20">
+        <TabsList className="grid w-full grid-cols-6 bg-background/20">
           <TabsTrigger value="dashboard">{t('scientific.tabs.dashboard', 'Панель')}</TabsTrigger>
           <TabsTrigger value="monitoring">{t('scientific.tabs.monitoring', 'Мониторинг')}</TabsTrigger>
           <TabsTrigger value="research">{t('scientific.tabs.research', 'Исследования')}</TabsTrigger>
+          <TabsTrigger value="laboratory">{t('scientific.tabs.laboratory', 'Лаборатория')}</TabsTrigger>
           <TabsTrigger value="publications">{t('scientific.tabs.publications', 'Публикации')}</TabsTrigger>
           <TabsTrigger value="reports">{t('scientific.tabs.reports', 'Отчеты')}</TabsTrigger>
         </TabsList>
@@ -458,6 +459,164 @@ export default function ScientificCabinetPage() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Лаборатория */}
+        <TabsContent value="laboratory" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Beaker className="h-5 w-5 mr-2 text-green-400" />
+                  {t('scientific.laboratory.analyzer', 'Анализатор проб воды')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-2">Загрузить новую пробу</h4>
+                    <div className="space-y-3">
+                      <input
+                        type="file"
+                        accept=".csv,.xlsx,.json"
+                        className="w-full text-white/70 bg-background/30 border border-primary/30 rounded px-3 py-2"
+                      />
+                      <Button className="w-full bg-green-500 hover:bg-green-600">
+                        {t('scientific.laboratory.analyze', 'Начать анализ')}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-2">Последние результаты</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/60">Проба #2024-05-23-001:</span>
+                        <span className="text-green-400">✓ Норма</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/60">Проба #2024-05-23-002:</span>
+                        <span className="text-yellow-400">⚠ Внимание</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white/60">Проба #2024-05-22-015:</span>
+                        <span className="text-green-400">✓ Норма</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <FlaskConical className="h-5 w-5 mr-2 text-blue-400" />
+                  {t('scientific.laboratory.experiments', 'Активные эксперименты')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-white font-medium">Тест очистки озоном</h4>
+                      <Badge className="bg-blue-500/20 text-blue-400">Активен</Badge>
+                    </div>
+                    <Progress value={68} className="h-2 mb-2" />
+                    <p className="text-white/60 text-sm">68% завершено • Осталось 2.5 часа</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-white font-medium">pH стабилизация</h4>
+                      <Badge className="bg-yellow-500/20 text-yellow-400">Ожидание</Badge>
+                    </div>
+                    <Progress value={0} className="h-2 mb-2" />
+                    <p className="text-white/60 text-sm">Запуск в 14:30</p>
+                  </div>
+                  
+                  <Button variant="outline" className="w-full border-primary/30 text-primary">
+                    {t('scientific.laboratory.newExperiment', 'Создать эксперимент')}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glassmorphism-dark border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Database className="h-5 w-5 mr-2 text-purple-400" />
+                {t('scientific.laboratory.equipment', 'Лабораторное оборудование')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                    <h4 className="text-white font-medium">Спектрометр MS-2000</h4>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Статус:</span>
+                      <span className="text-green-400">Готов</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Температура:</span>
+                      <span className="text-white">23.1°C</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Калибровка:</span>
+                      <span className="text-white">15.05.2024</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                    <h4 className="text-white font-medium">pH-метр PH-3000</h4>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Статус:</span>
+                      <span className="text-blue-400">Работает</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Последнее значение:</span>
+                      <span className="text-white">7.2 pH</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Калибровка:</span>
+                      <span className="text-white">20.05.2024</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                    <h4 className="text-white font-medium">Микроскоп MIC-500</h4>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Статус:</span>
+                      <span className="text-yellow-400">Техобслуживание</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Увеличение:</span>
+                      <span className="text-white">1000x</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Доступен:</span>
+                      <span className="text-white">24.05.2024</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Публикации */}
