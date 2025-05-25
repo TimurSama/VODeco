@@ -22,7 +22,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
+import { Loader2, Building2, Settings } from "lucide-react";
+import { Link } from "wouter";
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -56,6 +57,44 @@ const AuthPage = () => {
             <RegisterForm isLoading={registerMutation.isPending} onSubmit={registerMutation.mutate} />
           </TabsContent>
         </Tabs>
+        
+        {/* Кнопки предварительного просмотра */}
+        <div className="mt-8 w-full max-w-md">
+          <div className="relative mb-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">{t('auth.previewCabinets', 'Предварительный просмотр кабинетов')}</span>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3">
+            <Link href="/cabinets/government" className="block">
+              <Button 
+                variant="outline" 
+                className="w-full h-16 flex flex-col items-center gap-1 border-blue-600/30 text-blue-400 hover:bg-blue-600/10"
+              >
+                <Building2 className="h-5 w-5" />
+                <span className="text-xs">Правительственный</span>
+              </Button>
+            </Link>
+            
+            <Link href="/cabinets/operator" className="block">
+              <Button 
+                variant="outline" 
+                className="w-full h-16 flex flex-col items-center gap-1 border-green-600/30 text-green-400 hover:bg-green-600/10"
+              >
+                <Settings className="h-5 w-5" />
+                <span className="text-xs">Операторский</span>
+              </Button>
+            </Link>
+          </div>
+          
+          <p className="text-xs text-center text-muted-foreground mt-3">
+            {t('auth.previewNote', 'Просмотр доступен без регистрации')}
+          </p>
+        </div>
       </div>
 
       {/* Информационная секция */}

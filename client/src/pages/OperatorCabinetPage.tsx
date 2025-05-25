@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Settings, Zap, Wrench, AlertTriangle, Activity,
   Gauge, Thermometer, Droplets, Power, Wifi,
-  CheckCircle, Clock, XCircle, MapPin, Calendar
+  CheckCircle, Clock, XCircle, MapPin, Calendar, Wind
 } from "lucide-react";
 
 // Типы данных для операторского кабинета
