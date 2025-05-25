@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Building2, FileText, Shield, Users, Globe,
   CheckCircle, Clock, AlertTriangle, Scale,
-  Eye, Download, Upload, BarChart3, Target
+  Eye, Download, Upload, BarChart3, Target, Database
 } from "lucide-react";
 
 // Типы данных для правительственного кабинета
@@ -214,11 +214,12 @@ export default function GovernmentCabinetPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-background/20">
+        <TabsList className="grid w-full grid-cols-6 bg-background/20">
           <TabsTrigger value="overview">{t('government.tabs.overview', 'Обзор')}</TabsTrigger>
           <TabsTrigger value="policies">{t('government.tabs.policies', 'Политики')}</TabsTrigger>
           <TabsTrigger value="compliance">{t('government.tabs.compliance', 'Соответствие')}</TabsTrigger>
           <TabsTrigger value="programs">{t('government.tabs.programs', 'Программы')}</TabsTrigger>
+          <TabsTrigger value="documents">{t('government.tabs.documents', 'Документооборот')}</TabsTrigger>
           <TabsTrigger value="reports">{t('government.tabs.reports', 'Отчеты')}</TabsTrigger>
         </TabsList>
 
@@ -541,6 +542,231 @@ export default function GovernmentCabinetPage() {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Документооборот */}
+        <TabsContent value="documents" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Upload className="h-5 w-5 mr-2 text-green-400" />
+                  {t('government.documents.upload', 'Загрузка документов')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-primary/30 rounded-lg p-6 text-center">
+                    <Upload className="h-8 w-8 text-primary/60 mx-auto mb-2" />
+                    <p className="text-white/60 text-sm mb-2">Перетащите файлы сюда или</p>
+                    <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                      Выбрать файлы
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-white/60 text-sm">Категория документа</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white">
+                      <option>Нормативные акты</option>
+                      <option>Технические регламенты</option>
+                      <option>Отчеты мониторинга</option>
+                      <option>Международные соглашения</option>
+                    </select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-white/60 text-sm">Уровень секретности</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white">
+                      <option>Открытый</option>
+                      <option>Ограниченного доступа</option>
+                      <option>Конфиденциально</option>
+                      <option>Секретно</option>
+                    </select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <FileText className="h-5 w-5 mr-2 text-blue-400" />
+                  {t('government.documents.pending', 'На рассмотрении')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-white font-medium text-sm">Регламент №2024-WR-015</h4>
+                      <Badge className="bg-yellow-500/20 text-yellow-400">Ожидает</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs mb-2">Стандарты качества питьевой воды</p>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-white/40">Автор: Минздрав</span>
+                      <span className="text-white/40">2 дня назад</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-white font-medium text-sm">Отчет №2024-ENV-08</h4>
+                      <Badge className="bg-blue-500/20 text-blue-400">На подписи</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs mb-2">Мониторинг водных ресурсов</p>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-white/40">Автор: Минэкологии</span>
+                      <span className="text-white/40">5 часов назад</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-white font-medium text-sm">Соглашение UZ-KZ-001</h4>
+                      <Badge className="bg-purple-500/20 text-purple-400">Перевод</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs mb-2">Трансграничное сотрудничество</p>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-white/40">Автор: МИД</span>
+                      <span className="text-white/40">1 неделю назад</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Shield className="h-5 w-5 mr-2 text-purple-400" />
+                  {t('government.documents.signatures', 'Цифровые подписи')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <h4 className="text-white font-medium mb-2">Ваш сертификат</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Статус:</span>
+                        <span className="text-green-400">Активен</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Действует до:</span>
+                        <span className="text-white">15.12.2025</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Подписано документов:</span>
+                        <span className="text-white">247</span>
+                      </div>
+                    </div>
+                    <Button size="sm" className="w-full mt-3 bg-purple-600 hover:bg-purple-700">
+                      Обновить сертификат
+                    </Button>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <h4 className="text-white font-medium mb-2">Быстрые действия</h4>
+                    <div className="space-y-2">
+                      <Button size="sm" variant="outline" className="w-full border-primary/30 text-primary">
+                        Подписать документ
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full border-primary/30 text-primary">
+                        Проверить подпись
+                      </Button>
+                      <Button size="sm" variant="outline" className="w-full border-primary/30 text-primary">
+                        Архив подписей
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glassmorphism-dark border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Database className="h-5 w-5 mr-2 text-primary" />
+                {t('government.documents.registry', 'Реестр документов')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/20">
+                      <th className="text-left text-white/60 py-2">Номер</th>
+                      <th className="text-left text-white/60 py-2">Название</th>
+                      <th className="text-left text-white/60 py-2">Тип</th>
+                      <th className="text-left text-white/60 py-2">Статус</th>
+                      <th className="text-left text-white/60 py-2">Дата</th>
+                      <th className="text-left text-white/60 py-2">Действия</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-white/10">
+                      <td className="text-white py-3">2024-WR-015</td>
+                      <td className="text-white py-3">Стандарты качества питьевой воды</td>
+                      <td className="text-white py-3">Стандарт</td>
+                      <td className="py-3">
+                        <Badge className="bg-green-500/20 text-green-400">Утвержден</Badge>
+                      </td>
+                      <td className="text-white/60 py-3">20.05.2024</td>
+                      <td className="py-3">
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                            <Download className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-white/10">
+                      <td className="text-white py-3">2024-ENV-08</td>
+                      <td className="text-white py-3">Отчет мониторинга водных ресурсов</td>
+                      <td className="text-white py-3">Отчет</td>
+                      <td className="py-3">
+                        <Badge className="bg-yellow-500/20 text-yellow-400">На подписи</Badge>
+                      </td>
+                      <td className="text-white/60 py-3">22.05.2024</td>
+                      <td className="py-3">
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button size="sm" className="bg-primary hover:bg-primary/90">
+                            Подписать
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-white/10">
+                      <td className="text-white py-3">UZ-KZ-001</td>
+                      <td className="text-white py-3">Соглашение о трансграничном сотрудничестве</td>
+                      <td className="text-white py-3">Соглашение</td>
+                      <td className="py-3">
+                        <Badge className="bg-blue-500/20 text-blue-400">В работе</Badge>
+                      </td>
+                      <td className="text-white/60 py-3">15.05.2024</td>
+                      <td className="py-3">
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                            <FileText className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Отчеты */}

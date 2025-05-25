@@ -173,10 +173,11 @@ export default function InvestmentCabinetPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-background/20">
+        <TabsList className="grid w-full grid-cols-6 bg-background/20">
           <TabsTrigger value="portfolio">{t('investment.tabs.portfolio', 'Портфель')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('investment.tabs.analytics', 'Аналитика')}</TabsTrigger>
           <TabsTrigger value="projects">{t('investment.tabs.projects', 'Проекты')}</TabsTrigger>
+          <TabsTrigger value="trading">{t('investment.tabs.trading', 'Торговля')}</TabsTrigger>
           <TabsTrigger value="market">{t('investment.tabs.market', 'Рынок VOD')}</TabsTrigger>
           <TabsTrigger value="reports">{t('investment.tabs.reports', 'Отчеты')}</TabsTrigger>
         </TabsList>
@@ -427,17 +428,276 @@ export default function InvestmentCabinetPage() {
 
         {/* Проекты */}
         <TabsContent value="projects" className="mt-6">
-          <div className="text-center py-12">
-            <Target className="h-16 w-16 text-primary/60 mx-auto mb-4" />
-            <h3 className="text-white font-medium text-lg mb-2">
-              {t('investment.projects.title', 'Доступные проекты для инвестиций')}
-            </h3>
-            <p className="text-white/60 mb-6">
-              {t('investment.projects.description', 'Изучайте новые возможности инвестирования в водные проекты')}
-            </p>
-            <Button className="bg-primary hover:bg-primary/90">
-              {t('investment.projects.browse', 'Просмотреть проекты')}
-            </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">Станция водоочистки Андижан</CardTitle>
+                <Badge className="bg-green-500/20 text-green-400 w-fit">Открыт для инвестиций</Badge>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Требуется:</span>
+                    <span className="text-white font-medium">$2.5M</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Собрано:</span>
+                    <span className="text-white">$1.8M (72%)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Ожидаемый ROI:</span>
+                    <span className="text-green-400">22%</span>
+                  </div>
+                  <Progress value={72} className="h-2" />
+                  <Button className="w-full bg-primary hover:bg-primary/90">
+                    Инвестировать
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">IoT сенсоры Навои</CardTitle>
+                <Badge className="bg-blue-500/20 text-blue-400 w-fit">Технологический</Badge>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Требуется:</span>
+                    <span className="text-white font-medium">$800K</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Собрано:</span>
+                    <span className="text-white">$320K (40%)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Ожидаемый ROI:</span>
+                    <span className="text-green-400">28%</span>
+                  </div>
+                  <Progress value={40} className="h-2" />
+                  <Button className="w-full bg-primary hover:bg-primary/90">
+                    Инвестировать
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-lg">Экореставрация Каракалпакстан</CardTitle>
+                <Badge className="bg-purple-500/20 text-purple-400 w-fit">Экологический</Badge>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Требуется:</span>
+                    <span className="text-white font-medium">$5.2M</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Собрано:</span>
+                    <span className="text-white">$780K (15%)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-white/60">Ожидаемый ROI:</span>
+                    <span className="text-green-400">15%</span>
+                  </div>
+                  <Progress value={15} className="h-2" />
+                  <Button className="w-full bg-primary hover:bg-primary/90">
+                    Инвестировать
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Торговля */}
+        <TabsContent value="trading" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <BarChart3 className="h-5 w-5 mr-2 text-primary" />
+                    График VOD/USD
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-80 bg-background/20 rounded-lg flex items-center justify-center mb-4">
+                    <p className="text-white/60">[TradingView график VOD/USD с инструментами анализа]</p>
+                  </div>
+                  <div className="grid grid-cols-4 gap-4 text-center">
+                    <div>
+                      <p className="text-white/60 text-sm">Цена</p>
+                      <p className="text-white font-bold">$2.34</p>
+                    </div>
+                    <div>
+                      <p className="text-white/60 text-sm">Изменение 24ч</p>
+                      <p className="text-green-400 font-bold">+5.7%</p>
+                    </div>
+                    <div>
+                      <p className="text-white/60 text-sm">Объем</p>
+                      <p className="text-white font-bold">$1.2M</p>
+                    </div>
+                    <div>
+                      <p className="text-white/60 text-sm">Макс/Мин</p>
+                      <p className="text-white font-bold">$2.45/$2.28</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Стакан заявок</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-red-400 font-medium mb-3">Продажа</h4>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-red-400">$2.36</span>
+                          <span className="text-white/60">1,250 VOD</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-red-400">$2.35</span>
+                          <span className="text-white/60">2,340 VOD</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-red-400">$2.34</span>
+                          <span className="text-white/60">890 VOD</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-green-400 font-medium mb-3">Покупка</h4>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-green-400">$2.33</span>
+                          <span className="text-white/60">3,420 VOD</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-green-400">$2.32</span>
+                          <span className="text-white/60">1,560 VOD</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-green-400">$2.31</span>
+                          <span className="text-white/60">2,100 VOD</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Торговая панель</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button 
+                        size="sm" 
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        Купить
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        className="border-red-600 text-red-400 hover:bg-red-600/20"
+                      >
+                        Продать
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-white/60 text-sm">Цена</label>
+                        <input 
+                          type="number" 
+                          placeholder="2.34"
+                          className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="text-white/60 text-sm">Количество VOD</label>
+                        <input 
+                          type="number" 
+                          placeholder="1000"
+                          className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="text-white/60 text-sm">Общая сумма</label>
+                        <input 
+                          type="text" 
+                          placeholder="$2,340"
+                          disabled
+                          className="w-full bg-background/20 border border-white/10 rounded px-3 py-2 text-white/60"
+                        />
+                      </div>
+                    </div>
+
+                    <Button className="w-full bg-green-600 hover:bg-green-700">
+                      Разместить заявку
+                    </Button>
+
+                    <div className="border-t border-white/10 pt-4">
+                      <p className="text-white/60 text-sm mb-2">Доступный баланс:</p>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-white/60">USD:</span>
+                          <span className="text-white">$15,420</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-white/60">VOD:</span>
+                          <span className="text-white">8,340 VOD</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Открытые заявки</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="bg-background/20 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-green-400 text-sm">Покупка</span>
+                        <span className="text-white/60 text-xs">12:34</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white">1,500 VOD</span>
+                        <span className="text-white">@ $2.32</span>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-background/20 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-red-400 text-sm">Продажа</span>
+                        <span className="text-white/60 text-xs">11:58</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-white">800 VOD</span>
+                        <span className="text-white">@ $2.38</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </TabsContent>
 

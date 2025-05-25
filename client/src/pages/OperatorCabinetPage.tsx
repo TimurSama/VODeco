@@ -246,10 +246,11 @@ export default function OperatorCabinetPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 bg-background/20">
+        <TabsList className="grid w-full grid-cols-6 bg-background/20">
           <TabsTrigger value="dashboard">{t('operator.tabs.dashboard', 'Панель')}</TabsTrigger>
           <TabsTrigger value="stations">{t('operator.tabs.stations', 'Станции')}</TabsTrigger>
           <TabsTrigger value="equipment">{t('operator.tabs.equipment', 'Оборудование')}</TabsTrigger>
+          <TabsTrigger value="control">{t('operator.tabs.control', 'Диспетчерская')}</TabsTrigger>
           <TabsTrigger value="maintenance">{t('operator.tabs.maintenance', 'Обслуживание')}</TabsTrigger>
           <TabsTrigger value="alerts">{t('operator.tabs.alerts', 'Уведомления')}</TabsTrigger>
         </TabsList>
@@ -501,6 +502,187 @@ export default function OperatorCabinetPage() {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Диспетчерская */}
+        <TabsContent value="control" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Activity className="h-5 w-5 mr-2 text-blue-400" />
+                  {t('operator.control.remote', 'Удаленное управление')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-3">Насосная станция Ташкент-1</h4>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <p className="text-white/60 text-sm">Насос №1</p>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                          <span className="text-white">Работает</span>
+                          <Button size="sm" variant="outline" className="ml-auto border-red-600 text-red-400">
+                            Стоп
+                          </Button>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-white/60 text-sm">Насос №2</p>
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                          <span className="text-white">Остановлен</span>
+                          <Button size="sm" className="ml-auto bg-green-600 hover:bg-green-700">
+                            Пуск
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-white/60 text-sm">Давление</span>
+                          <span className="text-white text-sm">4.2 бар</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">-</Button>
+                          <Progress value={70} className="h-6 flex-1" />
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">+</Button>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-white/60 text-sm">Расход</span>
+                          <span className="text-white text-sm">4200 м³/ч</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">-</Button>
+                          <Progress value={84} className="h-6 flex-1" />
+                          <Button size="sm" variant="outline" className="border-primary/30 text-primary">+</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-3">Быстрые команды</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                        Автореж.
+                      </Button>
+                      <Button size="sm" variant="outline" className="border-yellow-600 text-yellow-400">
+                        Ручной
+                      </Button>
+                      <Button size="sm" variant="outline" className="border-red-600 text-red-400">
+                        Аварийный стоп
+                      </Button>
+                      <Button size="sm" variant="outline" className="border-green-600 text-green-400">
+                        Сброс ошибок
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Gauge className="h-5 w-5 mr-2 text-green-400" />
+                  {t('operator.control.monitoring', 'Мониторинг в реальном времени')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-background/20 rounded-lg p-3 text-center">
+                      <Thermometer className="h-6 w-6 text-red-400 mx-auto mb-2" />
+                      <p className="text-white/60 text-sm">Температура</p>
+                      <p className="text-white font-bold">65.2°C</p>
+                      <p className="text-green-400 text-xs">Норма</p>
+                    </div>
+                    
+                    <div className="bg-background/20 rounded-lg p-3 text-center">
+                      <Zap className="h-6 w-6 text-yellow-400 mx-auto mb-2" />
+                      <p className="text-white/60 text-sm">Мощность</p>
+                      <p className="text-white font-bold">142 кВт</p>
+                      <p className="text-blue-400 text-xs">87%</p>
+                    </div>
+                    
+                    <div className="bg-background/20 rounded-lg p-3 text-center">
+                      <Wind className="h-6 w-6 text-blue-400 mx-auto mb-2" />
+                      <p className="text-white/60 text-sm">Вибрация</p>
+                      <p className="text-white font-bold">2.1 мм/с</p>
+                      <p className="text-green-400 text-xs">Норма</p>
+                    </div>
+                    
+                    <div className="bg-background/20 rounded-lg p-3 text-center">
+                      <Wifi className="h-6 w-6 text-green-400 mx-auto mb-2" />
+                      <p className="text-white/60 text-sm">Связь</p>
+                      <p className="text-white font-bold">98%</p>
+                      <p className="text-green-400 text-xs">Стабильно</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-3">График нагрузки</h4>
+                    <div className="h-32 bg-background/20 rounded-lg flex items-center justify-center">
+                      <p className="text-white/60 text-sm">[График нагрузки за 24 часа]</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glassmorphism-dark border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Settings className="h-5 w-5 mr-2 text-primary" />
+                {t('operator.control.scenarios', 'Сценарии управления')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-background/20 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-2">Утренний пик</h4>
+                  <p className="text-white/60 text-sm mb-3">Увеличение производительности на 30% с 6:00 до 9:00</p>
+                  <div className="flex justify-between items-center">
+                    <Badge className="bg-green-500/20 text-green-400">Активен</Badge>
+                    <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                      Настроить
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="bg-background/20 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-2">Ночной режим</h4>
+                  <p className="text-white/60 text-sm mb-3">Снижение нагрузки и плановое обслуживание с 23:00 до 5:00</p>
+                  <div className="flex justify-between items-center">
+                    <Badge className="bg-blue-500/20 text-blue-400">Запланирован</Badge>
+                    <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                      Настроить
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="bg-background/20 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-2">Аварийный</h4>
+                  <p className="text-white/60 text-sm mb-3">Автоматическое переключение на резервные системы</p>
+                  <div className="flex justify-between items-center">
+                    <Badge className="bg-yellow-500/20 text-yellow-400">Готов</Badge>
+                    <Button size="sm" variant="outline" className="border-primary/30 text-primary">
+                      Тест
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Обслуживание */}
