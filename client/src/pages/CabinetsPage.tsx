@@ -91,7 +91,7 @@ const cabinets: Cabinet[] = [
     icon: <Building2 className="h-6 w-6" />,
     color: 'from-purple-500 to-violet-600',
     requiredRole: 'Government Official',
-    accessLevel: 'pending',
+    accessLevel: 'available',
     features: [
       'Регулятивные документы',
       'Контроль соблюдения норм',
@@ -117,7 +117,7 @@ const cabinets: Cabinet[] = [
     icon: <Settings className="h-6 w-6" />,
     color: 'from-orange-500 to-red-600',
     requiredRole: 'Water Operator',
-    accessLevel: 'locked',
+    accessLevel: 'available',
     features: [
       'Управление станциями',
       'Техническое обслуживание',
