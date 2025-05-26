@@ -5,10 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Switch } from "@/components/ui/switch";
 import { 
   Settings, Zap, Wrench, AlertTriangle, Activity,
   Gauge, Thermometer, Droplets, Power, Wifi,
-  CheckCircle, Clock, XCircle, MapPin, Calendar, Wind
+  CheckCircle, Clock, XCircle, MapPin, Calendar, Wind,
+  Brain, FileText, TestTube, ArrowLeftRight, BarChart3,
+  Bell, Camera, Cog, Download, Eye, FileDown, Filter,
+  Phone, Plus, RotateCcw, ShieldX
 } from "lucide-react";
 
 // Типы данных для операторского кабинета
@@ -246,13 +250,16 @@ export default function OperatorCabinetPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6 bg-background/20">
-          <TabsTrigger value="dashboard">{t('operator.tabs.dashboard', 'Панель')}</TabsTrigger>
-          <TabsTrigger value="stations">{t('operator.tabs.stations', 'Станции')}</TabsTrigger>
-          <TabsTrigger value="equipment">{t('operator.tabs.equipment', 'Оборудование')}</TabsTrigger>
-          <TabsTrigger value="control">{t('operator.tabs.control', 'Диспетчерская')}</TabsTrigger>
-          <TabsTrigger value="maintenance">{t('operator.tabs.maintenance', 'Обслуживание')}</TabsTrigger>
-          <TabsTrigger value="alerts">{t('operator.tabs.alerts', 'Уведомления')}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-9 bg-background/20 text-xs">
+          <TabsTrigger value="dashboard">{t('operator.tabs.dashboard', 'Главная панель')}</TabsTrigger>
+          <TabsTrigger value="map">{t('operator.tabs.map', 'Карта объектов')}</TabsTrigger>
+          <TabsTrigger value="operations">{t('operator.tabs.operations', 'Журнал операций')}</TabsTrigger>
+          <TabsTrigger value="sensors">{t('operator.tabs.sensors', 'Сенсоры')}</TabsTrigger>
+          <TabsTrigger value="control">{t('operator.tabs.control', 'Управление')}</TabsTrigger>
+          <TabsTrigger value="maintenance">{t('operator.tabs.maintenance', 'ТО')}</TabsTrigger>
+          <TabsTrigger value="video">{t('operator.tabs.video', 'Видеонаблюдение')}</TabsTrigger>
+          <TabsTrigger value="reports">{t('operator.tabs.reports', 'KPI и отчеты')}</TabsTrigger>
+          <TabsTrigger value="emergency">{t('operator.tabs.emergency', 'Аварийное реагирование')}</TabsTrigger>
         </TabsList>
 
         {/* Панель управления */}
@@ -367,6 +374,314 @@ export default function OperatorCabinetPage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Карта управления объектами */}
+        <TabsContent value="map" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Карта */}
+            <Card className="lg:col-span-2 glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <MapPin className="h-5 w-5 mr-2 text-primary" />
+                  Карта управления объектами
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-96 bg-background/20 rounded-lg relative overflow-hidden">
+                  {/* Интерактивная карта */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-green-900/20">
+                    {mockStations.map((station, index) => (
+                      <div
+                        key={station.id}
+                        className={`absolute w-4 h-4 rounded-full cursor-pointer transition-all hover:scale-125 ${
+                          station.status === 'operational' ? 'bg-green-400' :
+                          station.status === 'maintenance' ? 'bg-yellow-400' :
+                          station.status === 'offline' ? 'bg-red-400' : 'bg-orange-400'
+                        }`}
+                        style={{
+                          left: `${station.coordinates.lng}%`,
+                          top: `${station.coordinates.lat}%`
+                        }}
+                        title={station.name}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* ИИ-аналитика и предиктивная диагностика */}
+                  <div className="absolute top-4 left-4 bg-background/80 backdrop-blur-sm rounded-lg p-3">
+                    <div className="flex items-center mb-2">
+                      <Brain className="h-4 w-4 mr-2 text-purple-400" />
+                      <span className="text-white text-sm font-medium">ИИ-Аналитика</span>
+                    </div>
+                    <div className="space-y-1 text-xs">
+                      <div className="text-green-400">✓ Прогноз стабильности: 98%</div>
+                      <div className="text-yellow-400">⚠ Потенциальная проблема через 3 дня</div>
+                      <div className="text-blue-400">📊 Оптимизация нагрузки: активна</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Состояние объектов */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm">Состояние объектов</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {mockStations.slice(0, 6).map((station) => (
+                  <div key={station.id} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                    <div>
+                      <p className="text-white text-sm font-medium">{station.name}</p>
+                      <p className="text-white/60 text-xs">{station.type === 'pumping' ? 'Насосная' : station.type === 'treatment' ? 'Очистная' : 'Распределительная'}</p>
+                    </div>
+                    <Badge className={
+                      station.status === 'operational' ? 'bg-green-500/20 text-green-400' :
+                      station.status === 'maintenance' ? 'bg-yellow-500/20 text-yellow-400' :
+                      station.status === 'offline' ? 'bg-red-500/20 text-red-400' :
+                      'bg-orange-500/20 text-orange-400'
+                    }>
+                      {station.status === 'operational' ? 'Активна' :
+                       station.status === 'maintenance' ? 'ТО' :
+                       station.status === 'offline' ? 'Офлайн' : 'Авария'}
+                    </Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Журнал операций и событий */}
+        <TabsContent value="operations" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* История операций */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <FileText className="h-5 w-5 mr-2 text-primary" />
+                  История операций
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {[
+                    { time: '15:34', user: 'Оператор А.Иванов', action: 'Запуск насоса №3', status: 'success' },
+                    { time: '15:12', user: 'Система', action: 'Автоматическое переключение режима', status: 'info' },
+                    { time: '14:58', user: 'Оператор М.Петров', action: 'Остановка для ТО', status: 'warning' },
+                    { time: '14:45', user: 'ИИ-Система', action: 'Предиктивное предупреждение', status: 'info' },
+                    { time: '14:23', user: 'Оператор А.Иванов', action: 'Изменение параметров фильтрации', status: 'success' },
+                    { time: '13:56', user: 'Система', action: 'Аварийное отключение секции Б', status: 'error' }
+                  ].map((log, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-2 h-2 rounded-full ${
+                          log.status === 'success' ? 'bg-green-400' :
+                          log.status === 'warning' ? 'bg-yellow-400' :
+                          log.status === 'error' ? 'bg-red-400' : 'bg-blue-400'
+                        }`} />
+                        <div>
+                          <p className="text-white text-sm">{log.action}</p>
+                          <p className="text-white/60 text-xs">{log.user}</p>
+                        </div>
+                      </div>
+                      <span className="text-white/60 text-xs">{log.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Инциденты и отклонения */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <AlertTriangle className="h-5 w-5 mr-2 text-red-400" />
+                  Инциденты и отклонения
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {[
+                    { 
+                      time: '13:56', 
+                      title: 'Превышение давления в секции Б', 
+                      severity: 'critical',
+                      resolved: false,
+                      operator: 'Не назначен'
+                    },
+                    { 
+                      time: '12:34', 
+                      title: 'Отклонение pH в резервуаре №2', 
+                      severity: 'warning',
+                      resolved: true,
+                      operator: 'М.Петров'
+                    },
+                    { 
+                      time: '11:45', 
+                      title: 'Повышенная вибрация насоса №1', 
+                      severity: 'info',
+                      resolved: true,
+                      operator: 'А.Иванов'
+                    }
+                  ].map((incident, index) => (
+                    <div key={index} className="p-3 bg-background/20 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge className={
+                          incident.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
+                          incident.severity === 'warning' ? 'bg-yellow-500/20 text-yellow-400' :
+                          'bg-blue-500/20 text-blue-400'
+                        }>
+                          {incident.severity === 'critical' ? 'Критично' :
+                           incident.severity === 'warning' ? 'Предупреждение' : 'Информация'}
+                        </Badge>
+                        <span className="text-white/60 text-xs">{incident.time}</span>
+                      </div>
+                      <p className="text-white text-sm mb-2">{incident.title}</p>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-white/60">Исполнитель: {incident.operator}</span>
+                        <Badge className={incident.resolved ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
+                          {incident.resolved ? 'Решено' : 'Активно'}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Панель сенсоров и параметров */}
+        <TabsContent value="sensors" className="mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Давление */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm flex items-center">
+                  <Gauge className="h-4 w-4 mr-2 text-blue-400" />
+                  Давление в системе
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-4">
+                  <div className="text-2xl font-bold text-white">3.2 атм</div>
+                  <div className="text-green-400 text-sm">В норме (2.8-4.0 атм)</div>
+                </div>
+                <Progress value={65} className="h-2 mb-2" />
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>Мин: 2.8</span>
+                  <span>Макс: 4.0</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Объем */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm flex items-center">
+                  <Droplets className="h-4 w-4 mr-2 text-blue-400" />
+                  Объем подачи
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-4">
+                  <div className="text-2xl font-bold text-white">1,245 м³/ч</div>
+                  <div className="text-yellow-400 text-sm">Повышенный расход</div>
+                </div>
+                <Progress value={85} className="h-2 mb-2" />
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>Норма: 800-1200</span>
+                  <span>Критично: {'>'} 1400</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* pH */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm flex items-center">
+                  <TestTube className="h-4 w-4 mr-2 text-green-400" />
+                  Уровень pH
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-4">
+                  <div className="text-2xl font-bold text-white">7.2</div>
+                  <div className="text-green-400 text-sm">Оптимально (6.5-8.5)</div>
+                </div>
+                <Progress value={70} className="h-2 mb-2" />
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>Кислая: &lt;6.5</span>
+                  <span>Щелочная: {'>'} 8.5</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Температура */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm flex items-center">
+                  <Thermometer className="h-4 w-4 mr-2 text-orange-400" />
+                  Температура
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-4">
+                  <div className="text-2xl font-bold text-white">18.5°C</div>
+                  <div className="text-green-400 text-sm">В норме</div>
+                </div>
+                <Progress value={45} className="h-2 mb-2" />
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>Холодная: {'<'} 10°C</span>
+                  <span>Горячая: {'>'} 25°C</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Ток */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm flex items-center">
+                  <Zap className="h-4 w-4 mr-2 text-yellow-400" />
+                  Потребление тока
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-4">
+                  <div className="text-2xl font-bold text-white">245 А</div>
+                  <div className="text-green-400 text-sm">Нормальное</div>
+                </div>
+                <Progress value={60} className="h-2 mb-2" />
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>Норма: 180-300 А</span>
+                  <span>Перегрузка: {'>'} 350 А</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Вибрации */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm flex items-center">
+                  <Activity className="h-4 w-4 mr-2 text-purple-400" />
+                  Уровень вибраций
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center mb-4">
+                  <div className="text-2xl font-bold text-white">2.1 мм/с</div>
+                  <div className="text-yellow-400 text-sm">Повышенный</div>
+                </div>
+                <Progress value={75} className="h-2 mb-2" />
+                <div className="flex justify-between text-xs text-white/60">
+                  <span>Норма: &lt;2.0</span>
+                  <span>Критично: &gt;3.5</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Станции */}
@@ -504,8 +819,486 @@ export default function OperatorCabinetPage() {
           </div>
         </TabsContent>
 
-        {/* Диспетчерская */}
+        {/* Модули управления и настройки */}
         <TabsContent value="control" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Режимы работы */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Settings className="h-5 w-5 mr-2 text-primary" />
+                  Режимы работы системы
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { name: 'Главная насосная', mode: 'auto', status: 'active' },
+                  { name: 'Система фильтрации', mode: 'manual', status: 'maintenance' },
+                  { name: 'Распределительная сеть', mode: 'semi', status: 'active' },
+                  { name: 'Очистные сооружения', mode: 'auto', status: 'active' }
+                ].map((system, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                    <div>
+                      <p className="text-white text-sm font-medium">{system.name}</p>
+                      <Badge className={
+                        system.mode === 'auto' ? 'bg-green-500/20 text-green-400' :
+                        system.mode === 'manual' ? 'bg-blue-500/20 text-blue-400' :
+                        'bg-yellow-500/20 text-yellow-400'
+                      }>
+                        {system.mode === 'auto' ? 'Автоматический' :
+                         system.mode === 'manual' ? 'Ручной' : 'Полуавтомат'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        system.status === 'active' ? 'bg-green-400' : 'bg-yellow-400'
+                      }`} />
+                      <Button size="sm" variant="outline" className="text-xs">
+                        Настроить
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Управление оборудованием */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Cog className="h-5 w-5 mr-2 text-primary" />
+                  Управление оборудованием
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  { name: 'Насос №1', type: 'pump', status: 'running', power: 85 },
+                  { name: 'Насос №2', type: 'pump', status: 'stopped', power: 0 },
+                  { name: 'Клапан А-14', type: 'valve', status: 'open', power: 100 },
+                  { name: 'Фильтр Б-7', type: 'filter', status: 'cleaning', power: 60 }
+                ].map((equipment, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className={`p-2 rounded-lg ${
+                        equipment.type === 'pump' ? 'bg-blue-500/20' :
+                        equipment.type === 'valve' ? 'bg-green-500/20' : 'bg-purple-500/20'
+                      }`}>
+                        {equipment.type === 'pump' ? <Zap className="h-4 w-4 text-blue-400" /> :
+                         equipment.type === 'valve' ? <Settings className="h-4 w-4 text-green-400" /> :
+                         <Filter className="h-4 w-4 text-purple-400" />}
+                      </div>
+                      <div>
+                        <p className="text-white text-sm font-medium">{equipment.name}</p>
+                        <p className="text-white/60 text-xs">{equipment.status} • {equipment.power}%</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button size="sm" variant="outline" className="text-xs">
+                        {equipment.status === 'running' ? 'Остановить' : 'Запустить'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Расписания и сценарии */}
+          <Card className="glassmorphism-dark border-primary/20 mt-6">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Calendar className="h-5 w-5 mr-2 text-primary" />
+                Расписания и автоматические сценарии
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { 
+                    name: 'Ночная промывка фильтров', 
+                    schedule: '02:00 - 04:00', 
+                    frequency: 'Ежедневно',
+                    active: true 
+                  },
+                  { 
+                    name: 'Пиковая нагрузка', 
+                    schedule: '07:00 - 09:00, 18:00 - 20:00', 
+                    frequency: 'Будни',
+                    active: true 
+                  },
+                  { 
+                    name: 'Профилактическая остановка', 
+                    schedule: '00:00 - 06:00', 
+                    frequency: 'Воскресенье',
+                    active: false 
+                  }
+                ].map((scenario, index) => (
+                  <div key={index} className="p-4 bg-background/20 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-white text-sm font-medium">{scenario.name}</h4>
+                      <Switch checked={scenario.active} />
+                    </div>
+                    <div className="space-y-1 text-xs text-white/60">
+                      <p>⏰ {scenario.schedule}</p>
+                      <p>🔄 {scenario.frequency}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Видео- и фотонаблюдение */}
+        <TabsContent value="video" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Живое видео */}
+            <Card className="lg:col-span-2 glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Camera className="h-5 w-5 mr-2 text-primary" />
+                  Прямой видеопоток
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { name: 'Главный вход', location: 'Насосная станция №1', status: 'online' },
+                    { name: 'Машинный зал', location: 'Насосная станция №1', status: 'online' },
+                    { name: 'Резервуары', location: 'Очистные сооружения', status: 'maintenance' },
+                    { name: 'Периметр', location: 'Распределительная станция', status: 'online' }
+                  ].map((camera, index) => (
+                    <div key={index} className="relative">
+                      <div className="aspect-video bg-background/20 rounded-lg overflow-hidden">
+                        <div className="w-full h-full bg-gradient-to-br from-blue-900/30 to-purple-900/30 flex items-center justify-center">
+                          <div className="text-center">
+                            <Camera className={`h-8 w-8 mx-auto mb-2 ${
+                              camera.status === 'online' ? 'text-green-400' : 'text-yellow-400'
+                            }`} />
+                            <p className="text-white text-sm">{camera.name}</p>
+                            <p className="text-white/60 text-xs">{camera.location}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="absolute top-2 right-2">
+                        <Badge className={
+                          camera.status === 'online' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+                        }>
+                          {camera.status === 'online' ? 'Онлайн' : 'ТО'}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Архив и анализ */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm">Архив и анализ</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-3 bg-background/20 rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <Eye className="h-4 w-4 mr-2 text-blue-400" />
+                    <span className="text-white text-sm">Компьютерное зрение</span>
+                  </div>
+                  <div className="space-y-2 text-xs">
+                    <div className="text-green-400">✓ Обнаружение утечек: активно</div>
+                    <div className="text-blue-400">📊 Анализ движения: включен</div>
+                    <div className="text-yellow-400">⚠ Аномальная активность: 2 события</div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">Последние события</h4>
+                  {[
+                    { time: '14:23', event: 'Несанкционированный доступ', camera: 'Периметр', severity: 'high' },
+                    { time: '12:45', event: 'Утечка в секции А', camera: 'Резервуары', severity: 'critical' },
+                    { time: '11:12', event: 'Плановое обслуживание', camera: 'Машинный зал', severity: 'low' }
+                  ].map((event, index) => (
+                    <div key={index} className="p-2 bg-background/20 rounded-lg">
+                      <div className="flex items-center justify-between mb-1">
+                        <Badge className={
+                          event.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
+                          event.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                          'bg-blue-500/20 text-blue-400'
+                        }>
+                          {event.severity === 'critical' ? 'Критично' :
+                           event.severity === 'high' ? 'Высокий' : 'Низкий'}
+                        </Badge>
+                        <span className="text-white/60 text-xs">{event.time}</span>
+                      </div>
+                      <p className="text-white text-xs">{event.event}</p>
+                      <p className="text-white/60 text-xs">Камера: {event.camera}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* KPI и отчеты */}
+        <TabsContent value="reports" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* KPI метрики */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2 text-primary" />
+                  Ключевые показатели эффективности
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-3 bg-background/20 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-green-400">98.7%</div>
+                    <div className="text-white/60 text-xs">Надежность оборудования</div>
+                  </div>
+                  <div className="p-3 bg-background/20 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-blue-400">94.2%</div>
+                    <div className="text-white/60 text-xs">Эффективность водоподачи</div>
+                  </div>
+                  <div className="p-3 bg-background/20 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-yellow-400">-12%</div>
+                    <div className="text-white/60 text-xs">Снижение энергозатрат</div>
+                  </div>
+                  <div className="p-3 bg-background/20 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-purple-400">15 мин</div>
+                    <div className="text-white/60 text-xs">Среднее время реакции</div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">Экономические показатели</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60 text-sm">Энергопотребление</span>
+                      <span className="text-green-400 text-sm">↓ 8.4% к прошлому месяцу</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60 text-sm">Стоимость обслуживания</span>
+                      <span className="text-yellow-400 text-sm">↑ 2.1% к прошлому месяцу</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60 text-sm">Общая экономия</span>
+                      <span className="text-blue-400 text-sm">524,000 ₽/месяц</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">Экологические показатели</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60 text-sm">Снижение выбросов CO₂</span>
+                      <span className="text-green-400 text-sm">-147 тонн/месяц</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60 text-sm">Экономия воды</span>
+                      <span className="text-blue-400 text-sm">12.3% от потребления</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Отчеты и интеграции */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <FileDown className="h-5 w-5 mr-2 text-primary" />
+                  Отчеты и интеграции
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">Готовые отчеты</h4>
+                  {[
+                    { name: 'Суточный отчет операций', format: 'PDF', size: '2.4 МБ', date: 'Сегодня' },
+                    { name: 'Месячная аналитика KPI', format: 'Excel', size: '5.8 МБ', date: 'Вчера' },
+                    { name: 'Журнал инцидентов', format: 'CSV', size: '1.2 МБ', date: 'Вчера' }
+                  ].map((report, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                      <div>
+                        <p className="text-white text-sm">{report.name}</p>
+                        <p className="text-white/60 text-xs">{report.format} • {report.size} • {report.date}</p>
+                      </div>
+                      <Button size="sm" variant="outline" className="text-xs">
+                        <Download className="h-3 w-3 mr-1" />
+                        Скачать
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">API интеграции</h4>
+                  {[
+                    { name: 'Реестр данных Минэкологии', status: 'active', sync: '10 мин назад' },
+                    { name: 'Система мониторинга региона', status: 'active', sync: '2 ч назад' },
+                    { name: 'Внешняя система учета', status: 'error', sync: 'Ошибка подключения' }
+                  ].map((integration, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                      <div>
+                        <p className="text-white text-sm">{integration.name}</p>
+                        <p className="text-white/60 text-xs">Синхронизация: {integration.sync}</p>
+                      </div>
+                      <Badge className={
+                        integration.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                      }>
+                        {integration.status === 'active' ? 'Активна' : 'Ошибка'}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+
+                <Button className="w-full bg-primary hover:bg-primary/80">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Создать новый отчет
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Аварийное реагирование */}
+        <TabsContent value="emergency" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Панель экстренного управления */}
+            <Card className="lg:col-span-2 glassmorphism-dark border-red-500/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <AlertTriangle className="h-5 w-5 mr-2 text-red-400" />
+                  Панель экстренного управления
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                  {[
+                    { name: 'Аварийная остановка', color: 'red', icon: Power },
+                    { name: 'Перенаправление потоков', color: 'orange', icon: ArrowLeftRight },
+                    { name: 'Изоляция секций', color: 'yellow', icon: ShieldX },
+                    { name: 'Вызов службы', color: 'blue', icon: Phone },
+                    { name: 'Оповещение персонала', color: 'purple', icon: Bell },
+                    { name: 'Резервные системы', color: 'green', icon: RotateCcw }
+                  ].map((action, index) => {
+                    const IconComponent = action.icon;
+                    return (
+                      <Button
+                        key={index}
+                        className={`h-20 flex flex-col items-center justify-center bg-${action.color}-500/20 hover:bg-${action.color}-500/30 border-${action.color}-500/50 text-${action.color}-400`}
+                        variant="outline"
+                      >
+                        <IconComponent className="h-6 w-6 mb-2" />
+                        <span className="text-xs text-center">{action.name}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-white text-sm font-medium">Автоматические сценарии</h4>
+                  {[
+                    { 
+                      name: 'Перепад давления >50%', 
+                      action: 'Автоматическое отключение секции', 
+                      status: 'active',
+                      lastTriggered: 'Никогда' 
+                    },
+                    { 
+                      name: 'Утечка >100 л/мин', 
+                      action: 'Перенаправление + оповещение', 
+                      status: 'active',
+                      lastTriggered: '3 дня назад' 
+                    },
+                    { 
+                      name: 'Отказ >2 насосов', 
+                      action: 'Резервное питание + вызов службы', 
+                      status: 'active',
+                      lastTriggered: 'Никогда' 
+                    }
+                  ].map((scenario, index) => (
+                    <div key={index} className="p-4 bg-background/20 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-white text-sm font-medium">{scenario.name}</span>
+                        <Badge className="bg-green-500/20 text-green-400">Активен</Badge>
+                      </div>
+                      <p className="text-white/60 text-xs mb-1">Действие: {scenario.action}</p>
+                      <p className="text-white/60 text-xs">Последнее срабатывание: {scenario.lastTriggered}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Связь и уведомления */}
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white text-sm">Связь и уведомления</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">Экстренные контакты</h4>
+                  {[
+                    { name: 'МЧС', phone: '112', type: 'emergency' },
+                    { name: 'Водоканал дежурный', phone: '+7 (495) 123-45-67', type: 'service' },
+                    { name: 'Главный инженер', phone: '+7 (495) 987-65-43', type: 'internal' },
+                    { name: 'Техподдержка', phone: '+7 (495) 555-01-02', type: 'support' }
+                  ].map((contact, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-background/20 rounded-lg">
+                      <div>
+                        <p className="text-white text-sm">{contact.name}</p>
+                        <p className="text-white/60 text-xs">{contact.phone}</p>
+                      </div>
+                      <Button size="sm" variant="outline" className="text-xs">
+                        <Phone className="h-3 w-3 mr-1" />
+                        Вызов
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-white text-sm font-medium">Push-уведомления</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/60 text-sm">Критические события</span>
+                      <Switch checked={true} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/60 text-sm">Предупреждения</span>
+                      <Switch checked={true} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/60 text-sm">Плановые работы</span>
+                      <Switch checked={false} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <AlertTriangle className="h-4 w-4 mr-2 text-red-400" />
+                    <span className="text-red-400 text-sm font-medium">Активные тревоги</span>
+                  </div>
+                  <div className="text-red-300 text-xs">
+                    • Превышение давления в секции Б<br/>
+                    • Связь с камерой "Резервуары" потеряна
+                  </div>
+                  <Button size="sm" className="w-full mt-2 bg-red-500 hover:bg-red-600">
+                    Обработать тревоги
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Станции */}
+        <TabsContent value="stations" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <Card className="glassmorphism-dark border-primary/20">
               <CardHeader>
