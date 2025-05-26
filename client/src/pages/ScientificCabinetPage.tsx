@@ -184,13 +184,16 @@ export default function ScientificCabinetPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-6 bg-background/20">
-          <TabsTrigger value="dashboard">{t('scientific.tabs.dashboard', 'Панель')}</TabsTrigger>
-          <TabsTrigger value="monitoring">{t('scientific.tabs.monitoring', 'Мониторинг')}</TabsTrigger>
-          <TabsTrigger value="research">{t('scientific.tabs.research', 'Исследования')}</TabsTrigger>
-          <TabsTrigger value="laboratory">{t('scientific.tabs.laboratory', 'Лаборатория')}</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-9 bg-background/20 text-xs">
+          <TabsTrigger value="dashboard">{t('scientific.tabs.dashboard', 'Главная панель')}</TabsTrigger>
+          <TabsTrigger value="map">{t('scientific.tabs.map', 'Карта активности')}</TabsTrigger>
+          <TabsTrigger value="data">{t('scientific.tabs.data', 'Данные и сенсоры')}</TabsTrigger>
+          <TabsTrigger value="ai-analysis">{t('scientific.tabs.ai', 'ИИ Анализ')}</TabsTrigger>
           <TabsTrigger value="publications">{t('scientific.tabs.publications', 'Публикации')}</TabsTrigger>
-          <TabsTrigger value="reports">{t('scientific.tabs.reports', 'Отчеты')}</TabsTrigger>
+          <TabsTrigger value="missions">{t('scientific.tabs.missions', 'Миссии')}</TabsTrigger>
+          <TabsTrigger value="laboratory">{t('scientific.tabs.laboratory', 'Симуляторы')}</TabsTrigger>
+          <TabsTrigger value="collaboration">{t('scientific.tabs.collaboration', 'Взаимодействие')}</TabsTrigger>
+          <TabsTrigger value="innovations">{t('scientific.tabs.innovations', 'Инновации')}</TabsTrigger>
         </TabsList>
 
         {/* Панель управления */}
@@ -284,6 +287,346 @@ export default function ScientificCabinetPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Карта научной активности */}
+        <TabsContent value="map" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center">
+                    <Database className="h-5 w-5 mr-2 text-blue-400" />
+                    Географическое распределение исследований
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-96 bg-background/20 rounded-lg relative overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center">
+                        <Database className="h-16 w-16 text-primary/60 mx-auto mb-4" />
+                        <p className="text-white/60 mb-4">[Интерактивная карта научной активности]</p>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
+                            <span className="text-white/80">Исследования</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                            <span className="text-white/80">Экспедиции</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
+                            <span className="text-white/80">Лаборатории</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <span className="text-white/80">Сенсоры</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-4 gap-4 mt-4">
+                    <Button size="sm" variant="outline" className="border-blue-400/30 text-blue-400">
+                      Проекты
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-green-400/30 text-green-400">
+                      Полевые работы
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-purple-400/30 text-purple-400">
+                      Лаборатории
+                    </Button>
+                    <Button size="sm" variant="outline" className="border-yellow-400/30 text-yellow-400">
+                      Мониторинг
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="space-y-6">
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Активные исследования</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="bg-background/20 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-white font-medium">Амударья</span>
+                        <Badge className="bg-blue-500/20 text-blue-400">7 проектов</Badge>
+                      </div>
+                      <p className="text-white/60 text-xs">Гидрология, качество воды, биоразнообразие</p>
+                    </div>
+                    
+                    <div className="bg-background/20 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-white font-medium">Сырдарья</span>
+                        <Badge className="bg-green-500/20 text-green-400">4 проекта</Badge>
+                      </div>
+                      <p className="text-white/60 text-xs">Солевой баланс, ирригация, экосистемы</p>
+                    </div>
+                    
+                    <div className="bg-background/20 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-white font-medium">Каракалпакстан</span>
+                        <Badge className="bg-purple-500/20 text-purple-400">3 проекта</Badge>
+                      </div>
+                      <p className="text-white/60 text-xs">Аральское море, опустынивание, реставрация</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="glassmorphism-dark border-primary/20">
+                <CardHeader>
+                  <CardTitle className="text-white">Источники и потоки</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60">Горные источники</span>
+                      <span className="text-blue-400">42%</span>
+                    </div>
+                    <Progress value={42} className="h-2" />
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60">Промышленность</span>
+                      <span className="text-yellow-400">28%</span>
+                    </div>
+                    <Progress value={28} className="h-2" />
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-white/60">Сельское хозяйство</span>
+                      <span className="text-green-400">30%</span>
+                    </div>
+                    <Progress value={30} className="h-2" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Данные и сенсоры */}
+        <TabsContent value="data" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Droplets className="h-5 w-5 mr-2 text-blue-400" />
+                  Потоковые данные в реальном времени
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">pH уровень</span>
+                      <span className="text-green-400">7.2</span>
+                    </div>
+                    <Progress value={72} className="h-2" />
+                    <p className="text-white/60 text-xs mt-1">Норма: 6.5-8.5</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Мутность</span>
+                      <span className="text-yellow-400">12 NTU</span>
+                    </div>
+                    <Progress value={40} className="h-2" />
+                    <p className="text-white/60 text-xs mt-1">Допустимо: &lt;20 NTU</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Солёность</span>
+                      <span className="text-blue-400">1.2 г/л</span>
+                    </div>
+                    <Progress value={60} className="h-2" />
+                    <p className="text-white/60 text-xs mt-1">Питьевая: &lt;1.5 г/л</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Температура</span>
+                      <span className="text-white">18.5°C</span>
+                    </div>
+                    <Progress value={55} className="h-2" />
+                    <p className="text-white/60 text-xs mt-1">Сезонная норма</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <BarChart2 className="h-5 w-5 mr-2 text-purple-400" />
+                  Микробиологические показатели
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">E. Coli</span>
+                      <Badge className="bg-green-500/20 text-green-400">Не обнаружено</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs">Последняя проверка: 2 часа назад</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Колиформы</span>
+                      <Badge className="bg-yellow-500/20 text-yellow-400">3 КОЕ/100мл</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs">Норма: &lt;5 КОЕ/100мл</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Микропластик</span>
+                      <Badge className="bg-red-500/20 text-red-400">15 частиц/л</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs">Требует внимания</p>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white font-medium">Биопленки</span>
+                      <Badge className="bg-blue-500/20 text-blue-400">Умеренные</Badge>
+                    </div>
+                    <p className="text-white/60 text-xs">Естественный уровень</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white">Фильтрация и импорт данных</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-white/60 text-sm">Источник данных</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1">
+                      <option>Все источники</option>
+                      <option>Полевые станции</option>
+                      <option>Лабораторные анализы</option>
+                      <option>Спутниковые данные</option>
+                      <option>IoT сенсоры</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="text-white/60 text-sm">Регион</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1">
+                      <option>Весь Узбекистан</option>
+                      <option>Бассейн Амударьи</option>
+                      <option>Бассейн Сырдарьи</option>
+                      <option>Каракалпакстан</option>
+                      <option>Ферганская долина</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="text-white/60 text-sm">Временной период</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1">
+                      <option>Последние 24 часа</option>
+                      <option>Последняя неделя</option>
+                      <option>Последний месяц</option>
+                      <option>Последний год</option>
+                      <option>Настраиваемый период</option>
+                    </select>
+                  </div>
+                  
+                  <div className="border-t border-white/10 pt-4">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 mb-2">
+                      Импорт внешних данных
+                    </Button>
+                    <Button variant="outline" className="w-full border-primary/30 text-primary mb-2">
+                      Экспорт в CSV/JSON
+                    </Button>
+                    <Button variant="outline" className="w-full border-green-400/30 text-green-400">
+                      API подключение
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glassmorphism-dark border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <Thermometer className="h-5 w-5 mr-2 text-primary" />
+                Подключение полевых приборов
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                      <Droplets className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">pH метр портативный</h4>
+                      <p className="text-green-400 text-xs">Подключен</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Модель: AquaTest Pro-7</p>
+                  <p className="text-white/60 text-sm">Последние данные: 5 мин назад</p>
+                </div>
+
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                      <Beaker className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">Мутномер</h4>
+                      <p className="text-blue-400 text-xs">Синхронизация</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Модель: TurbiMax WP-4</p>
+                  <p className="text-white/60 text-sm">Калибровка: сегодня</p>
+                </div>
+
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                      <Thermometer className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">Термодатчик</h4>
+                      <p className="text-green-400 text-xs">Активен</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Модель: TempLog-X1</p>
+                  <p className="text-white/60 text-sm">Интервал: 15 секунд</p>
+                </div>
+
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
+                      <Zap className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">Кондуктометр</h4>
+                      <p className="text-red-400 text-xs">Офлайн</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Модель: CondMax-200</p>
+                  <p className="text-white/60 text-sm">Требует подключения</p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -386,6 +729,402 @@ export default function ScientificCabinetPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ИИ Анализ и Big Data */}
+        <TabsContent value="ai-analysis" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2 text-purple-400" />
+                  Прогнозирование и моделирование
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-3">Климатические изменения</h4>
+                    <div className="h-32 bg-background/20 rounded-lg flex items-center justify-center mb-3">
+                      <p className="text-white/60 text-sm">[График прогноза осадков и температуры]</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-white/60">Осадки 2025:</span>
+                        <p className="text-yellow-400 font-medium">-12% от нормы</p>
+                      </div>
+                      <div>
+                        <span className="text-white/60">Температура:</span>
+                        <p className="text-red-400 font-medium">+1.8°C</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-background/20 rounded-lg p-4">
+                    <h4 className="text-white font-medium mb-3">Качество воды</h4>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Тренд pH</span>
+                        <span className="text-green-400">Стабильный</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Загрязнения</span>
+                        <span className="text-yellow-400">Рост +5%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/60">Микропластик</span>
+                        <span className="text-red-400">Критический</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <BarChart2 className="h-5 w-5 mr-2 text-green-400" />
+                  Корреляции и тренды
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="h-4 w-4 text-green-400" />
+                      <span className="text-green-400 font-medium">Сильная корреляция</span>
+                    </div>
+                    <p className="text-white text-sm mb-2">Температура воды ↔ Биоразнообразие</p>
+                    <p className="text-white/60 text-xs">Коэффициент: -0.78 • Достоверность: 94%</p>
+                  </div>
+                  
+                  <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <BarChart2 className="h-4 w-4 text-yellow-400" />
+                      <span className="text-yellow-400 font-medium">Средняя корреляция</span>
+                    </div>
+                    <p className="text-white text-sm mb-2">Солёность ↔ Сельхоз стоки</p>
+                    <p className="text-white/60 text-xs">Коэффициент: +0.56 • Достоверность: 87%</p>
+                  </div>
+                  
+                  <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Droplets className="h-4 w-4 text-blue-400" />
+                      <span className="text-blue-400 font-medium">Новый тренд</span>
+                    </div>
+                    <p className="text-white text-sm mb-2">Микропластик в горных источниках</p>
+                    <p className="text-white/60 text-xs">Обнаружено 3 дня назад • Требует изучения</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glassmorphism-dark border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <FlaskConical className="h-5 w-5 mr-2 text-primary" />
+                Сценарное моделирование экосистем
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-background/20 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-2">Повышение температуры +3°C</h4>
+                  <p className="text-white/60 text-sm mb-3">Воздействие на водные экосистемы Узбекистана</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Испарение:</span>
+                      <span className="text-red-400">+25%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Биоразнообразие:</span>
+                      <span className="text-red-400">-18%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Качество воды:</span>
+                      <span className="text-yellow-400">Ухудшение</span>
+                    </div>
+                  </div>
+                  <Button size="sm" className="w-full mt-3 bg-red-600 hover:bg-red-700">
+                    Детальный анализ
+                  </Button>
+                </div>
+                
+                <div className="bg-background/20 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-2">Сокращение осадков -20%</h4>
+                  <p className="text-white/60 text-sm mb-3">Влияние на водный баланс региона</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Уровень рек:</span>
+                      <span className="text-red-400">-35%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Подземные воды:</span>
+                      <span className="text-yellow-400">-12%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Солёность:</span>
+                      <span className="text-red-400">+28%</span>
+                    </div>
+                  </div>
+                  <Button size="sm" className="w-full mt-3 bg-yellow-600 hover:bg-yellow-700">
+                    Моделирование
+                  </Button>
+                </div>
+                
+                <div className="bg-background/20 rounded-lg p-4">
+                  <h4 className="text-white font-medium mb-2">Внедрение умных технологий</h4>
+                  <p className="text-white/60 text-sm mb-3">IoT сенсоры + ИИ управление</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Эффективность:</span>
+                      <span className="text-green-400">+42%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Экономия воды:</span>
+                      <span className="text-green-400">+31%</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-white/60">Окупаемость:</span>
+                      <span className="text-blue-400">2.3 года</span>
+                    </div>
+                  </div>
+                  <Button size="sm" className="w-full mt-3 bg-green-600 hover:bg-green-700">
+                    Технико-экономическое обоснование
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Панель инициатив и миссий */}
+        <TabsContent value="missions" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center">
+                  <Users className="h-5 w-5 mr-2 text-green-400" />
+                  Создание исследовательских миссий
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-white/60 text-sm">Название миссии</label>
+                    <input 
+                      type="text" 
+                      placeholder="Например: Мониторинг Аральского моря"
+                      className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="text-white/60 text-sm">Тип миссии</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1">
+                      <option>Полевые исследования</option>
+                      <option>Лабораторный анализ</option>
+                      <option>Общественный мониторинг</option>
+                      <option>Образовательная программа</option>
+                      <option>Экологическая акция</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="text-white/60 text-sm">Уровень сложности</label>
+                    <select className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1">
+                      <option>Новичок (1-3 дня)</option>
+                      <option>Любитель (1-2 недели)</option>
+                      <option>Продвинутый (1-3 месяца)</option>
+                      <option>Эксперт (3+ месяца)</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="text-white/60 text-sm">Награды за выполнение</label>
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      <input 
+                        type="number" 
+                        placeholder="Баллы"
+                        className="bg-background/30 border border-primary/30 rounded px-3 py-2 text-white"
+                      />
+                      <select className="bg-background/30 border border-primary/30 rounded px-3 py-2 text-white">
+                        <option>Значок</option>
+                        <option>Сертификат</option>
+                        <option>VOD токены</option>
+                        <option>Особый статус</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-white/60 text-sm">Описание миссии</label>
+                    <textarea 
+                      placeholder="Опишите цели, задачи и ожидаемые результаты"
+                      className="w-full bg-background/30 border border-primary/30 rounded px-3 py-2 text-white mt-1 h-20 resize-none"
+                    />
+                  </div>
+                  
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                    Создать миссию
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="glassmorphism-dark border-primary/20">
+              <CardHeader>
+                <CardTitle className="text-white">Активные миссии сообщества</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-background/20 rounded-lg p-4 border-l-4 border-blue-400">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="text-white font-medium">Фотофиксация родников</h4>
+                        <p className="text-white/60 text-sm">Ташкентская область • 47 участников</p>
+                      </div>
+                      <Badge className="bg-blue-500/20 text-blue-400">Активна</Badge>
+                    </div>
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="flex items-center gap-1">
+                        <span className="text-yellow-400">⭐</span>
+                        <span className="text-white text-sm">150 баллов</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-green-400">🏆</span>
+                        <span className="text-white text-sm">Эко-исследователь</span>
+                      </div>
+                    </div>
+                    <Progress value={67} className="h-2 mb-2" />
+                    <p className="text-white/60 text-xs">Прогресс: 67% • Осталось 8 дней</p>
+                  </div>
+
+                  <div className="bg-background/20 rounded-lg p-4 border-l-4 border-green-400">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="text-white font-medium">Тестирование портативных pH-метров</h4>
+                        <p className="text-white/60 text-sm">Вся республика • 23 участника</p>
+                      </div>
+                      <Badge className="bg-green-500/20 text-green-400">Новая</Badge>
+                    </div>
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="flex items-center gap-1">
+                        <span className="text-yellow-400">⭐</span>
+                        <span className="text-white text-sm">300 баллов</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-purple-400">🔬</span>
+                        <span className="text-white text-sm">Лаборант</span>
+                      </div>
+                    </div>
+                    <Progress value={12} className="h-2 mb-2" />
+                    <p className="text-white/60 text-xs">Прогресс: 12% • Осталось 21 день</p>
+                  </div>
+
+                  <div className="bg-background/20 rounded-lg p-4 border-l-4 border-purple-400">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="text-white font-medium">Школьная программа "Чистая вода"</h4>
+                        <p className="text-white/60 text-sm">Навои • 156 участников</p>
+                      </div>
+                      <Badge className="bg-purple-500/20 text-purple-400">Образовательная</Badge>
+                    </div>
+                    <div className="flex items-center gap-4 mb-3">
+                      <div className="flex items-center gap-1">
+                        <span className="text-yellow-400">⭐</span>
+                        <span className="text-white text-sm">75 баллов</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-blue-400">📚</span>
+                        <span className="text-white text-sm">Просветитель</span>
+                      </div>
+                    </div>
+                    <Progress value={89} className="h-2 mb-2" />
+                    <p className="text-white/60 text-xs">Прогресс: 89% • Осталось 3 дня</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glassmorphism-dark border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <TrendingUp className="h-5 w-5 mr-2 text-primary" />
+                Связь с образовательными учреждениями
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">НУУз</h4>
+                      <p className="text-blue-400 text-xs">15 проектов</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Факультет гидрологии</p>
+                  <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
+                    Сотрудничать
+                  </Button>
+                </div>
+
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                      <FlaskConical className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">ТИИИМСХ</h4>
+                      <p className="text-green-400 text-xs">8 проектов</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Кафедра ирригации</p>
+                  <Button size="sm" className="w-full bg-green-600 hover:bg-green-700">
+                    Сотрудничать
+                  </Button>
+                </div>
+
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                      <Database className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">Лицей №1</h4>
+                      <p className="text-purple-400 text-xs">3 проекта</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Химико-биологический профиль</p>
+                  <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700">
+                    Наставничество
+                  </Button>
+                </div>
+
+                <div className="bg-background/20 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center">
+                      <Beaker className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-white font-medium">Школа №47</h4>
+                      <p className="text-yellow-400 text-xs">Новый партнер</p>
+                    </div>
+                  </div>
+                  <p className="text-white/60 text-sm mb-2">Экологический кружок</p>
+                  <Button size="sm" className="w-full bg-yellow-600 hover:bg-yellow-700">
+                    Подключить
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
