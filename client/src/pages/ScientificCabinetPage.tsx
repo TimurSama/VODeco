@@ -6,9 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { 
-  FlaskConical, Database, FileText, BarChart2, Users,
+  FlaskConical, Database, FileText, BarChart2, BarChart3, Users,
   TrendingUp, AlertTriangle, CheckCircle, Clock,
-  Droplets, Thermometer, Zap, Wind, Beaker
+  Droplets, Thermometer, Zap, Wind, Beaker, Globe,
+  Activity, Brain, Target, TestTube, Lightbulb
 } from "lucide-react";
 
 // Типы данных для научного кабинета
@@ -166,35 +167,141 @@ export default function ScientificCabinetPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Заголовок */}
-      <div className="flex items-center gap-4">
-        <div className="hexagon h-16 w-16 bg-gradient-to-r from-blue-500 to-indigo-600 
-          flex items-center justify-center">
-          <FlaskConical className="h-8 w-8 text-white" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-white">
+    <div className="flex h-screen bg-background">
+      {/* Боковое меню */}
+      <div className="w-64 bg-background/40 backdrop-blur-sm border-r border-primary/20 flex flex-col">
+        {/* Заголовок кабинета */}
+        <div className="p-6 border-b border-primary/20">
+          <div className="hexagon h-12 w-12 bg-gradient-to-r from-blue-500/30 to-purple-500/30 
+            flex items-center justify-center mb-3">
+            <FlaskConical className="h-6 w-6 text-primary" />
+          </div>
+          <h2 className="text-xl font-bold text-white">
             {t('scientific.title', 'Научный кабинет')}
-          </h1>
-          <p className="text-white/70">
-            {t('scientific.subtitle', 'Исследования и анализ водных ресурсов')}
+          </h2>
+          <p className="text-white/60 text-sm">
+            {t('scientific.subtitle', 'Исследования и анализ')}
           </p>
         </div>
+
+        {/* Навигационное меню */}
+        <nav className="flex-1 p-4">
+          <div className="space-y-2">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'dashboard'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <BarChart3 className="h-4 w-4 mr-3" />
+              Главная панель
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('map')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'map'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Globe className="h-4 w-4 mr-3" />
+              Карта активности
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('data')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'data'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Activity className="h-4 w-4 mr-3" />
+              Данные и сенсоры
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('ai-analysis')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'ai-analysis'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Brain className="h-4 w-4 mr-3" />
+              ИИ Анализ
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('publications')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'publications'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <FileText className="h-4 w-4 mr-3" />
+              Публикации
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('missions')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'missions'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Target className="h-4 w-4 mr-3" />
+              Миссии
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('laboratory')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'laboratory'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <TestTube className="h-4 w-4 mr-3" />
+              Симуляторы
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('collaboration')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'collaboration'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Users className="h-4 w-4 mr-3" />
+              Взаимодействие
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('innovations')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'innovations'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Lightbulb className="h-4 w-4 mr-3" />
+              Инновации
+            </button>
+          </div>
+        </nav>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-9 bg-background/20 text-xs">
-          <TabsTrigger value="dashboard">{t('scientific.tabs.dashboard', 'Главная панель')}</TabsTrigger>
-          <TabsTrigger value="map">{t('scientific.tabs.map', 'Карта активности')}</TabsTrigger>
-          <TabsTrigger value="data">{t('scientific.tabs.data', 'Данные и сенсоры')}</TabsTrigger>
-          <TabsTrigger value="ai-analysis">{t('scientific.tabs.ai', 'ИИ Анализ')}</TabsTrigger>
-          <TabsTrigger value="publications">{t('scientific.tabs.publications', 'Публикации')}</TabsTrigger>
-          <TabsTrigger value="missions">{t('scientific.tabs.missions', 'Миссии')}</TabsTrigger>
-          <TabsTrigger value="laboratory">{t('scientific.tabs.laboratory', 'Симуляторы')}</TabsTrigger>
-          <TabsTrigger value="collaboration">{t('scientific.tabs.collaboration', 'Взаимодействие')}</TabsTrigger>
-          <TabsTrigger value="innovations">{t('scientific.tabs.innovations', 'Инновации')}</TabsTrigger>
-        </TabsList>
+      {/* Основной контент */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 
         {/* Панель управления */}
         <TabsContent value="dashboard" className="mt-6">
@@ -1423,6 +1530,8 @@ export default function ScientificCabinetPage() {
           </div>
         </TabsContent>
       </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
