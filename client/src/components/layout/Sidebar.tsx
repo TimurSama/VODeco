@@ -43,9 +43,9 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   ];
 
   // Добавляем админ панель только для администраторов
-  if (user?.role === 'admin') {
-    navItems.push({ name: t('common.admin'), path: '/admin', icon: ShieldAlert });
-  }
+  // if (user?.role === 'admin') {
+  //   navItems.push({ name: t('common.admin'), path: '/admin', icon: ShieldAlert });
+  // }
 
   // Dashboard is separate to always show at the top
   const dashboardItem: SidebarItem = { name: t('common.dashboard'), path: '/', icon: LayoutDashboard };
@@ -88,6 +88,19 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
 
         {/* Other nav items */}
         <div className="space-y-1">
+          {/* Админ панель - только для администраторов в самом верху */}
+          {user?.role === 'admin' && (
+            <>
+              <Link href='/admin' onClick={() => setOpen(false)}>
+                <div className='flex items-center p-3 rounded-lg transition-all bg-primary/10 text-primary border border-primary/20'>
+                  <ShieldAlert className="mr-3 h-5 w-5" />
+                  {t('common.admin')}
+                </div>
+              </Link>
+              <div className="my-3 border-b border-primary/10"></div>
+            </>
+          )}
+
           {navItems.map((item) => (
             <Link key={item.path} href={item.path} onClick={() => setOpen(false)}>
               <div className={`flex items-center p-3 rounded-lg transition-all
@@ -108,7 +121,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
           VODeco v1.0.0
         </div>
       </div>
-      
+
       {/* Overlay to close the sidebar on touch outside */}
       {open && (
         <div 
