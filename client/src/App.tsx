@@ -45,11 +45,11 @@ import { useMobileDetect } from "@/hooks/use-mobile-detect";
 function Router() {
   // Используем hook
   const isMobile = useMobileDetect();
-  
+
   useEffect(() => {
     console.log('Текущее устройство:', isMobile ? 'Мобильное' : 'Десктоп');
   }, [isMobile]);
-  
+
   return (
     <Switch>
       {/* Маршруты с мобильными версиями */}
@@ -59,7 +59,7 @@ function Router() {
       <Route path="/contacts">
         {isMobile ? <MobileContactsPage /> : <ContactsPage />}
       </Route>
-      
+
       {/* Стандартные маршруты */}
       <Route path="/account">
         <AccountPage />
@@ -152,7 +152,7 @@ function SupportPageWithFooter() {
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

@@ -6,6 +6,7 @@ import {
   FolderKanban, LifeBuoy, FileText, ShieldAlert
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SidebarProps {
   open: boolean;
@@ -21,6 +22,7 @@ interface SidebarItem {
 const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
   const [location] = useLocation();
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   const navItems: SidebarItem[] = [
     { name: t('common.account'), path: '/account', icon: User },
@@ -38,8 +40,12 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     { name: t('common.settings'), path: '/settings', icon: Settings },
     { name: t('common.support'), path: '/support', icon: LifeBuoy },
     { name: t('common.docs'), path: '/docs', icon: FileText },
-    { name: t('common.admin'), path: '/admin', icon: ShieldAlert },
   ];
+
+  // Добавляем админ панель только для администраторов
+  if (user?.role === 'admin') {
+    navItems.push({ name: t('common.admin'), path: '/admin', icon: ShieldAlert });
+  }
 
   // Dashboard is separate to always show at the top
   const dashboardItem: SidebarItem = { name: t('common.dashboard'), path: '/', icon: LayoutDashboard };
