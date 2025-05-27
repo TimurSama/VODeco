@@ -8,7 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Building2, FileText, Shield, Users, Globe,
   CheckCircle, Clock, AlertTriangle, Scale,
-  Eye, Download, Upload, BarChart3, Target, Database
+  Eye, Download, Upload, BarChart3, Target, Database,
+  MapPin, Brain, Inbox, TrendingUp
 } from "lucide-react";
 
 // Типы данных для правительственного кабинета
@@ -196,34 +197,129 @@ export default function GovernmentCabinetPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Заголовок */}
-      <div className="flex items-center gap-4">
-        <div className="hexagon h-16 w-16 bg-gradient-to-r from-purple-500 to-violet-600 
-          flex items-center justify-center">
-          <Building2 className="h-8 w-8 text-white" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-white">
+    <div className="flex h-screen bg-background">
+      {/* Боковое меню */}
+      <div className="w-64 bg-background/40 backdrop-blur-sm border-r border-primary/20 flex flex-col">
+        {/* Заголовок кабинета */}
+        <div className="p-6 border-b border-primary/20">
+          <div className="hexagon h-12 w-12 bg-gradient-to-r from-purple-500/30 to-violet-600/30 
+            flex items-center justify-center mb-3">
+            <Building2 className="h-6 w-6 text-primary" />
+          </div>
+          <h2 className="text-xl font-bold text-white">
             {t('government.title', 'Правительственный кабинет')}
-          </h1>
-          <p className="text-white/70">
-            {t('government.subtitle', 'Политики, регулирование и контроль соответствия')}
+          </h2>
+          <p className="text-white/60 text-sm">
+            {t('government.subtitle', 'Регулирование и контроль')}
           </p>
         </div>
+
+        {/* Навигационное меню */}
+        <nav className="flex-1 p-4">
+          <div className="space-y-2">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'overview'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <BarChart3 className="h-4 w-4 mr-3" />
+              Главная панель
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('map')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'map'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <MapPin className="h-4 w-4 mr-3" />
+              Карта региона
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('ai-analysis')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'ai-analysis'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Brain className="h-4 w-4 mr-3" />
+              ИИ Анализ
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('requests')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'requests'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Inbox className="h-4 w-4 mr-3" />
+              Запросы
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('contacts')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'contacts'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Users className="h-4 w-4 mr-3" />
+              Контакты
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('research')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'research'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Database className="h-4 w-4 mr-3" />
+              Исследования
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('investments')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'investments'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <TrendingUp className="h-4 w-4 mr-3" />
+              Инвестиции
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('documents')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'documents'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <FileText className="h-4 w-4 mr-3" />
+              Документооборот
+            </button>
+          </div>
+        </nav>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-8 bg-background/20 text-xs">
-          <TabsTrigger value="overview">{t('government.tabs.overview', 'Главная панель')}</TabsTrigger>
-          <TabsTrigger value="map">{t('government.tabs.map', 'Карта региона')}</TabsTrigger>
-          <TabsTrigger value="ai-analysis">{t('government.tabs.analysis', 'ИИ Анализ')}</TabsTrigger>
-          <TabsTrigger value="requests">{t('government.tabs.requests', 'Запросы')}</TabsTrigger>
-          <TabsTrigger value="contacts">{t('government.tabs.contacts', 'Контакты')}</TabsTrigger>
-          <TabsTrigger value="research">{t('government.tabs.research', 'Исследования')}</TabsTrigger>
-          <TabsTrigger value="investments">{t('government.tabs.investments', 'Инвестиции')}</TabsTrigger>
-          <TabsTrigger value="documents">{t('government.tabs.documents', 'Документооборот')}</TabsTrigger>
-        </TabsList>
+      {/* Основной контент */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 
         {/* Обзор */}
         <TabsContent value="overview" className="mt-6">
@@ -1932,6 +2028,8 @@ export default function GovernmentCabinetPage() {
           </div>
         </TabsContent>
       </Tabs>
+        </div>
+      </div>
     </div>
   );
 }

@@ -232,35 +232,141 @@ export default function OperatorCabinetPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Заголовок */}
-      <div className="flex items-center gap-4">
-        <div className="hexagon h-16 w-16 bg-gradient-to-r from-orange-500 to-red-600 
-          flex items-center justify-center">
-          <Settings className="h-8 w-8 text-white" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-white">
+    <div className="flex h-screen bg-background">
+      {/* Боковое меню */}
+      <div className="w-64 bg-background/40 backdrop-blur-sm border-r border-primary/20 flex flex-col">
+        {/* Заголовок кабинета */}
+        <div className="p-6 border-b border-primary/20">
+          <div className="hexagon h-12 w-12 bg-gradient-to-r from-orange-500/30 to-red-600/30 
+            flex items-center justify-center mb-3">
+            <Settings className="h-6 w-6 text-primary" />
+          </div>
+          <h2 className="text-xl font-bold text-white">
             {t('operator.title', 'Операторский кабинет')}
-          </h1>
-          <p className="text-white/70">
-            {t('operator.subtitle', 'Управление водными ресурсами и техническое обслуживание')}
+          </h2>
+          <p className="text-white/60 text-sm">
+            {t('operator.subtitle', 'Управление и контроль')}
           </p>
         </div>
+
+        {/* Навигационное меню */}
+        <nav className="flex-1 p-4">
+          <div className="space-y-2">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'dashboard'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <BarChart3 className="h-4 w-4 mr-3" />
+              Главная панель
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('map')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'map'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <MapPin className="h-4 w-4 mr-3" />
+              Карта объектов
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('operations')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'operations'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <FileText className="h-4 w-4 mr-3" />
+              Журнал операций
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('sensors')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'sensors'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Gauge className="h-4 w-4 mr-3" />
+              Сенсоры
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('control')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'control'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Cog className="h-4 w-4 mr-3" />
+              Управление
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('maintenance')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'maintenance'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Wrench className="h-4 w-4 mr-3" />
+              ТО
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('video')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'video'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <Camera className="h-4 w-4 mr-3" />
+              Видеонаблюдение
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'reports'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <FileDown className="h-4 w-4 mr-3" />
+              KPI и отчеты
+            </button>
+            
+            <button
+              onClick={() => setActiveTab('emergency')}
+              className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                activeTab === 'emergency'
+                  ? 'bg-primary/20 text-primary border border-primary/30'
+                  : 'text-white/70 hover:text-white hover:bg-background/20'
+              }`}
+            >
+              <AlertTriangle className="h-4 w-4 mr-3" />
+              Аварийное реагирование
+            </button>
+          </div>
+        </nav>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-9 bg-background/20 text-xs">
-          <TabsTrigger value="dashboard">{t('operator.tabs.dashboard', 'Главная панель')}</TabsTrigger>
-          <TabsTrigger value="map">{t('operator.tabs.map', 'Карта объектов')}</TabsTrigger>
-          <TabsTrigger value="operations">{t('operator.tabs.operations', 'Журнал операций')}</TabsTrigger>
-          <TabsTrigger value="sensors">{t('operator.tabs.sensors', 'Сенсоры')}</TabsTrigger>
-          <TabsTrigger value="control">{t('operator.tabs.control', 'Управление')}</TabsTrigger>
-          <TabsTrigger value="maintenance">{t('operator.tabs.maintenance', 'ТО')}</TabsTrigger>
-          <TabsTrigger value="video">{t('operator.tabs.video', 'Видеонаблюдение')}</TabsTrigger>
-          <TabsTrigger value="reports">{t('operator.tabs.reports', 'KPI и отчеты')}</TabsTrigger>
-          <TabsTrigger value="emergency">{t('operator.tabs.emergency', 'Аварийное реагирование')}</TabsTrigger>
-        </TabsList>
+      {/* Основной контент */}
+      <div className="flex-1 overflow-auto">
+        <div className="p-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 
         {/* Панель управления */}
         <TabsContent value="dashboard" className="mt-6">
@@ -1599,6 +1705,8 @@ export default function OperatorCabinetPage() {
           </div>
         </TabsContent>
       </Tabs>
+        </div>
+      </div>
     </div>
   );
 }
