@@ -882,7 +882,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/temp-session/:sessionId/convert", isAuthenticated, async (req: Request, res: Response) => {try {
-      const result = await storage.convertTempSessionToUser(req.params.sessionId, req.user!.id);
+            const result = await storage.convertTempSessionToUser(req.params.sessionId, req.user!.id);
       res.json(result);
     } catch (error) {
       console.error("Error converting temp session:", error);
@@ -911,6 +911,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error creating user staking:", error);
       res.status(500).json({ message: "Ошибка создания стейкинга" });
+    }
+  });
+
+  // User routes
+  app.get("/api/user", isAuthenticated, async (req, res) => {
+    res.json(req.user);
+  });
+
+  app.put("/api/user/update", isAuthenticated, async (req, res) => {
+    try {
+      const userId = req.user!.id;
+      const { firstName, lastName, email, walletAddress } = req.body;
+
+      const updatedUser = await storage.updateUser(userId, {
+        firstName,
+        lastName,
+        email,
+        walletAddress
+      });
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Ошибка при обновлении пользователя" });
     }
   });
 

@@ -1196,8 +1196,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
+    const [user] = await db.select().from(users).where(sql`LOWER(${users.username}) = LOWER(${username})`);
     return user || undefined;
+  }
+
+  async updateUser(userId: number, updateData: Partial<User>): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        ...updateData,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    return updatedUser;
   }
 
   // User Tokens management
@@ -1295,7 +1308,7 @@ export class DatabaseStorage implements IStorage {
         })
         .where(eq(tempSessions.sessionId, sessionId))
         .returning();
-        
+
       return updatedTempSession || null;
     }
     return null;

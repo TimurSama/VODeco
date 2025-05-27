@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { toast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { 
   User, QrCode, Award, History, Settings, 
   Globe, FlaskConical, Building2, BarChart3, Edit, Eye, Lock, 
@@ -10,32 +13,138 @@ import {
 } from "lucide-react";
 import { UserRole } from '@/types';
 
-// Mock data (в реальном приложении это будет загружаться из API)
-const userData = {
-  id: "DAO_00567832",
-  username: "WaterGuardian",
-  avatarUrl: null,
-  joinedDate: new Date(2023, 5, 15),
-  role: UserRole.Participant,
-  engagementScore: 78,
-  votingPower: 123,
-  stakeAmount: 450,
-  achievements: [
-    { id: 1, name: "Водный Страж", level: 2, date: new Date(2023, 8, 10) },
-    { id: 2, name: "DAO Участник", votes: 10, date: new Date(2023, 9, 5) },
-    { id: 3, name: "Эко-Новатор", level: 1, date: new Date(2023, 7, 22) }
-  ],
-  activities: [
-    { id: 1, type: "vote", project: "Реставрация Аральского моря", date: new Date(2023, 9, 12) },
-    { id: 2, type: "stake", amount: 50, pool: "VOD_Uzbekistan", date: new Date(2023, 8, 30) },
-    { id: 3, type: "certificate", name: "Анализ качества воды", date: new Date(2023, 7, 15) }
-  ]
-};
-
 // Определение типов ролей
 type RoleType = 'community' | 'scientific' | 'government' | 'investor';
 
 export default function AccountPage() {
+  // Реальные данные пользователя будут получены из API
+  const [userData, setUserData] = useState({
+    id: "",
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    walletAddress: "",
+    role: "participant",
+    joined: "",
+    avatar: "",
+    votingPower: 0,
+    // Баланс токенов
+    vodBalance: 0,
+    h2oBalance: 0,
+    stakedVOD: 0,
+    // Статистика активности
+    totalVotes: 0,
+    proposalsCreated: 0,
+    successfulVotes: 0,
+    investmentsMade: 0,
+    totalInvested: 0,
+    currentROI: 0,
+    // Достижения
+    achievements: []
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    walletAddress: ""
+  });
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  // Загрузка данных пользователя
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!user) return;
+
+      try {
+        const response = await fetch('/api/user', {
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUserData({
+            id: `DAO_${String(data.id).padStart(8, '0')}`,
+            username: data.username || '',
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || '',
+            walletAddress: data.walletAddress || '',
+            role: data.role || 'participant',
+            joined: data.createdAt ? new Date(data.createdAt).toLocaleDateString() : '',
+            avatar: data.avatar || '',
+            votingPower: data.votingPower || 0,
+            vodBalance: 0,
+            h2oBalance: 0,
+            stakedVOD: 0,
+            totalVotes: 0,
+            proposalsCreated: 0,
+            successfulVotes: 0,
+            investmentsMade: 0,
+            totalInvested: 0,
+            currentROI: 0,
+            achievements: []
+          });
+
+          setEditForm({
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            email: data.email || '',
+            walletAddress: data.walletAddress || ''
+          });
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки данных пользователя:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, [user]);
+
+  const handleSave = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch('/api/user/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(editForm)
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUserData(prev => ({
+          ...prev,
+          firstName: updatedUser.firstName || '',
+          lastName: updatedUser.lastName || '',
+          email: updatedUser.email || '',
+          walletAddress: updatedUser.walletAddress || ''
+        }));
+
+        setIsEditing(false);
+        toast({
+          title: "Данные сохранены",
+          description: "Информация профиля успешно обновлена",
+        });
+      } else {
+        throw new Error('Ошибка сохранения');
+      }
+    } catch (error) {
+      console.error('Ошибка сохранения данных:', error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось сохранить данные",
+        variant: "destructive"
+      });
+    }
+  };
   const [activeRole, setActiveRole] = useState<RoleType>('community');
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -77,7 +186,7 @@ export default function AccountPage() {
       <div className="glassmorphism-dark w-full rounded-xl p-6 mb-8 relative overflow-hidden">
         {/* Неоновое свечение вокруг профиля */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 rounded-full blur-3xl opacity-30 z-0"></div>
-        
+
         {/* Основная информация */}
         <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* Аватар и ID */}
@@ -85,9 +194,9 @@ export default function AccountPage() {
             <div className="relative">
               <div className="absolute inset-0 bg-primary/30 rounded-full blur-md animate-pulse"></div>
               <div className="relative hexagon h-32 w-32 bg-gradient-to-br from-background to-primary/20 border border-primary/30 flex items-center justify-center">
-                {userData.avatarUrl ? (
+                {userData.avatar ? (
                   <img 
-                    src={userData.avatarUrl} 
+                    src={userData.avatar} 
                     alt={userData.username} 
                     className="h-24 w-24 object-cover hexagon"
                   />
@@ -99,16 +208,16 @@ export default function AccountPage() {
                 <Award className="h-5 w-5 text-background" />
               </div>
             </div>
-            
+
             <div className="text-center">
               <div className="bg-background/30 border border-primary/20 px-3 py-1 rounded-full text-xs text-primary mb-1 inline-flex items-center">
                 <QrCode className="h-3 w-3 mr-1" />
                 {userData.id}
               </div>
               <h2 className="text-xl font-bold text-white">{userData.username}</h2>
-              <p className="text-white/60 text-sm">С нами с {userData.joinedDate.toLocaleDateString()}</p>
+              <p className="text-white/60 text-sm">С нами с {userData.joined}</p>
             </div>
-            
+
             <Button 
               variant="outline" 
               size="sm" 
@@ -118,7 +227,7 @@ export default function AccountPage() {
               Показать QR-код
             </Button>
           </div>
-          
+
           {/* Статистика и метрики */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
             {/* Показатель вовлеченности */}
@@ -132,13 +241,13 @@ export default function AccountPage() {
               </div>
               <div className="mb-2 flex justify-between text-sm">
                 <span className="text-white/70">Прогресс</span>
-                <span className="text-primary font-medium">{userData.engagementScore}%</span>
+                <span className="text-primary font-medium">{userData.votingPower}%</span>
               </div>
-              <Progress value={userData.engagementScore} className="h-2 bg-background/30" />
-              
+              <Progress value={userData.votingPower} className="h-2 bg-background/30" />
+
               <div className="mt-4 grid grid-cols-3 gap-1 text-center text-xs">
                 <div className="bg-background/30 p-2 rounded-md">
-                  <div className="text-white">{userData.activities.length}</div>
+                  <div className="text-white">{userData.totalVotes}</div>
                   <div className="text-white/60">Активности</div>
                 </div>
                 <div className="bg-background/30 p-2 rounded-md">
@@ -151,7 +260,7 @@ export default function AccountPage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Переключение ролей */}
             <div className="bg-background/20 rounded-lg p-4 border border-primary/10">
               <h3 className="text-white font-medium mb-3">Активная роль</h3>
@@ -180,34 +289,34 @@ export default function AccountPage() {
                 Переключение роли меняет доступные функции и данные в соответствии с вашими привилегиями.
               </p>
             </div>
-            
+
             {/* DAO Статус и Рейтинг */}
             <div className="bg-background/20 rounded-lg p-4 border border-primary/10 md:col-span-2">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-white font-medium">DAO Статус и Инвестиции</h3>
                 <Badge className="bg-accent/20 text-accent hover:bg-accent/30">VOD Участник</Badge>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col justify-between bg-background/30 p-3 rounded-lg">
                   <div className="text-white/60 text-xs">Сила голоса</div>
                   <div className="text-2xl font-bold text-white mt-2">{userData.votingPower} <span className="text-primary text-sm">VOD</span></div>
                   <div className="text-xs text-white/50 mt-1">≈ 1.2% от общего пула</div>
                 </div>
-                
+
                 <div className="flex flex-col justify-between bg-background/30 p-3 rounded-lg">
                   <div className="text-white/60 text-xs">В стейкинге</div>
-                  <div className="text-2xl font-bold text-white mt-2">{userData.stakeAmount} <span className="text-primary text-sm">VOD</span></div>
+                  <div className="text-2xl font-bold text-white mt-2">{userData.stakedVOD} <span className="text-primary text-sm">VOD</span></div>
                   <div className="text-xs text-green-400 mt-1">+24.6 VOD (5.2%)</div>
                 </div>
-                
+
                 <div className="flex flex-col justify-between bg-background/30 p-3 rounded-lg">
                   <div className="text-white/60 text-xs">Инвестировано в проекты</div>
                   <div className="text-2xl font-bold text-white mt-2">3 <span className="text-primary text-sm">проекта</span></div>
                   <div className="text-xs text-white/50 mt-1">Общий IRR: 18.7%</div>
                 </div>
               </div>
-              
+
               <div className="mt-4 flex justify-between">
                 <Button variant="link" className="text-primary text-xs">
                   <Wallet className="h-3 w-3 mr-1" />
@@ -222,7 +331,7 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
-      
+
       {/* Основное содержимое страницы */}
       <Tabs 
         value={activeTab} 
@@ -263,7 +372,7 @@ export default function AccountPage() {
             Настройки
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="profile" className="mt-4 space-y-6">
           <div className="glassmorphism-dark rounded-xl p-6">
             <div className="flex justify-between items-center mb-6">
@@ -276,7 +385,7 @@ export default function AccountPage() {
                 Редактировать
               </Button>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
@@ -285,22 +394,22 @@ export default function AccountPage() {
                     {userData.username}
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="text-white/60 text-xs block mb-1">DAO ID</label>
                   <div className="p-3 bg-background/30 rounded-lg border border-primary/10 text-white font-mono">
                     {userData.id}
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="text-white/60 text-xs block mb-1">Дата регистрации</label>
                   <div className="p-3 bg-background/30 rounded-lg border border-primary/10 text-white">
-                    {userData.joinedDate.toLocaleDateString()}
+                    {userData.joined}
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="text-white/60 text-xs block mb-1">Роль в DAO</label>
@@ -314,7 +423,7 @@ export default function AccountPage() {
                     </Badge>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="text-white/60 text-xs block mb-1">Привязанные кошельки</label>
                   <div className="p-3 bg-background/30 rounded-lg border border-primary/10 text-white">
@@ -329,7 +438,7 @@ export default function AccountPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="text-white/60 text-xs block mb-1">Публичный профиль</label>
                   <div className="flex space-x-3">
@@ -354,7 +463,7 @@ export default function AccountPage() {
               </div>
             </div>
           </div>
-          
+
           {/* Действия и быстрые ссылки */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="glassmorphism-dark rounded-xl p-6 space-y-4">
@@ -362,11 +471,11 @@ export default function AccountPage() {
                 <UserPlus className="h-5 w-5 mr-2 text-primary" />
                 Контакты
               </h3>
-              
+
               <p className="text-white/60 text-sm">
                 Управляйте своими контактами и подключениями в DAO VODeco.
               </p>
-              
+
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
                   Мои контакты
@@ -376,17 +485,17 @@ export default function AccountPage() {
                 </Button>
               </div>
             </div>
-            
+
             <div className="glassmorphism-dark rounded-xl p-6 space-y-4">
               <h3 className="text-white text-lg font-medium flex items-center">
                 <Bell className="h-5 w-5 mr-2 text-primary" />
                 Уведомления
               </h3>
-              
+
               <p className="text-white/60 text-sm">
                 Настройте предпочтения по уведомлениям для различных событий.
               </p>
-              
+
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
                   Настройки
@@ -396,17 +505,17 @@ export default function AccountPage() {
                 </Button>
               </div>
             </div>
-            
+
             <div className="glassmorphism-dark rounded-xl p-6 space-y-4">
               <h3 className="text-white text-lg font-medium flex items-center">
                 <ExternalLink className="h-5 w-5 mr-2 text-primary" />
                 Внешние сервисы
               </h3>
-              
+
               <p className="text-white/60 text-sm">
                 Управляйте подключениями к внешним сервисам и API.
               </p>
-              
+
               <div className="grid grid-cols-2 gap-3">
                 <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
                   Интеграции
@@ -418,7 +527,7 @@ export default function AccountPage() {
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="achievements" className="mt-4">
           <div className="glassmorphism-dark rounded-xl p-6">
             <div className="flex justify-between items-center mb-6">
@@ -430,7 +539,7 @@ export default function AccountPage() {
                 {userData.achievements.length} из 24
               </Badge>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {userData.achievements.map(achievement => (
                 <div 
@@ -452,7 +561,7 @@ export default function AccountPage() {
                   </p>
                 </div>
               ))}
-              
+
               {/* Placeholder для будущих достижений */}
               <div className="bg-background/10 rounded-xl border border-dashed border-white/20 p-4 flex flex-col items-center justify-center h-full min-h-[160px]">
                 <div className="h-16 w-16 rounded-full bg-background/20 flex items-center justify-center mb-3">
@@ -466,7 +575,7 @@ export default function AccountPage() {
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="activity" className="mt-4">
           <div className="glassmorphism-dark rounded-xl p-6">
             <div className="flex justify-between items-center mb-6">
@@ -478,9 +587,9 @@ export default function AccountPage() {
                 Фильтры
               </Button>
             </div>
-            
+
             <div className="space-y-4 mb-4">
-              {userData.activities.map(activity => (
+              {userData.activities && userData.activities.map(activity => (
                 <div 
                   key={activity.id}
                   className="bg-background/20 rounded-lg border border-primary/10 p-4"
@@ -491,7 +600,7 @@ export default function AccountPage() {
                       {activity.type === 'stake' && <Wallet className="h-5 w-5 text-primary" />}
                       {activity.type === 'certificate' && <Award className="h-5 w-5 text-primary" />}
                     </div>
-                    
+
                     <div className="flex-1">
                       <div className="flex justify-between items-start">
                         <h4 className="text-white font-medium">
@@ -503,13 +612,13 @@ export default function AccountPage() {
                           {activity.date.toLocaleDateString()}
                         </Badge>
                       </div>
-                      
+
                       <p className="text-white/70 text-sm mt-1">
                         {activity.type === 'vote' && `Проголосовал за проект "${activity.project}"`}
                         {activity.type === 'stake' && `Добавил ${activity.amount} VOD в пул ${activity.pool}`}
                         {activity.type === 'certificate' && `Получен сертификат "${activity.name}"`}
                       </p>
-                      
+
                       <div className="flex mt-3">
                         <Button variant="link" className="text-primary text-xs p-0 h-auto">
                           Подробнее
@@ -520,7 +629,7 @@ export default function AccountPage() {
                 </div>
               ))}
             </div>
-            
+
             <div className="flex justify-center">
               <Button variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
                 Загрузить больше
@@ -528,7 +637,7 @@ export default function AccountPage() {
             </div>
           </div>
         </TabsContent>
-        
+
         <TabsContent value="settings" className="mt-4">
           <div className="glassmorphism-dark rounded-xl p-6">
             <div className="mb-6">
@@ -540,7 +649,7 @@ export default function AccountPage() {
                 Управляйте настройками вашего аккаунта и предпочтениями
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
                 <div>
@@ -556,7 +665,7 @@ export default function AccountPage() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="text-white font-medium mb-3">Уведомления</h4>
                   <div className="space-y-3">
@@ -571,7 +680,7 @@ export default function AccountPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-6">
                 <div>
                   <h4 className="text-white font-medium mb-3">Приватность</h4>
@@ -586,7 +695,7 @@ export default function AccountPage() {
                     </Button>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="text-white font-medium mb-3">Интеграции</h4>
                   <div className="space-y-3">
@@ -602,7 +711,7 @@ export default function AccountPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-8 pt-4 border-t border-white/10">
               <Button variant="destructive" size="sm" className="bg-red-500/20 text-red-400 hover:bg-red-500/30">
                 Деактивировать аккаунт
