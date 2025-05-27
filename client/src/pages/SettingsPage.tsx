@@ -570,7 +570,7 @@ export default function SettingsPage() {
             <Button variant="outline">
               Отменить
             </Button>
-            <Button onClick={handleSaveSettings} className="flex items-center gap-2">
+            <Button onClick={handleSaveSettings} className="flex items-center gap-2 text-blue-900 hover:text-blue-800">
               <Save className="h-4 w-4" />
               Сохранить настройки
             </Button>
