@@ -55,7 +55,8 @@ export default function SupportPage() {
     { city: 'Берлин', country: 'Германия', emoji: '🇩🇪', contact: 'berlin@vodeco.org' },
     { city: 'Лондон', country: 'Великобритания', emoji: '🇬🇧', contact: 'london@vodeco.org' },
     { city: 'Пекин', country: 'Китай', emoji: '🇨🇳', contact: 'beijing@vodeco.org' },
-    { city: 'Сингапур', country: 'Сингапур', emoji: '🇸🇬', contact: 'singapore@vodeco.org' }
+    { city: 'Сингапур', country: 'Сингапур', emoji: '🇸🇬', contact: 'singapore@vodeco.org' },
+    { city: 'Абу-Даби', country: 'ОАЭ', emoji: '🇦🇪', contact: 'abudhabi@vodeco.org' }
   ];
 
   return (
