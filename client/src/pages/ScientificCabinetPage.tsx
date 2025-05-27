@@ -7,148 +7,167 @@ import { Progress } from "@/components/ui/progress";
 import { 
   FlaskConical, BarChart3, Globe, Activity, Brain, FileText, Target,
   TestTube, Users, Lightbulb, Database, Clock, CheckCircle,
-  AlertTriangle, TrendingUp, Eye, Download, Upload
+  AlertTriangle, TrendingUp, Eye, Download, Upload, Menu, ChevronLeft
 } from "lucide-react";
 
 export default function ScientificCabinetPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Боковое меню */}
-        <div className="w-64 bg-background/40 backdrop-blur-sm border-r border-primary/20 fixed h-screen">
-          {/* Заголовок кабинета */}
-          <div className="p-6 border-b border-primary/20">
-            <div className="hexagon h-12 w-12 bg-gradient-to-r from-blue-500/30 to-purple-500/30 
-              flex items-center justify-center mb-3">
-              <FlaskConical className="h-6 w-6 text-primary" />
-            </div>
-            <h2 className="text-xl font-bold text-white">
-              {t('scientific.title', 'Научный кабинет')}
-            </h2>
-            <p className="text-white/60 text-sm">
-              {t('scientific.subtitle', 'Исследования и анализ')}
-            </p>
+        <div className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-background/40 backdrop-blur-sm border-r border-primary/20 fixed h-screen transition-all duration-300 flex flex-col`}>
+          {/* Кнопка сворачивания */}
+          <div className="p-4 border-b border-primary/20 flex justify-between items-center">
+            {!sidebarCollapsed && (
+              <div className="flex items-center gap-3">
+                <div className="hexagon h-8 w-8 bg-gradient-to-r from-blue-500/30 to-purple-500/30 
+                  flex items-center justify-center">
+                  <FlaskConical className="h-4 w-4 text-primary" />
+                </div>
+                <span className="text-white font-medium text-sm">Научный</span>
+              </div>
+            )}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="p-2 hover:bg-background/20 rounded-lg transition-colors"
+            >
+              {sidebarCollapsed ? (
+                <Menu className="h-4 w-4 text-white/70" />
+              ) : (
+                <ChevronLeft className="h-4 w-4 text-white/70" />
+              )}
+            </button>
           </div>
 
           {/* Навигационное меню */}
-          <nav className="p-4">
+          <nav className="flex-1 p-2 overflow-y-auto">
             <div className="space-y-2">
               <button
                 onClick={() => setActiveTab('dashboard')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'dashboard'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Главная панель' : ''}
               >
-                <BarChart3 className="h-4 w-4 mr-3" />
-                Главная панель
+                <BarChart3 className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Главная панель</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('map')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'map'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Карта активности' : ''}
               >
-                <Globe className="h-4 w-4 mr-3" />
-                Карта активности
+                <Globe className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Карта активности</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('data')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'data'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Данные и сенсоры' : ''}
               >
-                <Activity className="h-4 w-4 mr-3" />
-                Данные и сенсоры
+                <Activity className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Данные и сенсоры</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('ai-analysis')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'ai-analysis'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'ИИ Анализ' : ''}
               >
-                <Brain className="h-4 w-4 mr-3" />
-                ИИ Анализ
+                <Brain className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">ИИ Анализ</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('publications')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'publications'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Публикации' : ''}
               >
-                <FileText className="h-4 w-4 mr-3" />
-                Публикации
+                <FileText className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Публикации</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('missions')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'missions'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Миссии' : ''}
               >
-                <Target className="h-4 w-4 mr-3" />
-                Миссии
+                <Target className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Миссии</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('laboratory')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'laboratory'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Симуляторы' : ''}
               >
-                <TestTube className="h-4 w-4 mr-3" />
-                Симуляторы
+                <TestTube className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Симуляторы</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('collaboration')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'collaboration'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Взаимодействие' : ''}
               >
-                <Users className="h-4 w-4 mr-3" />
-                Взаимодействие
+                <Users className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Взаимодействие</span>}
               </button>
               
               <button
                 onClick={() => setActiveTab('innovations')}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all flex items-center ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all flex items-center ${
                   activeTab === 'innovations'
                     ? 'bg-primary/20 text-primary border border-primary/30'
                     : 'text-white/70 hover:text-white hover:bg-background/20'
                 }`}
+                title={sidebarCollapsed ? 'Инновации' : ''}
               >
-                <Lightbulb className="h-4 w-4 mr-3" />
-                Инновации
+                <Lightbulb className="h-4 w-4 mr-3 flex-shrink-0" />
+                {!sidebarCollapsed && <span className="text-sm">Инновации</span>}
               </button>
             </div>
           </nav>
         </div>
 
         {/* Основной контент */}
-        <div className="ml-64 w-full">
+        <div className={`${sidebarCollapsed ? 'ml-16' : 'ml-64'} w-full transition-all duration-300`}>
           <div className="p-6 space-y-8">
 
             {/* Главная панель */}
