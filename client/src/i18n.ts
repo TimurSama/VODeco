@@ -14,7 +14,7 @@ const translationRU = {
     preview: "Превью",
     dao: "DAO",
     missions: "Миссии",
-    tokenHub: "Токены",
+    tokenHub: "ТокенХаб",
     globo: "Глобо",
     bank: "Банк",
     cabinets: "Системы",
