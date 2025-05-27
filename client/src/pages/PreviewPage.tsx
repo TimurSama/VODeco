@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 // Импорт обновленных компонентов для каждого экрана
 import SplashIntro from "../components/preview/SplashIntro";
@@ -33,12 +34,14 @@ enum PresentationStage {
 
 export default function PreviewPage() {
   const [currentStage, setCurrentStage] = useState<PresentationStage>(PresentationStage.SPLASH_INTRO);
-  const [tokens, setTokens] = useState(0);
   const [, setLocation] = useLocation();
+  const { guestTokens, addGuestTokens, isAuthenticated } = useAuth();
 
   // Функция добавления токенов
-  const addTokens = (amount: number) => {
-    setTokens(prev => prev + amount);
+  const addTokens = async (amount: number, activityType?: string) => {
+    if (!isAuthenticated) {
+      await addGuestTokens(amount, activityType);
+    }
   };
   
   // Обработчики перехода между этапами
@@ -46,8 +49,8 @@ export default function PreviewPage() {
     setLocation('/login');
   };
   
-  const handleExplore = () => {
-    addTokens(100);
+  const handleExplore = async () => {
+    await addTokens(100, 'preview_start');
     // Переход сразу к новому сценарию через анимацию перехода
     setCurrentStage(PresentationStage.TRANSITION);
   };
@@ -57,50 +60,50 @@ export default function PreviewPage() {
     setCurrentStage(PresentationStage.NEW_SCENARIO);
   };
   
-  const handleNewScenarioComplete = () => {
+  const handleNewScenarioComplete = async () => {
     // После завершения нового сценария переходим на дашборд
-    addTokens(150);
+    await addTokens(150, 'scenario_complete');
     setLocation('/dashboard');
   };
   
   // Старые обработчики для совместимости
-  const handleWelcomeNext = () => {
-    addTokens(5);
+  const handleWelcomeNext = async () => {
+    await addTokens(5, 'welcome_complete');
     setCurrentStage(PresentationStage.PLANET_CRISIS);
   };
   
-  const handlePlanetSave = () => {
-    addTokens(50);
+  const handlePlanetSave = async () => {
+    await addTokens(50, 'planet_save_action');
     setCurrentStage(PresentationStage.UNITE_FORCES);
   };
   
-  const handleUniteForceNext = () => {
-    addTokens(5);
+  const handleUniteForceNext = async () => {
+    await addTokens(5, 'unite_forces_complete');
     setCurrentStage(PresentationStage.WHY_DAO);
   };
   
-  const handleWhyDaoNext = () => {
-    addTokens(5);
+  const handleWhyDaoNext = async () => {
+    await addTokens(5, 'why_dao_complete');
     setCurrentStage(PresentationStage.ARCHITECTURE);
   };
   
-  const handleArchitectureNext = () => {
-    addTokens(5);
+  const handleArchitectureNext = async () => {
+    await addTokens(5, 'architecture_complete');
     setCurrentStage(PresentationStage.TOKENOMICS);
   };
   
-  const handleTokenomicsNext = () => {
-    addTokens(5);
+  const handleTokenomicsNext = async () => {
+    await addTokens(5, 'tokenomics_complete');
     setCurrentStage(PresentationStage.FOR_EVERYONE);
   };
   
-  const handleForEveryoneNext = () => {
-    addTokens(5);
+  const handleForEveryoneNext = async () => {
+    await addTokens(5, 'for_everyone_complete');
     setCurrentStage(PresentationStage.FINAL_CALL);
   };
   
-  const handleFinalContinue = () => {
-    addTokens(50);
+  const handleFinalContinue = async () => {
+    await addTokens(50, 'preview_complete');
     setLocation('/dashboard'); // Переход в приложение
   };
   
@@ -117,7 +120,7 @@ export default function PreviewPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <span className="text-primary font-bold">{tokens}</span>
+          <span className="text-primary font-bold">{guestTokens}</span>
           <span className="ml-1 text-white/80">💧</span>
         </motion.div>
       )}

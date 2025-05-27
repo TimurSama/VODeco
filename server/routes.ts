@@ -19,15 +19,15 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Настройка нашей собственной системы аутентификации
   setupAuth(app);
-  
+
   // Create RESTful API routes
   // All routes prefixed with /api
-  
+
   // Health check endpoint
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok" });
   });
-  
+
   // Маршрут для получения информации о текущем пользователе
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
@@ -39,9 +39,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
-  
+
   // === Users API ===
-  
+
   // Get user by ID
   app.get("/api/users/:id", async (req, res) => {
     try {
@@ -49,19 +49,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid user ID" });
       }
-      
+
       const user = await storage.getUser(id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       return res.json(user);
     } catch (error) {
       console.error("Error getting user:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Create a new user
   app.post("/api/users", async (req, res) => {
     try {
@@ -69,13 +69,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!userInput.success) {
         return res.status(400).json({ message: "Invalid user data", errors: userInput.error.format() });
       }
-      
+
       // Check if username already exists
       const existingUser = await storage.getUserByUsername(userInput.data.username);
       if (existingUser) {
         return res.status(409).json({ message: "Username already taken" });
       }
-      
+
       // Create the user
       const newUser = await storage.createUser(userInput.data);
       return res.status(201).json(newUser);
@@ -84,30 +84,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get user by wallet address
   app.get("/api/users/wallet/:address", async (req, res) => {
     try {
       const { address } = req.params;
-      
+
       if (!address) {
         return res.status(400).json({ message: "Wallet address is required" });
       }
-      
+
       const user = await storage.getUserByWalletAddress(address);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       return res.json(user);
     } catch (error) {
       console.error("Error getting user by wallet:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // === Water Resources API ===
-  
+
   // Get all water resources
   app.get("/api/water-resources", async (_req, res) => {
     try {
@@ -118,7 +118,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get water resource by ID
   app.get("/api/water-resources/:id", async (req, res) => {
     try {
@@ -126,19 +126,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid resource ID" });
       }
-      
+
       const resource = await storage.getWaterResource(id);
       if (!resource) {
         return res.status(404).json({ message: "Water resource not found" });
       }
-      
+
       return res.json(resource);
     } catch (error) {
       console.error("Error getting water resource:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Create a new water resource
   app.post("/api/water-resources", async (req, res) => {
     try {
@@ -146,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!resourceInput.success) {
         return res.status(400).json({ message: "Invalid resource data", errors: resourceInput.error.format() });
       }
-      
+
       const newResource = await storage.createWaterResource(resourceInput.data);
       return res.status(201).json(newResource);
     } catch (error) {
@@ -154,7 +154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Update water resource
   app.patch("/api/water-resources/:id", async (req, res) => {
     try {
@@ -162,12 +162,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid resource ID" });
       }
-      
+
       const resource = await storage.getWaterResource(id);
       if (!resource) {
         return res.status(404).json({ message: "Water resource not found" });
       }
-      
+
       const updatedResource = await storage.updateWaterResource(id, req.body);
       return res.json(updatedResource);
     } catch (error) {
@@ -175,9 +175,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // === Projects API ===
-  
+
   // Get all projects
   app.get("/api/projects", async (_req, res) => {
     try {
@@ -188,7 +188,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get project by ID
   app.get("/api/projects/:id", async (req, res) => {
     try {
@@ -196,19 +196,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid project ID" });
       }
-      
+
       const project = await storage.getProject(id);
       if (!project) {
         return res.status(404).json({ message: "Project not found" });
       }
-      
+
       return res.json(project);
     } catch (error) {
       console.error("Error getting project:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Create a new project
   app.post("/api/projects", async (req, res) => {
     try {
@@ -216,7 +216,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!projectInput.success) {
         return res.status(400).json({ message: "Invalid project data", errors: projectInput.error.format() });
       }
-      
+
       const newProject = await storage.createProject(projectInput.data);
       return res.status(201).json(newProject);
     } catch (error) {
@@ -224,9 +224,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // === Proposals API ===
-  
+
   // Get active proposals
   app.get("/api/proposals/active", async (_req, res) => {
     try {
@@ -237,7 +237,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get recent decisions
   app.get("/api/proposals/recent-decisions", async (_req, res) => {
     try {
@@ -248,7 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get proposal by ID
   app.get("/api/proposals/:id", async (req, res) => {
     try {
@@ -256,19 +256,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid proposal ID" });
       }
-      
+
       const proposal = await storage.getProposal(id);
       if (!proposal) {
         return res.status(404).json({ message: "Proposal not found" });
       }
-      
+
       return res.json(proposal);
     } catch (error) {
       console.error("Error getting proposal:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Create a new proposal
   app.post("/api/proposals", async (req, res) => {
     try {
@@ -276,7 +276,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!proposalInput.success) {
         return res.status(400).json({ message: "Invalid proposal data", errors: proposalInput.error.format() });
       }
-      
+
       const newProposal = await storage.createProposal(proposalInput.data);
       return res.status(201).json(newProposal);
     } catch (error) {
@@ -284,7 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Vote on a proposal
   app.post("/api/proposals/:id/vote", async (req, res) => {
     try {
@@ -292,40 +292,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid proposal ID" });
       }
-      
+
       const proposal = await storage.getProposal(id);
       if (!proposal) {
         return res.status(404).json({ message: "Proposal not found" });
       }
-      
+
       // Validate if proposal is still active
       if (proposal.status !== 'Active') {
         return res.status(400).json({ message: "Cannot vote on inactive proposal" });
       }
-      
+
       // Validate if voting period has ended
       if (new Date() > proposal.endDate) {
         return res.status(400).json({ message: "Voting period has ended" });
       }
-      
+
       // Validate the vote input
       const voteSchema = z.object({
         userId: z.number(),
         voteType: z.enum(['yes', 'no']),
         votingPower: z.number().positive()
       });
-      
+
       const voteInput = voteSchema.safeParse(req.body);
       if (!voteInput.success) {
         return res.status(400).json({ message: "Invalid vote data", errors: voteInput.error.format() });
       }
-      
+
       // Create the vote with the proposal ID
       const voteData = {
         ...voteInput.data,
         proposalId: id
       };
-      
+
       const vote = await storage.voteOnProposal(voteData);
       return res.status(201).json(vote);
     } catch (error) {
@@ -333,9 +333,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // === Events API ===
-  
+
   // Get upcoming events
   app.get("/api/events/upcoming", async (_req, res) => {
     try {
@@ -346,7 +346,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get event by ID
   app.get("/api/events/:id", async (req, res) => {
     try {
@@ -354,19 +354,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid event ID" });
       }
-      
+
       const event = await storage.getEvent(id);
       if (!event) {
         return res.status(404).json({ message: "Event not found" });
       }
-      
+
       return res.json(event);
     } catch (error) {
       console.error("Error getting event:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Create a new event
   app.post("/api/events", async (req, res) => {
     try {
@@ -374,7 +374,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!eventInput.success) {
         return res.status(400).json({ message: "Invalid event data", errors: eventInput.error.format() });
       }
-      
+
       const newEvent = await storage.createEvent(eventInput.data);
       return res.status(201).json(newEvent);
     } catch (error) {
@@ -382,9 +382,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // === Investments API ===
-  
+
   // Create a new investment
   app.post("/api/investments", async (req, res) => {
     try {
@@ -392,13 +392,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!investmentInput.success) {
         return res.status(400).json({ message: "Invalid investment data", errors: investmentInput.error.format() });
       }
-      
+
       // Validate if project exists
       const project = await storage.getProject(investmentInput.data.projectId);
       if (!project) {
         return res.status(404).json({ message: "Project not found" });
       }
-      
+
       const newInvestment = await storage.createInvestment(investmentInput.data);
       return res.status(201).json(newInvestment);
     } catch (error) {
@@ -406,7 +406,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get investments by user
   app.get("/api/investments/user/:userId", async (req, res) => {
     try {
@@ -414,7 +414,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(userId)) {
         return res.status(400).json({ message: "Invalid user ID" });
       }
-      
+
       const investments = await storage.getInvestmentsByUser(userId);
       return res.json(investments);
     } catch (error) {
@@ -422,7 +422,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
-  
+
   // Get investments by project
   app.get("/api/investments/project/:projectId", async (req, res) => {
     try {
@@ -430,7 +430,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(projectId)) {
         return res.status(400).json({ message: "Invalid project ID" });
       }
-      
+
       const investments = await storage.getInvestmentsByProject(projectId);
       return res.json(investments);
     } catch (error) {
@@ -447,7 +447,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Фильтры
       const category = req.query.category as string;
       const type = req.query.type as string;
-      
+
       if (category) {
         const groups = await storage.getGroupsByCategory(category);
         return res.json(groups);
@@ -471,12 +471,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid group ID" });
       }
-      
+
       const group = await storage.getGroup(id);
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
       }
-      
+
       return res.json(group);
     } catch (error) {
       console.error("Error getting group:", error);
@@ -494,9 +494,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: groupData.error.format() 
         });
       }
-      
+
       const newGroup = await storage.createGroup(groupData.data);
-      
+
       // Добавим создателя как владельца группы
       if (newGroup.creatorId) {
         await storage.addGroupMember({
@@ -505,7 +505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           role: 'owner'
         });
       }
-      
+
       return res.status(201).json(newGroup);
     } catch (error) {
       console.error("Error creating group:", error);
@@ -520,12 +520,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid group ID" });
       }
-      
+
       const group = await storage.getGroup(id);
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
       }
-      
+
       const updatedGroup = await storage.updateGroup(id, req.body);
       return res.json(updatedGroup);
     } catch (error) {
@@ -541,12 +541,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid group ID" });
       }
-      
+
       const group = await storage.getGroup(id);
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
       }
-      
+
       const members = await storage.getGroupMembers(id);
       return res.json(members);
     } catch (error) {
@@ -562,24 +562,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(groupId)) {
         return res.status(400).json({ message: "Invalid group ID" });
       }
-      
+
       const group = await storage.getGroup(groupId);
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
       }
-      
+
       const memberData = insertGroupMemberSchema.safeParse({
         ...req.body,
         groupId
       });
-      
+
       if (!memberData.success) {
         return res.status(400).json({ 
           message: "Invalid member data", 
           errors: memberData.error.format() 
         });
       }
-      
+
       const newMember = await storage.addGroupMember(memberData.data);
       return res.status(201).json(newMember);
     } catch (error) {
@@ -593,15 +593,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const groupId = parseInt(req.params.groupId);
       const userId = parseInt(req.params.userId);
-      
+
       if (isNaN(groupId) || isNaN(userId)) {
         return res.status(400).json({ message: "Invalid IDs" });
       }
-      
+
       const roleSchema = z.object({
         role: z.enum(['owner', 'moderator', 'member'])
       });
-      
+
       const roleData = roleSchema.safeParse(req.body);
       if (!roleData.success) {
         return res.status(400).json({ 
@@ -609,17 +609,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: roleData.error.format() 
         });
       }
-      
+
       const updatedMember = await storage.updateGroupMemberRole(
         groupId, 
         userId, 
         roleData.data.role
       );
-      
+
       if (!updatedMember) {
         return res.status(404).json({ message: "Member not found in this group" });
       }
-      
+
       return res.json(updatedMember);
     } catch (error) {
       console.error("Error updating member role:", error);
@@ -632,16 +632,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const groupId = parseInt(req.params.groupId);
       const userId = parseInt(req.params.userId);
-      
+
       if (isNaN(groupId) || isNaN(userId)) {
         return res.status(400).json({ message: "Invalid IDs" });
       }
-      
+
       const removed = await storage.removeGroupMember(groupId, userId);
       if (!removed) {
         return res.status(404).json({ message: "Member not found in this group" });
       }
-      
+
       return res.json({ success: true });
     } catch (error) {
       console.error("Error removing group member:", error);
@@ -656,12 +656,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid group ID" });
       }
-      
+
       const group = await storage.getGroup(id);
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
       }
-      
+
       const posts = await storage.getGroupPosts(id);
       return res.json(posts);
     } catch (error) {
@@ -677,24 +677,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(groupId)) {
         return res.status(400).json({ message: "Invalid group ID" });
       }
-      
+
       const group = await storage.getGroup(groupId);
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
       }
-      
+
       const postData = insertGroupPostSchema.safeParse({
         ...req.body,
         groupId
       });
-      
+
       if (!postData.success) {
         return res.status(400).json({ 
           message: "Invalid post data", 
           errors: postData.error.format() 
         });
       }
-      
+
       const newPost = await storage.createGroupPost(postData.data);
       return res.status(201).json(newPost);
     } catch (error) {
@@ -710,12 +710,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid post ID" });
       }
-      
+
       const post = await storage.getGroupPost(id);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       const updatedPost = await storage.updateGroupPost(id, req.body);
       return res.json(updatedPost);
     } catch (error) {
@@ -731,12 +731,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid post ID" });
       }
-      
+
       const post = await storage.getGroupPost(id);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
       }
-      
+
       const deleted = await storage.deleteGroupPost(id);
       return res.json({ success: deleted });
     } catch (error) {
@@ -752,17 +752,165 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid user ID" });
       }
-      
+
       const user = await storage.getUser(id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       const groups = await storage.getUserGroups(id);
       return res.json(groups);
     } catch (error) {
       console.error("Error getting user groups:", error);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+// Get all group posts
+  app.get("/api/groups/:id/posts", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const groupId = parseInt(req.params.id);
+      const posts = await storage.getGroupPosts(groupId);
+      res.json(posts);
+    } catch (error) {
+      console.error("Error fetching group posts:", error);
+      res.status(500).json({ message: "Ошибка получения сообщений группы" });
+    }
+  });
+
+  // User Tokens routes
+  app.get("/api/user/tokens", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const tokens = await storage.getUserTokens(req.user!.id);
+      res.json(tokens);
+    } catch (error) {
+      console.error("Error fetching user tokens:", error);
+      res.status(500).json({ message: "Ошибка получения токенов пользователя" });
+    }
+  });
+
+  app.post("/api/user/tokens/update", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const { tokenSymbol, balance, staked, earned } = req.body;
+      const result = await storage.updateUserToken(req.user!.id, tokenSymbol, balance, staked, earned);
+      res.json(result[0]);
+    } catch (error) {
+      console.error("Error updating user tokens:", error);
+      res.status(500).json({ message: "Ошибка обновления токенов" });
+    }
+  });
+
+  // User Activities routes
+  app.get("/api/user/activities", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 50;
+      const activities = await storage.getUserActivities(req.user!.id, limit);
+      res.json(activities);
+    } catch (error) {
+      console.error("Error fetching user activities:", error);
+      res.status(500).json({ message: "Ошибка получения активности пользователя" });
+    }
+  });
+
+  app.post("/api/user/activities", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const activity = await storage.createUserActivity({
+        ...req.body,
+        userId: req.user!.id
+      });
+      res.json(activity);
+    } catch (error) {
+      console.error("Error creating user activity:", error);
+      res.status(500).json({ message: "Ошибка создания записи активности" });
+    }
+  });
+
+  // Temporary Session routes (for guests)
+  app.post("/api/temp-session/create", async (req: Request, res: Response) => {
+    try {
+      const sessionId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const session = await storage.createTempSession(sessionId);
+      res.json(session);
+    } catch (error) {
+      console.error("Error creating temp session:", error);
+      res.status(500).json({ message: "Ошибка создания временной сессии" });
+    }
+  });
+
+  app.get("/api/temp-session/:sessionId", async (req: Request, res: Response) => {
+    try {
+      const session = await storage.getTempSession(req.params.sessionId);
+      if (!session) {
+        return res.status(404).json({ message: "Сессия не найдена" });
+      }
+      res.json(session);
+    } catch (error) {
+      console.error("Error fetching temp session:", error);
+      res.status(500).json({ message: "Ошибка получения временной сессии" });
+    }
+  });
+
+  app.post("/api/temp-session/:sessionId/tokens", async (req: Request, res: Response) => {
+    try {
+      const { tokensToAdd, activityType } = req.body;
+      const session = await storage.getTempSession(req.params.sessionId);
+
+      if (!session) {
+        return res.status(404).json({ message: "Сессия не найдена" });
+      }
+
+      const newTotal = session.tokensCollected + tokensToAdd;
+      const result = await storage.updateTempSession(
+        req.params.sessionId, 
+        newTotal, 
+        session.activitiesCompleted + 1
+      );
+
+      // Записываем активность для статистики
+      await storage.createUserActivity({
+        sessionId: req.params.sessionId,
+        activityType: activityType || 'guest_token_earn',
+        tokensEarned: tokensToAdd,
+        details: JSON.stringify({ sessionId: req.params.sessionId })
+      });
+
+      res.json(result[0]);
+    } catch (error) {
+      console.error("Error updating temp session tokens:", error);
+      res.status(500).json({ message: "Ошибка обновления токенов сессии" });
+    }
+  });
+
+  app.post("/api/temp-session/:sessionId/convert", isAuthenticated, async (req: Request, res: Response) => {try {
+      const result = await storage.convertTempSessionToUser(req.params.sessionId, req.user!.id);
+      res.json(result);
+    } catch (error) {
+      console.error("Error converting temp session:", error);
+      res.status(500).json({ message: "Ошибка конвертации временной сессии" });
+    }
+  });
+
+  // User Staking routes
+  app.get("/api/user/staking", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const stakings = await storage.getUserStakings(req.user!.id);
+      res.json(stakings);
+    } catch (error) {
+      console.error("Error fetching user stakings:", error);
+      res.status(500).json({ message: "Ошибка получения стейкинга пользователя" });
+    }
+  });
+
+  app.post("/api/user/staking", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      const staking = await storage.createUserStaking({
+        ...req.body,
+        userId: req.user!.id
+      });
+      res.json(staking);
+    } catch (error) {
+      console.error("Error creating user staking:", error);
+      res.status(500).json({ message: "Ошибка создания стейкинга" });
     }
   });
 

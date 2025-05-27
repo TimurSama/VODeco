@@ -1,14 +1,12 @@
 import {
-  users, type User, type InsertUser,
-  waterResources, type WaterResource, type InsertWaterResource,
-  projects, type Project, type InsertProject,
-  proposals, type Proposal, type InsertProposal,
-  events, type Event, type InsertEvent,
-  votes, type Vote, type InsertVote,
-  investments, type Investment, type InsertInvestment,
-  groups, type Group, type InsertGroup,
-  groupMembers, type GroupMember, type InsertGroupMember,
-  groupPosts, type GroupPost, type InsertGroupPost
+  users, waterResources, projects, proposals, events, votes, investments, groups, groupMembers, groupPosts,
+  userTokens, userActivities, tempSessions, userStaking,
+  type User, type WaterResource, type Project, type Proposal, type Event, type Vote, type Investment, 
+  type Group, type GroupMember, type GroupPost, type UserToken, type UserActivity, type TempSession, type UserStaking,
+  type InsertUser, type InsertWaterResource, type InsertProject, type InsertProposal, 
+  type InsertEvent, type InsertVote, type InsertInvestment, type InsertGroup, 
+  type InsertGroupMember, type InsertGroupPost, type InsertUserToken, type InsertUserActivity,
+  type InsertTempSession, type InsertUserStaking
 } from "@shared/schema";
 
 // Define the storage interface
@@ -22,19 +20,19 @@ export interface IStorage {
   getUserByTelegramId(telegramId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserGoogleId(userId: number, googleId: string): Promise<User>;
-  
+
   // Water resource operations
   getWaterResource(id: number): Promise<WaterResource | undefined>;
   getAllWaterResources(): Promise<WaterResource[]>;
   createWaterResource(resource: InsertWaterResource): Promise<WaterResource>;
   updateWaterResource(id: number, data: Partial<WaterResource>): Promise<WaterResource | undefined>;
-  
+
   // Project operations
   getProject(id: number): Promise<Project | undefined>;
   getAllProjects(): Promise<Project[]>;
   createProject(project: InsertProject): Promise<Project>;
   updateProjectFunding(id: number, additionalFunding: number): Promise<Project | undefined>;
-  
+
   // Proposal operations
   getProposal(id: number): Promise<Proposal | undefined>;
   getActiveProposals(): Promise<Proposal[]>;
@@ -42,17 +40,17 @@ export interface IStorage {
   createProposal(proposal: InsertProposal): Promise<Proposal>;
   voteOnProposal(vote: InsertVote): Promise<Vote>;
   updateProposalStatus(id: number, status: string): Promise<Proposal | undefined>;
-  
+
   // Event operations
   getEvent(id: number): Promise<Event | undefined>;
   getUpcomingEvents(): Promise<Event[]>;
   createEvent(event: InsertEvent): Promise<Event>;
-  
+
   // Investment operations
   createInvestment(investment: InsertInvestment): Promise<Investment>;
   getInvestmentsByUser(userId: number): Promise<Investment[]>;
   getInvestmentsByProject(projectId: number): Promise<Investment[]>;
-  
+
   // Group operations
   getGroup(id: number): Promise<Group | undefined>;
   getAllGroups(): Promise<Group[]>;
@@ -60,14 +58,14 @@ export interface IStorage {
   getGroupsByType(type: string): Promise<Group[]>;
   createGroup(group: InsertGroup): Promise<Group>;
   updateGroup(id: number, data: Partial<Group>): Promise<Group | undefined>;
-  
+
   // Group member operations
   getGroupMembers(groupId: number): Promise<GroupMember[]>;
   getUserGroups(userId: number): Promise<Group[]>;
   addGroupMember(member: InsertGroupMember): Promise<GroupMember>;
   updateGroupMemberRole(groupId: number, userId: number, role: string): Promise<GroupMember | undefined>;
   removeGroupMember(groupId: number, userId: number): Promise<boolean>;
-  
+
   // Group post operations
   getGroupPosts(groupId: number): Promise<GroupPost[]>;
   getGroupPost(id: number): Promise<GroupPost | undefined>;
@@ -87,7 +85,7 @@ export class MemStorage implements IStorage {
   private groups: Map<number, Group>;
   private groupMembers: Map<number, GroupMember>;
   private groupPosts: Map<number, GroupPost>;
-  
+
   private currentUserId: number;
   private currentResourceId: number;
   private currentProjectId: number;
@@ -110,7 +108,7 @@ export class MemStorage implements IStorage {
     this.groups = new Map();
     this.groupMembers = new Map();
     this.groupPosts = new Map();
-    
+
     this.currentUserId = 1;
     this.currentResourceId = 1;
     this.currentProjectId = 1;
@@ -121,7 +119,7 @@ export class MemStorage implements IStorage {
     this.currentGroupId = 1;
     this.currentGroupMemberId = 1;
     this.currentGroupPostId = 1;
-    
+
     // Seed the database with some initial data
     // Вызываем асинхронную функцию, но не ждем ее завершения в конструкторе
     this.seedData().catch(err => console.error("Error seeding data:", err));
@@ -137,37 +135,37 @@ export class MemStorage implements IStorage {
       (user) => user.username === username,
     );
   }
-  
+
   async getUserByWalletAddress(walletAddress: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
       (user) => user.walletAddress === walletAddress,
     );
   }
-  
+
   async getUserByEmail(email: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
       (user) => user.email === email,
     );
   }
-  
+
   async getUserByGoogleId(googleId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
       (user) => user.googleId === googleId,
     );
   }
-  
+
   async getUserByTelegramId(telegramId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
       (user) => user.telegramId === telegramId,
     );
   }
-  
+
   async updateUserGoogleId(userId: number, googleId: string): Promise<User> {
     const user = await this.getUser(userId);
     if (!user) {
       throw new Error(`User with ID ${userId} not found`);
     }
-    
+
     const updatedUser = { ...user, googleId, updatedAt: new Date() };
     this.users.set(userId, updatedUser);
     return updatedUser;
@@ -184,80 +182,80 @@ export class MemStorage implements IStorage {
     this.users.set(id, user);
     return user;
   }
-  
+
   // Water resource operations
   async getWaterResource(id: number): Promise<WaterResource | undefined> {
     return this.waterResources.get(id);
   }
-  
+
   async getAllWaterResources(): Promise<WaterResource[]> {
     return Array.from(this.waterResources.values());
   }
-  
+
   async createWaterResource(resource: InsertWaterResource): Promise<WaterResource> {
     const id = this.currentResourceId++;
     const waterResource: WaterResource = { ...resource, id };
     this.waterResources.set(id, waterResource);
     return waterResource;
   }
-  
+
   async updateWaterResource(id: number, data: Partial<WaterResource>): Promise<WaterResource | undefined> {
     const resource = this.waterResources.get(id);
     if (!resource) return undefined;
-    
+
     const updatedResource = { ...resource, ...data };
     this.waterResources.set(id, updatedResource);
     return updatedResource;
   }
-  
+
   // Project operations
   async getProject(id: number): Promise<Project | undefined> {
     return this.projects.get(id);
   }
-  
+
   async getAllProjects(): Promise<Project[]> {
     return Array.from(this.projects.values());
   }
-  
+
   async createProject(project: InsertProject): Promise<Project> {
     const id = this.currentProjectId++;
     const newProject: Project = { ...project, id };
     this.projects.set(id, newProject);
     return newProject;
   }
-  
+
   async updateProjectFunding(id: number, additionalFunding: number): Promise<Project | undefined> {
     const project = this.projects.get(id);
     if (!project) return undefined;
-    
+
     // Calculate new funding progress
     const totalNeeded = project.availableForDAO;
     const currentFunding = (project.fundingProgress / 100) * totalNeeded;
     const newFunding = currentFunding + additionalFunding;
     const newFundingProgress = Math.min(Math.round((newFunding / totalNeeded) * 100), 100);
-    
+
     const updatedProject = { ...project, fundingProgress: newFundingProgress };
     this.projects.set(id, updatedProject);
     return updatedProject;
   }
-  
+
   // Proposal operations
   async getProposal(id: number): Promise<Proposal | undefined> {
     return this.proposals.get(id);
   }
-  
+
   async getActiveProposals(): Promise<Proposal[]> {
     return Array.from(this.proposals.values()).filter(
       (proposal) => proposal.status === 'Active'
     );
   }
-  
+
   async getRecentDecisions(): Promise<Proposal[]> {
     return Array.from(this.proposals.values()).filter(
       (proposal) => proposal.status === 'Passed' || proposal.status === 'Failed'
     ).sort((a, b) => b.endDate.getTime() - a.endDate.getTime());
   }
-  
+
   async createProposal(proposal: InsertProposal): Promise<Proposal> {
     const id = this.currentProposalId++;
     const newProposal: Proposal = { 
@@ -268,7 +266,7 @@ export class MemStorage implements IStorage {
     this.proposals.set(id, newProposal);
     return newProposal;
   }
-  
+
   async voteOnProposal(insertVote: InsertVote): Promise<Vote> {
     const id = this.currentVoteId++;
     const vote: Vote = { 
@@ -277,19 +275,19 @@ export class MemStorage implements IStorage {
       timestamp: new Date()
     };
     this.votes.set(id, vote);
-    
+
     // Update the proposal
     const proposal = this.proposals.get(vote.proposalId);
     if (proposal) {
       const updatedVotes = vote.voteType === 'yes' 
         ? { votesYes: proposal.votesYes + vote.votingPower }
         : { votesNo: proposal.votesNo + vote.votingPower };
-      
+
       // Calculate new quorum
       const totalVotingPower = 10000; // Mock total for calculation
       const totalVotes = proposal.votesYes + proposal.votesNo + vote.votingPower;
       const newQuorum = Math.round((totalVotes / totalVotingPower) * 100);
-      
+
       const updatedProposal = { 
         ...proposal, 
         ...updatedVotes,
@@ -297,31 +295,31 @@ export class MemStorage implements IStorage {
       };
       this.proposals.set(proposal.id, updatedProposal);
     }
-    
+
     return vote;
   }
-  
+
   async updateProposalStatus(id: number, status: string): Promise<Proposal | undefined> {
     const proposal = this.proposals.get(id);
     if (!proposal) return undefined;
-    
+
     const updatedProposal = { ...proposal, status };
     this.proposals.set(id, updatedProposal);
     return updatedProposal;
   }
-  
+
   // Event operations
   async getEvent(id: number): Promise<Event | undefined> {
     return this.events.get(id);
   }
-  
+
   async getUpcomingEvents(): Promise<Event[]> {
     const now = new Date();
     return Array.from(this.events.values())
       .filter(event => event.date > now)
       .sort((a, b) => a.date.getTime() - b.date.getTime());
   }
-  
+
   async createEvent(event: InsertEvent): Promise<Event> {
     const id = this.currentEventId++;
     const newEvent: Event = { 
@@ -332,7 +330,7 @@ export class MemStorage implements IStorage {
     this.events.set(id, newEvent);
     return newEvent;
   }
-  
+
   // Investment operations
   async createInvestment(investment: InsertInvestment): Promise<Investment> {
     const id = this.currentInvestmentId++;
@@ -342,44 +340,44 @@ export class MemStorage implements IStorage {
       timestamp: new Date()
     };
     this.investments.set(id, newInvestment);
-    
+
     // Update the project funding
     await this.updateProjectFunding(investment.projectId, investment.amount);
-    
+
     return newInvestment;
   }
-  
+
   async getInvestmentsByUser(userId: number): Promise<Investment[]> {
     return Array.from(this.investments.values())
       .filter(investment => investment.userId === userId)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
-  
+
   async getInvestmentsByProject(projectId: number): Promise<Investment[]> {
     return Array.from(this.investments.values())
       .filter(investment => investment.projectId === projectId)
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
-  
+
   // Group operations
   async getGroup(id: number): Promise<Group | undefined> {
     return this.groups.get(id);
   }
-  
+
   async getAllGroups(): Promise<Group[]> {
     return Array.from(this.groups.values());
   }
-  
+
   async getGroupsByCategory(category: string): Promise<Group[]> {
     const groups = Array.from(this.groups.values());
     return groups.filter(group => group.category === category);
   }
-  
+
   async getGroupsByType(type: string): Promise<Group[]> {
     const groups = Array.from(this.groups.values());
     return groups.filter(group => group.type === type);
   }
-  
+
   async createGroup(group: InsertGroup): Promise<Group> {
     const id = this.currentGroupId++;
     const createdAt = new Date();
@@ -387,47 +385,47 @@ export class MemStorage implements IStorage {
     this.groups.set(id, newGroup);
     return newGroup;
   }
-  
+
   async updateGroup(id: number, data: Partial<Group>): Promise<Group | undefined> {
     const group = this.groups.get(id);
     if (!group) return undefined;
-    
+
     const updatedGroup = { ...group, ...data };
     this.groups.set(id, updatedGroup);
     return updatedGroup;
   }
-  
+
   // Group member operations
   async getGroupMembers(groupId: number): Promise<GroupMember[]> {
     const members = Array.from(this.groupMembers.values());
     return members.filter(member => member.groupId === groupId);
   }
-  
+
   async getUserGroups(userId: number): Promise<Group[]> {
     const members = Array.from(this.groupMembers.values())
       .filter(member => member.userId === userId);
-      
+
     const groupIds = members.map(member => member.groupId);
     return Array.from(this.groups.values())
       .filter(group => groupIds.includes(group.id));
   }
-  
+
   async addGroupMember(member: InsertGroupMember): Promise<GroupMember> {
     const id = this.currentGroupMemberId++;
     const joinedAt = new Date();
     const newMember: GroupMember = { ...member, id, joinedAt };
     this.groupMembers.set(id, newMember);
-    
+
     // Update member count in the group
     const group = this.groups.get(member.groupId);
     if (group) {
       group.memberCount = (group.memberCount || 0) + 1;
       this.groups.set(group.id, group);
     }
-    
+
     return newMember;
   }
-  
+
   async updateGroupMemberRole(groupId: number, userId: number, role: string): Promise<GroupMember | undefined> {
     for (const member of this.groupMembers.values()) {
       if (member.groupId === groupId && member.userId === userId) {
@@ -438,27 +436,27 @@ export class MemStorage implements IStorage {
     }
     return undefined;
   }
-  
+
   async removeGroupMember(groupId: number, userId: number): Promise<boolean> {
     let found = false;
     for (const [key, member] of this.groupMembers.entries()) {
       if (member.groupId === groupId && member.userId === userId) {
         this.groupMembers.delete(key);
         found = true;
-        
+
         // Update member count in the group
         const group = this.groups.get(groupId);
         if (group && group.memberCount > 0) {
           group.memberCount -= 1;
           this.groups.set(groupId, group);
         }
-        
+
         break;
       }
     }
     return found;
   }
-  
+
   // Group post operations
   async getGroupPosts(groupId: number): Promise<GroupPost[]> {
     const posts = Array.from(this.groupPosts.values());
@@ -470,11 +468,11 @@ export class MemStorage implements IStorage {
         return b.createdAt.getTime() - a.createdAt.getTime();
       });
   }
-  
+
   async getGroupPost(id: number): Promise<GroupPost | undefined> {
     return this.groupPosts.get(id);
   }
-  
+
   async createGroupPost(post: InsertGroupPost): Promise<GroupPost> {
     const id = this.currentGroupPostId++;
     const createdAt = new Date();
@@ -482,11 +480,11 @@ export class MemStorage implements IStorage {
     this.groupPosts.set(id, newPost);
     return newPost;
   }
-  
+
   async updateGroupPost(id: number, data: Partial<GroupPost>): Promise<GroupPost | undefined> {
     const post = this.groupPosts.get(id);
     if (!post) return undefined;
-    
+
     const updatedPost = { 
       ...post, 
       ...data,
@@ -495,11 +493,11 @@ export class MemStorage implements IStorage {
     this.groupPosts.set(id, updatedPost);
     return updatedPost;
   }
-  
+
   async deleteGroupPost(id: number): Promise<boolean> {
     return this.groupPosts.delete(id);
   }
-  
+
   // Seed initial data for development
   private async seedData() {
     // Seed water resources
@@ -557,11 +555,11 @@ export class MemStorage implements IStorage {
         imageUrl: 'https://pixabay.com/get/g4fa2d45f26fff7348695891c87fc3605bcf6e3924747b8b7dd2da58b7e86991357bb8784795bf80d9385979c7c21dba14536f790a4b3cce77a1a9f45da31ef92_1280.jpg'
       }
     ];
-    
+
     waterResourcesData.forEach(resource => {
       this.createWaterResource(resource);
     });
-    
+
     // Seed projects
     const projectsData: InsertProject[] = [
       {
@@ -604,11 +602,11 @@ export class MemStorage implements IStorage {
         endDate: new Date('2024-01-15')
       }
     ];
-    
+
     projectsData.forEach(project => {
       this.createProject(project);
     });
-    
+
     // Seed proposals
     const proposalsData: InsertProposal[] = [
       {
@@ -667,11 +665,11 @@ export class MemStorage implements IStorage {
         createdBy: 1
       }
     ];
-    
+
     proposalsData.forEach(proposal => {
       this.createProposal(proposal);
     });
-    
+
     // Seed events
     const eventsData: InsertEvent[] = [
       {
@@ -696,11 +694,11 @@ export class MemStorage implements IStorage {
         isVirtual: false
       }
     ];
-    
+
     eventsData.forEach(event => {
       this.createEvent(event);
     });
-    
+
     // Seed groups data
     const groupsData = [
       {
@@ -769,7 +767,7 @@ export class MemStorage implements IStorage {
       await this.addGroupMember({ groupId: groupIds[3], userId: 2, role: 'owner' });
       await this.addGroupMember({ groupId: groupIds[4], userId: 3, role: 'owner' });
       await this.addGroupMember({ groupId: groupIds[5], userId: 4, role: 'owner' });
-      
+
       // Add some members
       await this.addGroupMember({ groupId: groupIds[0], userId: 2, role: 'moderator' });
       await this.addGroupMember({ groupId: groupIds[0], userId: 3, role: 'member' });
@@ -822,7 +820,7 @@ export class MemStorage implements IStorage {
 }
 
 import { db } from "./db";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and, desc } from "drizzle-orm";
 
 export class DatabaseStorage implements IStorage {
   async getUser(id: number): Promise<User | undefined> {
@@ -839,17 +837,17 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress));
     return user || undefined;
   }
-  
+
   async getUserByEmail(email: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user || undefined;
   }
-  
+
   async getUserByGoogleId(googleId: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.googleId, googleId));
     return user || undefined;
   }
-  
+
   async getUserByTelegramId(telegramId: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.telegramId, telegramId));
     return user || undefined;
@@ -862,7 +860,7 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return user;
   }
-  
+
   async updateUserGoogleId(userId: number, googleId: string): Promise<User> {
     const [user] = await db
       .update(users)
@@ -871,11 +869,11 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return user;
   }
-  
+
   async upsertUser(userData: Partial<InsertUser> & { id: string }): Promise<User> {
     // Проверяем существование пользователя
     const existingUser = await this.getUser(userData.id);
-    
+
     if (existingUser) {
       // Обновляем существующего пользователя
       const [updatedUser] = await db
@@ -894,20 +892,20 @@ export class DatabaseStorage implements IStorage {
         username: userData.username || `user${userData.id}`,
         votingPower: userData.votingPower || 10
       } as InsertUser;
-      
+
       return await this.createUser(newUser);
     }
   }
-  
+
   async getWaterResource(id: number): Promise<WaterResource | undefined> {
     const [resource] = await db.select().from(waterResources).where(eq(waterResources.id, id));
     return resource || undefined;
   }
-  
+
   async getAllWaterResources(): Promise<WaterResource[]> {
     return await db.select().from(waterResources);
   }
-  
+
   async createWaterResource(resource: InsertWaterResource): Promise<WaterResource> {
     const [waterResource] = await db
       .insert(waterResources)
@@ -915,7 +913,7 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return waterResource;
   }
-  
+
   async updateWaterResource(id: number, data: Partial<WaterResource>): Promise<WaterResource | undefined> {
     const [updatedResource] = await db
       .update(waterResources)
@@ -924,16 +922,16 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return updatedResource || undefined;
   }
-  
+
   async getProject(id: number): Promise<Project | undefined> {
     const [project] = await db.select().from(projects).where(eq(projects.id, id));
     return project || undefined;
   }
-  
+
   async getAllProjects(): Promise<Project[]> {
     return await db.select().from(projects);
   }
-  
+
   async createProject(project: InsertProject): Promise<Project> {
     const [newProject] = await db
       .insert(projects)
@@ -941,7 +939,7 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return newProject;
   }
-  
+
   async updateProjectFunding(id: number, additionalFunding: number): Promise<Project | undefined> {
     const [project] = await db
       .update(projects)
@@ -952,16 +950,16 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return project || undefined;
   }
-  
+
   async getProposal(id: number): Promise<Proposal | undefined> {
     const [proposal] = await db.select().from(proposals).where(eq(proposals.id, id));
     return proposal || undefined;
   }
-  
+
   async getActiveProposals(): Promise<Proposal[]> {
     return await db.select().from(proposals).where(eq(proposals.status, "Active"));
   }
-  
+
   async getRecentDecisions(): Promise<Proposal[]> {
     return await db
       .select()
@@ -970,7 +968,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(sql`${proposals.createdAt} DESC`)
       .limit(5);
   }
-  
+
   async createProposal(proposal: InsertProposal): Promise<Proposal> {
     const [newProposal] = await db
       .insert(proposals)
@@ -978,7 +976,7 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return newProposal;
   }
-  
+
   async voteOnProposal(vote: InsertVote): Promise<Vote> {
     // First insert the vote
     const [newVote] = await db
@@ -1004,10 +1002,10 @@ export class DatabaseStorage implements IStorage {
         })
         .where(eq(proposals.id, vote.proposalId));
     }
-    
+
     return newVote;
   }
-  
+
   async updateProposalStatus(id: number, status: string): Promise<Proposal | undefined> {
     const [proposal] = await db
       .update(proposals)
@@ -1016,12 +1014,12 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return proposal || undefined;
   }
-  
+
   async getEvent(id: number): Promise<Event | undefined> {
     const [event] = await db.select().from(events).where(eq(events.id, id));
     return event || undefined;
   }
-  
+
   async getUpcomingEvents(): Promise<Event[]> {
     return await db
       .select()
@@ -1029,7 +1027,7 @@ export class DatabaseStorage implements IStorage {
       .where(sql`${events.date} > NOW()`)
       .orderBy(sql`${events.date} ASC`);
   }
-  
+
   async createEvent(event: InsertEvent): Promise<Event> {
     const [newEvent] = await db
       .insert(events)
@@ -1037,13 +1035,13 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return newEvent;
   }
-  
+
   async createInvestment(investment: InsertInvestment): Promise<Investment> {
     const [newInvestment] = await db
       .insert(investments)
       .values(investment)
       .returning();
-      
+
     // Update project funding progress
     await db
       .update(projects)
@@ -1051,35 +1049,35 @@ export class DatabaseStorage implements IStorage {
         fundingProgress: sql`${projects.fundingProgress} + ${investment.amount}`
       })
       .where(eq(projects.id, investment.projectId));
-      
+
     return newInvestment;
   }
-  
+
   async getInvestmentsByUser(userId: number): Promise<Investment[]> {
     return await db.select().from(investments).where(eq(investments.userId, userId));
   }
-  
+
   async getInvestmentsByProject(projectId: number): Promise<Investment[]> {
     return await db.select().from(investments).where(eq(investments.projectId, projectId));
   }
-  
+
   async getGroup(id: number): Promise<Group | undefined> {
     const [group] = await db.select().from(groups).where(eq(groups.id, id));
     return group || undefined;
   }
-  
+
   async getAllGroups(): Promise<Group[]> {
     return await db.select().from(groups);
   }
-  
+
   async getGroupsByCategory(category: string): Promise<Group[]> {
     return await db.select().from(groups).where(eq(groups.category, category));
   }
-  
+
   async getGroupsByType(type: string): Promise<Group[]> {
     return await db.select().from(groups).where(eq(groups.type, type));
   }
-  
+
   async createGroup(group: InsertGroup): Promise<Group> {
     const [newGroup] = await db
       .insert(groups)
@@ -1087,7 +1085,7 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return newGroup;
   }
-  
+
   async updateGroup(id: number, data: Partial<Group>): Promise<Group | undefined> {
     const [updatedGroup] = await db
       .update(groups)
@@ -1096,33 +1094,33 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return updatedGroup || undefined;
   }
-  
+
   async getGroupMembers(groupId: number): Promise<GroupMember[]> {
     return await db.select().from(groupMembers).where(eq(groupMembers.groupId, groupId));
   }
-  
+
   async getUserGroups(userId: number): Promise<Group[]> {
     const userMemberships = await db
       .select()
       .from(groupMembers)
       .where(eq(groupMembers.userId, userId));
-      
+
     const groupIds = userMemberships.map(m => m.groupId);
-    
+
     if (groupIds.length === 0) return [];
-    
+
     return await db
       .select()
       .from(groups)
       .where(sql`${groups.id} IN (${groupIds.join(',')})`);
   }
-  
+
   async addGroupMember(member: InsertGroupMember): Promise<GroupMember> {
     const [newMember] = await db
       .insert(groupMembers)
       .values(member)
       .returning();
-      
+
     // Increment member count
     await db
       .update(groups)
@@ -1130,10 +1128,10 @@ export class DatabaseStorage implements IStorage {
         memberCount: sql`${groups.memberCount} + 1`
       })
       .where(eq(groups.id, member.groupId));
-      
+
     return newMember;
   }
-  
+
   async updateGroupMemberRole(groupId: number, userId: number, role: string): Promise<GroupMember | undefined> {
     const [updatedMember] = await db
       .update(groupMembers)
@@ -1142,12 +1140,12 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return updatedMember || undefined;
   }
-  
+
   async removeGroupMember(groupId: number, userId: number): Promise<boolean> {
     const result = await db
       .delete(groupMembers)
       .where(sql`${groupMembers.groupId} = ${groupId} AND ${groupMembers.userId} = ${userId}`);
-      
+
     // Decrement member count
     await db
       .update(groups)
@@ -1155,10 +1153,10 @@ export class DatabaseStorage implements IStorage {
         memberCount: sql`${groups.memberCount} - 1`
       })
       .where(eq(groups.id, groupId));
-      
+
     return true;
   }
-  
+
   async getGroupPosts(groupId: number): Promise<GroupPost[]> {
     return await db
       .select()
@@ -1166,12 +1164,12 @@ export class DatabaseStorage implements IStorage {
       .where(eq(groupPosts.groupId, groupId))
       .orderBy(sql`${groupPosts.createdAt} DESC`);
   }
-  
+
   async getGroupPost(id: number): Promise<GroupPost | undefined> {
     const [post] = await db.select().from(groupPosts).where(eq(groupPosts.id, id));
     return post || undefined;
   }
-  
+
   async createGroupPost(post: InsertGroupPost): Promise<GroupPost> {
     const [newPost] = await db
       .insert(groupPosts)
@@ -1179,7 +1177,7 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return newPost;
   }
-  
+
   async updateGroupPost(id: number, data: Partial<GroupPost>): Promise<GroupPost | undefined> {
     const [updatedPost] = await db
       .update(groupPosts)
@@ -1191,10 +1189,136 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return updatedPost || undefined;
   }
-  
+
   async deleteGroupPost(id: number): Promise<boolean> {
     await db.delete(groupPosts).where(eq(groupPosts.id, id));
     return true;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  // User Tokens management
+  async getUserTokens(userId: number): Promise<UserToken[]> {
+    return await db.select().from(userTokens).where(eq(userTokens.userId, userId));
+  }
+
+  async updateUserToken(userId: number, tokenSymbol: string, balance: number, staked?: number, earned?: number) {
+    const existing = await db.select().from(userTokens)
+      .where(and(eq(userTokens.userId, userId), eq(userTokens.tokenSymbol, tokenSymbol)))
+      .limit(1);
+
+    if (existing[0]) {
+      return await db.update(userTokens)
+        .set({ 
+          balance, 
+          staked: staked ?? existing[0].staked,
+          earned: earned ?? existing[0].earned,
+          lastUpdated: new Date() 
+        })
+        .where(and(eq(userTokens.userId, userId), eq(userTokens.tokenSymbol, tokenSymbol)))
+        .returning();
+    } else {
+      return await db.insert(userTokens)
+        .values({ userId, tokenSymbol, balance, staked: staked || 0, earned: earned || 0 })
+        .returning();
+    }
+  }
+
+  // User Activities
+  async createUserActivity(activity: InsertUserActivity): Promise<UserActivity> {
+    const [result] = await db.insert(userActivities).values(activity).returning();
+    return result;
+  }
+
+  async getUserActivities(userId: number, limit: number = 50): Promise<UserActivity[]> {
+    return await db.select().from(userActivities)
+      .where(eq(userActivities.userId, userId))
+      .orderBy(desc(userActivities.timestamp))
+      .limit(limit);
+  }
+
+  // Temporary Sessions for guests
+  async createTempSession(sessionId: string): Promise<TempSession> {
+    const [result] = await db.insert(tempSessions)
+      .values({ sessionId })
+      .returning();
+    return result;
+  }
+
+  async getTempSession(sessionId: string): Promise<TempSession | null> {
+    const [result] = await db.select().from(tempSessions)
+      .where(and(eq(tempSessions.sessionId, sessionId), eq(tempSessions.isActive, true)))
+      .limit(1);
+    return result || null;
+  }
+
+  async updateTempSession(sessionId: string, tokensCollected: number, activitiesCompleted?: number) {
+    const [updatedSession] = await db.update(tempSessions)
+      .set({ 
+        tokensCollected,
+        activitiesCompleted: activitiesCompleted ?? undefined,
+        lastActiveAt: new Date()
+      })
+      .where(eq(tempSessions.sessionId, sessionId))
+      .returning();
+    return updatedSession || undefined;
+  }
+
+  async convertTempSessionToUser(sessionId: string, userId: number) {
+    const session = await this.getTempSession(sessionId);
+    if (session) {
+      // Переносим токены из временной сессии пользователю
+      await this.updateUserToken(userId, 'VOD', session.tokensCollected);
+
+      // Создаем запись об активности конвертации
+      const createUserActivityResult = await this.createUserActivity({
+        userId,
+        sessionId,
+        activityType: 'session_conversion',
+        tokensEarned: session.tokensCollected,
+        details: JSON.stringify({ convertedTokens: session.tokensCollected })
+      });
+
+      if(!createUserActivityResult) {
+        console.error("Failed to create user activity for session conversion");
+        return null;
+      }
+
+      // Помечаем сессию как конвертированную
+      const [updatedTempSession] = await db.update(tempSessions)
+        .set({ 
+          convertedToUserId: userId,
+          isActive: false
+        })
+        .where(eq(tempSessions.sessionId, sessionId))
+        .returning();
+        
+      return updatedTempSession || null;
+    }
+    return null;
+  }
+
+  // User Staking
+  async createUserStaking(staking: InsertUserStaking): Promise<UserStaking> {
+    const [result] = await db.insert(userStaking).values(staking).returning();
+    return result;
+  }
+
+  async getUserStakings(userId: number): Promise<UserStaking[]> {
+    return await db.select().from(userStaking)
+      .where(eq(userStaking.userId, userId))
+      .orderBy(desc(userStaking.startDate));
+  }
+
+  async updateStakingRewards(stakingId: number, rewards: number) {
+    const [updatedStaking] = await db.update(userStaking)
+      .set({ rewardsEarned: rewards })
+      .where(eq(userStaking.id, stakingId))
+      .returning();
+    return updatedStaking || undefined;
   }
 }
 

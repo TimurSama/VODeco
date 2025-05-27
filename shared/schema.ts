@@ -248,6 +248,88 @@ export type Vote = typeof votes.$inferSelect;
 export type InsertInvestment = z.infer<typeof insertInvestmentSchema>;
 export type Investment = typeof investments.$inferSelect;
 
+// User Tokens table - для хранения токенов пользователей
+export const userTokens = pgTable("user_tokens", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  tokenSymbol: text("token_symbol").notNull(), // VOD, H2O, VOD_Regional и т.д.
+  balance: real("balance").default(0).notNull(),
+  staked: real("staked").default(0).notNull(),
+  earned: real("earned").default(0).notNull(),
+  lastUpdated: timestamp("last_updated").defaultNow()
+});
+
+export const insertUserTokenSchema = createInsertSchema(userTokens).pick({
+  userId: true,
+  tokenSymbol: true,
+  balance: true,
+  staked: true,
+  earned: true
+});
+
+// User Activities table - для отслеживания активности
+export const userActivities = pgTable("user_activities", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  sessionId: text("session_id"), // для незарегистрированных пользователей
+  activityType: text("activity_type").notNull(), // 'preview_exploration', 'vote', 'investment', 'mission_complete'
+  tokensEarned: real("tokens_earned").default(0),
+  details: text("details"), // JSON строка с дополнительными данными
+  timestamp: timestamp("timestamp").defaultNow().notNull()
+});
+
+export const insertUserActivitySchema = createInsertSchema(userActivities).pick({
+  userId: true,
+  sessionId: true,
+  activityType: true,
+  tokensEarned: true,
+  details: true
+});
+
+// Temporary Sessions table - для незарегистрированных пользователей
+export const tempSessions = pgTable("temp_sessions", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").unique().notNull(),
+  tokensCollected: real("tokens_collected").default(0),
+  activitiesCompleted: integer("activities_completed").default(0),
+  startedAt: timestamp("started_at").defaultNow().notNull(),
+  lastActiveAt: timestamp("last_active_at").defaultNow().notNull(),
+  convertedToUserId: integer("converted_to_user_id").references(() => users.id),
+  isActive: boolean("is_active").default(true)
+});
+
+export const insertTempSessionSchema = createInsertSchema(tempSessions).pick({
+  sessionId: true,
+  tokensCollected: true,
+  activitiesCompleted: true,
+  convertedToUserId: true
+});
+
+// User Staking table - для детального отслеживания стейкинга
+export const userStaking = pgTable("user_staking", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id).notNull(),
+  tokenSymbol: text("token_symbol").notNull(),
+  amount: real("amount").notNull(),
+  apy: real("apy").notNull(),
+  startDate: timestamp("start_date").defaultNow().notNull(),
+  lockPeriod: integer("lock_period").notNull(), // в днях
+  endDate: timestamp("end_date").notNull(),
+  status: text("status").default("active").notNull(), // active, completed, withdrawn
+  rewardsEarned: real("rewards_earned").default(0)
+});
+
+export const insertUserStakingSchema = createInsertSchema(userStaking).pick({
+  userId: true,
+  tokenSymbol: true,
+  amount: true,
+  apy: true,
+  lockPeriod: true,
+  endDate: true,
+  status: true,
+  rewardsEarned: true
+});
+
 export const groups = pgTable("groups", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -313,3 +395,15 @@ export type GroupMember = typeof groupMembers.$inferSelect;
 
 export type InsertGroupPost = z.infer<typeof insertGroupPostSchema>;
 export type GroupPost = typeof groupPosts.$inferSelect;
+
+export type InsertUserToken = z.infer<typeof insertUserTokenSchema>;
+export type UserToken = typeof userTokens.$inferSelect;
+
+export type InsertUserActivity = z.infer<typeof insertUserActivitySchema>;
+export type UserActivity = typeof userActivities.$inferSelect;
+
+export type InsertTempSession = z.infer<typeof insertTempSessionSchema>;
+export type TempSession = typeof tempSessions.$inferSelect;
+
+export type InsertUserStaking = z.infer<typeof insertUserStakingSchema>;
+export type UserStaking = typeof userStaking.$inferSelect;
