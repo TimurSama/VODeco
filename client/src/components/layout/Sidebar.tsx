@@ -28,7 +28,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     { name: t('common.messages'), path: '/messages', icon: MessageSquare },
     { name: t('common.contacts'), path: '/contacts', icon: Users },
     { name: t('common.groups'), path: '/groups', icon: Users },
-    { name: t('common.profile'), path: '/profile', icon: UserCircle },
     { name: t('common.preview'), path: '/preview', icon: Eye },
     { name: t('common.dao'), path: '/dao', icon: Database },
     { name: t('common.missions'), path: '/missions', icon: MessagesSquare },
