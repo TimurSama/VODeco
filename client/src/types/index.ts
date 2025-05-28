@@ -87,7 +87,27 @@ export enum ResourceStatus {
 
 export enum ResourceCategory {
   INVESTMENT = 'investment',  // Объекты для инвестирования (синие маркеры)
-  PATH = 'path'               // Объекты пути (белые маркеры)
+  PATH = 'path',              // Объекты пути (белые маркеры)
+  COMPLETED = 'completed'     // Завершенные проекты (зеленые маркеры)
+}
+
+// Completed Project Types
+export interface CompletedProject {
+  id: number;
+  name: string;
+  type: string;
+  status: string;
+  location: string;
+  region: string;
+  country: string;
+  completion_date: string;
+  capacity?: number;
+  total_investment?: number;
+  beneficiaries?: number;
+  latitude?: number;
+  longitude?: number;
+  description?: string;
+  created_at?: string;
 }
 
 // Project Types

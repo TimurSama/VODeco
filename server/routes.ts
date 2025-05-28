@@ -136,6 +136,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // === Completed Projects API ===
+
+  // Get all completed projects
+  app.get("/api/completed-projects", async (_req, res) => {
+    try {
+      const projects = await db.select().from(completedProjectsTable);
+      return res.json(projects);
+    } catch (error) {
+      console.error("Error getting completed projects:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get completed project by ID
+  app.get("/api/completed-projects/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid project ID" });
+      }
+
+      const [project] = await db.select().from(completedProjectsTable).where(eq(completedProjectsTable.id, id));
+      if (!project) {
+        return res.status(404).json({ message: "Completed project not found" });
+      }
+
+      return res.json(project);
+    } catch (error) {
+      console.error("Error getting completed project:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Get water resource by ID
   app.get("/api/water-resources/:id", async (req, res) => {
     try {
