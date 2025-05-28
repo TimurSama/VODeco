@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import { 
   Search, 
   Filter, 
@@ -26,7 +28,12 @@ import {
   Globe,
   Building2,
   FlaskConical,
-  BarChart3
+  BarChart3,
+  MapPin,
+  Calendar,
+  Target,
+  PiggyBank,
+  X
 } from 'lucide-react';
 
 // Типы для новостей
@@ -42,6 +49,7 @@ interface NewsItem {
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const [selectedResource, setSelectedResource] = useState<WaterResource | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterCategory, setFilterCategory] = useState<string>('all');
@@ -200,9 +208,9 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Глобус с боковой панелью справа */}
-        <div className="relative min-h-[600px]">
-          {/* Глобус на голом фоне */}
-          <div className="absolute inset-0">
+        <div className="relative min-h-[600px] bg-transparent">
+          {/* Глобус на прозрачном фоне */}
+          <div className="absolute inset-0 bg-transparent">
             {isLoading ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center">
@@ -227,72 +235,97 @@ const Dashboard: React.FC = () => {
             )}
           </div>
 
-          {/* Компактная боковая панель справа */}
-          <div className="absolute top-4 right-4 w-72 space-y-3 z-20">
-            {/* Компактная панель фильтров */}
+          {/* Тонкая вертикальная боковая панель справа */}
+          <div className="absolute top-4 right-4 w-48 space-y-2 z-20">
+            {/* Тонкая вертикальная панель фильтров */}
             <Card className="bg-background/80 backdrop-blur-sm border-border/50">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center gap-1">
+                  <Settings className="h-3 w-3" />
                   Фильтры
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 pt-0">
+              <CardContent className="space-y-2 pt-0">
                 {/* Поиск */}
                 <div className="relative">
-                  <Search className="absolute top-2 left-2 h-3 w-3 text-muted-foreground" />
+                  <Search className="absolute top-1.5 left-2 h-3 w-3 text-muted-foreground" />
                   <Input
                     placeholder="Поиск..."
-                    className="pl-7 h-8 text-sm"
+                    className="pl-6 h-7 text-xs"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
-                {/* Фильтры в одну строку */}
-                <div className="grid grid-cols-2 gap-2">
+                {/* Фильтры вертикально */}
+                <div className="space-y-2">
                   <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger className="h-8 text-xs">
+                    <SelectTrigger className="h-7 text-xs">
                       <SelectValue placeholder="Статус" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Все</SelectItem>
-                      <SelectItem value={ResourceStatus.CRITICAL}>Критич.</SelectItem>
-                      <SelectItem value={ResourceStatus.NEEDS_ATTENTION}>Внимание</SelectItem>
-                      <SelectItem value={ResourceStatus.STABLE}>Стабильн.</SelectItem>
-                      <SelectItem value={ResourceStatus.EXCELLENT}>Отличн.</SelectItem>
+                      <SelectItem value={ResourceStatus.CRITICAL}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                          Критич.
+                        </div>
+                      </SelectItem>
+                      <SelectItem value={ResourceStatus.NEEDS_ATTENTION}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                          Внимание
+                        </div>
+                      </SelectItem>
+                      <SelectItem value={ResourceStatus.STABLE}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          Стабильн.
+                        </div>
+                      </SelectItem>
+                      <SelectItem value={ResourceStatus.EXCELLENT}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          Отличн.
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
 
                   <Select value={filterCategory} onValueChange={setFilterCategory}>
-                    <SelectTrigger className="h-8 text-xs">
+                    <SelectTrigger className="h-7 text-xs">
                       <SelectValue placeholder="Категория" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Все</SelectItem>
-                      <SelectItem value={ResourceCategory.INVESTMENT}>Инвест.</SelectItem>
+                      <SelectItem value={ResourceCategory.INVESTMENT}>
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                          Инвест.
+                        </div>
+                      </SelectItem>
                       <SelectItem value={ResourceCategory.PATH}>Путевые</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Компактная статистика */}
-                <div className="grid grid-cols-3 gap-1 text-xs">
-                  <div className="text-center">
-                    <div className="font-medium">{filteredResources.length}</div>
-                    <div className="text-muted-foreground">Всего</div>
+                <div className="space-y-1 text-xs">
+                  <div className="flex justify-between">
+                    <span>Всего:</span>
+                    <span className="font-medium">{filteredResources.length}</span>
                   </div>
-                  <div className="text-center">
-                    <div className="font-medium text-red-500">
+                  <div className="flex justify-between">
+                    <span className="text-red-500">Критич.:</span>
+                    <span className="font-medium text-red-500">
                       {filteredResources.filter(r => r.status === ResourceStatus.CRITICAL).length}
-                    </div>
-                    <div className="text-muted-foreground">Критич.</div>
+                    </span>
                   </div>
-                  <div className="text-center">
-                    <div className="font-medium text-blue-500">
+                  <div className="flex justify-between">
+                    <span className="text-cyan-500">Инвест.:</span>
+                    <span className="font-medium text-cyan-500">
                       {filteredResources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
-                    </div>
-                    <div className="text-muted-foreground">Инвест.</div>
+                    </span>
                   </div>
                 </div>
 
@@ -300,7 +333,7 @@ const Dashboard: React.FC = () => {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="w-full h-7 text-xs"
+                  className="w-full h-6 text-xs"
                   onClick={() => {
                     setSearchTerm('');
                     setFilterStatus('all');
@@ -329,158 +362,168 @@ const Dashboard: React.FC = () => {
                   
                   <TabsContent value="overview" className="mt-6">
                     {selectedResource ? (
-                      /* Информация о выбранном ресурсе */
+                      /* Краткая информация о выбранном ресурсе */
                       <div className="space-y-4">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-2xl font-bold">{selectedResource.name}</h3>
-                            <p className="text-muted-foreground">
+                            <h3 className="text-xl font-bold">{selectedResource.name}</h3>
+                            <p className="text-muted-foreground text-sm">
                               {selectedResource.region}, {selectedResource.country}
                             </p>
                           </div>
-                          <Badge
-                            variant={
-                              selectedResource.status === ResourceStatus.CRITICAL ? 'destructive' :
-                              selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'outline' :
-                              selectedResource.status === ResourceStatus.STABLE ? 'secondary' :
-                              'default'
-                            }
-                            className={
-                              selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
-                              selectedResource.status === ResourceStatus.STABLE ? 'bg-green-500/10 text-green-500 border-green-500/20' :
-                              ''
-                            }
-                          >
-                            {selectedResource.status}
-                          </Badge>
+                          <div className="flex gap-2">
+                            <Badge
+                              variant={
+                                selectedResource.status === ResourceStatus.CRITICAL ? 'destructive' :
+                                selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'outline' :
+                                selectedResource.status === ResourceStatus.STABLE ? 'secondary' :
+                                'default'
+                              }
+                              className={
+                                selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                selectedResource.status === ResourceStatus.STABLE ? 'bg-green-500/10 text-green-500 border-green-500/20' :
+                                ''
+                              }
+                            >
+                              {selectedResource.status}
+                            </Badge>
+                            <Button 
+                              size="sm"
+                              onClick={() => setShowDetailModal(true)}
+                            >
+                              Детали
+                            </Button>
+                          </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                            <Droplets className="h-8 w-8 text-blue-500" />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                            <Droplets className="h-6 w-6 text-blue-500" />
                             <div>
-                              <p className="text-sm text-muted-foreground">Качество воды</p>
-                              <p className="font-semibold">{selectedResource.qualityIndex}%</p>
+                              <p className="text-xs text-muted-foreground">Качество</p>
+                              <p className="font-semibold text-sm">{selectedResource.qualityIndex}%</p>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                            <BarChart3 className="h-8 w-8 text-green-500" />
+                          <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                            <BarChart3 className="h-6 w-6 text-green-500" />
                             <div>
-                              <p className="text-sm text-muted-foreground">Расход</p>
-                              <p className="font-semibold">{selectedResource.flowRate} м³/с</p>
+                              <p className="text-xs text-muted-foreground">Расход</p>
+                              <p className="font-semibold text-sm">{selectedResource.flowRate} м³/с</p>
                             </div>
                           </div>
 
                           {selectedResource.category === ResourceCategory.INVESTMENT && (
                             <>
-                              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                                <DollarSign className="h-8 w-8 text-green-500" />
+                              <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                                <DollarSign className="h-6 w-6 text-green-500" />
                                 <div>
-                                  <p className="text-sm text-muted-foreground">IRR</p>
-                                  <p className="font-semibold">{selectedResource.irr}%</p>
+                                  <p className="text-xs text-muted-foreground">IRR</p>
+                                  <p className="font-semibold text-sm">{selectedResource.irr}%</p>
                                 </div>
                               </div>
 
-                              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                                <Building2 className="h-8 w-8 text-blue-500" />
+                              <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg">
+                                <Users className="h-6 w-6 text-purple-500" />
                                 <div>
-                                  <p className="text-sm text-muted-foreground">Финансирование</p>
-                                  <p className="font-semibold">${selectedResource.totalFunding?.toLocaleString()}</p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                                <Users className="h-8 w-8 text-purple-500" />
-                                <div>
-                                  <p className="text-sm text-muted-foreground">Участники</p>
-                                  <p className="font-semibold">{selectedResource.participantsCount}</p>
+                                  <p className="text-xs text-muted-foreground">Участники</p>
+                                  <p className="font-semibold text-sm">{selectedResource.participantsCount}</p>
                                 </div>
                               </div>
                             </>
                           )}
                         </div>
 
-                        <div className="pt-4">
-                          <h4 className="font-semibold mb-2">Описание</h4>
-                          <p className="text-muted-foreground leading-relaxed">
-                            {selectedResource.description}
-                          </p>
-                        </div>
-
-                        <div className="flex gap-2 pt-4">
-                          <Button onClick={() => setSelectedResource(null)} variant="outline">
-                            Закрыть детали
+                        <div className="flex gap-2 pt-2">
+                          <Button onClick={() => setSelectedResource(null)} variant="outline" size="sm">
+                            Закрыть
                           </Button>
                           {selectedResource.category === ResourceCategory.INVESTMENT && (
-                            <Button>
-                              Инвестировать
-                            </Button>
+                            <>
+                              <Button size="sm">
+                                Инвестировать
+                              </Button>
+                              <Button variant="secondary" size="sm">
+                                Стейкинг
+                              </Button>
+                            </>
                           )}
                         </div>
                       </div>
                     ) : (
-                      /* Общая информация */
+                      /* Интерактивная панель с кнопками */
                       <div className="space-y-6">
-                        <h3 className="text-2xl font-bold">Общая статистика водных ресурсов</h3>
+                        <h3 className="text-xl font-bold">Объектная информация</h3>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                          <button 
+                            className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg hover:bg-blue-500/10 transition-colors cursor-pointer border border-transparent hover:border-blue-500/20"
+                            onClick={() => {
+                              // Показать все объекты
+                              setFilterStatus('all');
+                              setFilterCategory('all');
+                            }}
+                          >
                             <Droplets className="h-10 w-10 text-blue-500" />
-                            <div>
+                            <div className="text-left">
                               <p className="text-sm text-muted-foreground">Всего объектов</p>
                               <p className="text-2xl font-bold">{resources.length}</p>
                             </div>
-                          </div>
+                          </button>
 
-                          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
-                            <DollarSign className="h-10 w-10 text-green-500" />
-                            <div>
-                              <p className="text-sm text-muted-foreground">Общие инвестиции</p>
-                              <p className="text-2xl font-bold">${totalInvestments.toLocaleString()}</p>
+                          <button 
+                            className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg hover:bg-red-500/10 transition-colors cursor-pointer border border-transparent hover:border-red-500/20"
+                            onClick={() => {
+                              setFilterStatus(ResourceStatus.CRITICAL);
+                              setFilterCategory('all');
+                            }}
+                          >
+                            <div className="h-10 w-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">!</div>
+                            <div className="text-left">
+                              <p className="text-sm text-muted-foreground">Критические</p>
+                              <p className="text-2xl font-bold text-red-500">{criticalCount}</p>
                             </div>
-                          </div>
+                          </button>
 
-                          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                          <button 
+                            className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg hover:bg-cyan-500/10 transition-colors cursor-pointer border border-transparent hover:border-cyan-500/20"
+                            onClick={() => {
+                              setFilterStatus('all');
+                              setFilterCategory(ResourceCategory.INVESTMENT);
+                            }}
+                          >
+                            <DollarSign className="h-10 w-10 text-cyan-500" />
+                            <div className="text-left">
+                              <p className="text-sm text-muted-foreground">Инвестиционные</p>
+                              <p className="text-2xl font-bold text-cyan-500">
+                                {resources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
+                              </p>
+                            </div>
+                          </button>
+
+                          <button 
+                            className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg hover:bg-purple-500/10 transition-colors cursor-pointer border border-transparent hover:border-purple-500/20"
+                            onClick={() => {
+                              // Показать стейкинг статистику
+                              setFilterCategory(ResourceCategory.INVESTMENT);
+                            }}
+                          >
                             <TrendingUp className="h-10 w-10 text-purple-500" />
-                            <div>
+                            <div className="text-left">
                               <p className="text-sm text-muted-foreground">Стейкинг</p>
-                              <p className="text-2xl font-bold">${totalStaking.toLocaleString()}</p>
+                              <p className="text-2xl font-bold text-purple-500">${totalStaking.toLocaleString()}</p>
                             </div>
-                          </div>
-
-                          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
-                            <Users className="h-10 w-10 text-orange-500" />
-                            <div>
-                              <p className="text-sm text-muted-foreground">Участники</p>
-                              <p className="text-2xl font-bold">{totalParticipants}</p>
-                            </div>
-                          </div>
+                          </button>
                         </div>
 
-                        <div>
-                          <h4 className="font-semibold mb-4">Распределение по статусам</h4>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {Object.values(ResourceStatus).map((status) => {
-                              const count = resources.filter(r => r.status === status).length;
-                              const percentage = resources.length > 0 ? ((count / resources.length) * 100).toFixed(1) : '0';
-                              
-                              return (
-                                <div key={status} className="text-center p-3 bg-muted/30 rounded-lg">
-                                  <p className="font-semibold text-lg">{count}</p>
-                                  <p className="text-sm text-muted-foreground">{status}</p>
-                                  <p className="text-xs text-muted-foreground">{percentage}%</p>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        <div className="text-center">
+                        <div className="text-center py-8">
+                          <Globe className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                           <p className="text-muted-foreground mb-2">
-                            Нажмите на объект на глобусе для просмотра подробной информации
+                            Нажмите на кнопки выше для фильтрации объектов
                           </p>
-                          <FlaskConical className="h-8 w-8 mx-auto text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground">
+                            Или выберите объект на глобусе для просмотра подробной информации
+                          </p>
                         </div>
                       </div>
                     )}
@@ -579,6 +622,214 @@ const Dashboard: React.FC = () => {
                 </Tabs>
           </CardContent>
         </Card>
+
+        {/* Модальное окно с детальной информацией */}
+        <Dialog open={showDetailModal} onOpenChange={setShowDetailModal}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            {selectedResource && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div>
+                        <h2 className="text-2xl font-bold">{selectedResource.name}</h2>
+                        <div className="flex items-center gap-2 mt-1">
+                          <MapPin className="h-4 w-4 text-muted-foreground" />
+                          <span className="text-muted-foreground">
+                            {selectedResource.region}, {selectedResource.country}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <Badge
+                      variant={
+                        selectedResource.status === ResourceStatus.CRITICAL ? 'destructive' :
+                        selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'outline' :
+                        selectedResource.status === ResourceStatus.STABLE ? 'secondary' :
+                        'default'
+                      }
+                      className={
+                        selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                        selectedResource.status === ResourceStatus.STABLE ? 'bg-green-500/10 text-green-500 border-green-500/20' :
+                        ''
+                      }
+                    >
+                      {selectedResource.status}
+                    </Badge>
+                  </DialogTitle>
+                </DialogHeader>
+
+                <div className="space-y-6 mt-6">
+                  {/* Основные показатели */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                      <Droplets className="h-10 w-10 text-blue-500" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Качество воды</p>
+                        <p className="text-xl font-bold">{selectedResource.qualityIndex}%</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                      <BarChart3 className="h-10 w-10 text-green-500" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Расход воды</p>
+                        <p className="text-xl font-bold">{selectedResource.flowRate} м³/с</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+                      <Calendar className="h-10 w-10 text-purple-500" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Последнее обновление</p>
+                        <p className="text-xl font-bold">
+                          {new Date(selectedResource.lastUpdated).toLocaleDateString('ru-RU')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Инвестиционная информация */}
+                  {selectedResource.category === ResourceCategory.INVESTMENT && (
+                    <div className="border-t pt-6">
+                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5" />
+                        Инвестиционная информация
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div className="flex items-center gap-3 p-4 bg-green-500/10 rounded-lg">
+                          <DollarSign className="h-8 w-8 text-green-500" />
+                          <div>
+                            <p className="text-sm text-muted-foreground">IRR</p>
+                            <p className="text-2xl font-bold text-green-500">{selectedResource.irr}%</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-4 bg-blue-500/10 rounded-lg">
+                          <Building2 className="h-8 w-8 text-blue-500" />
+                          <div>
+                            <p className="text-sm text-muted-foreground">Общее финансирование</p>
+                            <p className="text-2xl font-bold">${selectedResource.totalFunding?.toLocaleString()}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-4 bg-purple-500/10 rounded-lg">
+                          <Users className="h-8 w-8 text-purple-500" />
+                          <div>
+                            <p className="text-sm text-muted-foreground">Участники</p>
+                            <p className="text-2xl font-bold">{selectedResource.participantsCount}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-4 bg-orange-500/10 rounded-lg">
+                          <Target className="h-8 w-8 text-orange-500" />
+                          <div>
+                            <p className="text-sm text-muted-foreground">Доступно DAO</p>
+                            <p className="text-2xl font-bold">${selectedResource.availableForDAO?.toLocaleString()}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Прогресс финансирования */}
+                      {selectedResource.fundingProgress && selectedResource.totalFunding && (
+                        <div className="mb-6">
+                          <div className="flex justify-between text-sm mb-2">
+                            <span className="font-medium">Прогресс финансирования</span>
+                            <span className="font-bold">
+                              ${selectedResource.fundingProgress.toLocaleString()} / ${selectedResource.totalFunding.toLocaleString()}
+                            </span>
+                          </div>
+                          <Progress 
+                            value={Math.min((selectedResource.fundingProgress / selectedResource.totalFunding) * 100, 100)}
+                            className="h-3"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {Math.round((selectedResource.fundingProgress / selectedResource.totalFunding) * 100)}% завершено
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Информация о стейкинге */}
+                      <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 p-4 rounded-lg mb-4">
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <PiggyBank className="h-4 w-4" />
+                          Стейкинг токенов
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                          <div>
+                            <p className="text-muted-foreground">Минимальная сумма</p>
+                            <p className="font-semibold">$1,000</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Годовая доходность</p>
+                            <p className="font-semibold text-green-500">8-12%</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Период блокировки</p>
+                            <p className="font-semibold">30-90 дней</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Описание */}
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-semibold mb-3">Подробное описание</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedResource.description}
+                    </p>
+                  </div>
+
+                  {/* Координаты */}
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-semibold mb-3">Геопозиция</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Широта</p>
+                        <p className="font-semibold">{selectedResource.latitude}°</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Долгота</p>
+                        <p className="font-semibold">{selectedResource.longitude}°</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Кнопки действий */}
+                  <div className="flex gap-3 pt-6 border-t">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowDetailModal(false)}
+                    >
+                      Закрыть
+                    </Button>
+                    
+                    {selectedResource.category === ResourceCategory.INVESTMENT && (
+                      <>
+                        <Button 
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          <DollarSign className="h-4 w-4 mr-2" />
+                          Инвестировать
+                        </Button>
+                        
+                        <Button 
+                          variant="secondary"
+                          className="bg-purple-600 hover:bg-purple-700 text-white"
+                        >
+                          <PiggyBank className="h-4 w-4 mr-2" />
+                          Стейкинг
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );

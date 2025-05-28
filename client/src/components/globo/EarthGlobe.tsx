@@ -39,7 +39,8 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
 
     // Создание сцены
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x040B1B);
+    // Убираем темный фон, делаем прозрачным
+    scene.background = null;
 
     // Создание камеры с оптимизацией для мобильных устройств
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
@@ -52,10 +53,15 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       camera.position.z = 200;
     }
 
-    // Создание рендерера
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    // Создание рендерера с прозрачным фоном
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: true, 
+      alpha: true, 
+      premultipliedAlpha: false 
+    });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // Прозрачный фон
 
     // Очистка контейнера и добавление canvas
     while (container.firstChild) {
@@ -471,10 +477,10 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
         
         {/* Индикатор загрузки */}
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#040B1B]/90 z-50">
-            <div className="text-center">
+          <div className="absolute inset-0 flex items-center justify-center z-50">
+            <div className="text-center bg-background/80 backdrop-blur-sm p-4 rounded-lg">
               <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-white/80">{t('globo.loadingGlobe', 'Загрузка глобуса...')}</p>
+              <p className="text-foreground">{t('globo.loadingGlobe', 'Загрузка глобуса...')}</p>
             </div>
           </div>
         )}
