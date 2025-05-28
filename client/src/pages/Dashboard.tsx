@@ -199,16 +199,41 @@ const Dashboard: React.FC = () => {
           />
         </div>
 
-        {/* Интерактивный глобус и информационная панель */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-          {/* Левая колонка - фильтры и список объектов (1/3) */}
+        {/* Глобус с панелями настроек и информации */}
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+          {/* Основная область - глобус (4/5) */}
+          <div className="xl:col-span-4">
+            {/* Интерактивный глобус без окна */}
+            <div className="relative">
+              {isLoading ? (
+                <div className="text-center py-20">
+                  <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                  <p>{t('dashboard.globe.loading', 'Загрузка глобуса...')}</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-20">
+                  <p className="text-red-500 mb-4">{t('dashboard.globe.error', 'Ошибка загрузки данных')}</p>
+                  <Button onClick={() => window.location.reload()}>
+                    Попробовать снова
+                  </Button>
+                </div>
+              ) : (
+                <EarthGlobe 
+                  resources={filteredResources}
+                  onResourceSelect={handleResourceSelect}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Правая панель - настройки и фильтры (1/5) */}
           <div className="xl:col-span-1 space-y-4">
             {/* Фильтры и настройки */}
             <Card className="sticky top-4">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="h-5 w-5" />
-                  {t('dashboard.filters.title', 'Фильтры и настройки')}
+                  {t('dashboard.filters.title', 'Фильтры')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -216,7 +241,7 @@ const Dashboard: React.FC = () => {
                 <div className="relative">
                   <Search className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Поиск ресурсов..."
+                    placeholder="Поиск..."
                     className="pl-9"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -228,7 +253,7 @@ const Dashboard: React.FC = () => {
                   <label className="text-sm font-medium mb-2 block">Статус</label>
                   <Select value={filterStatus} onValueChange={setFilterStatus}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Выберите статус" />
+                      <SelectValue placeholder="Статус" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Все статусы</SelectItem>
@@ -245,7 +270,7 @@ const Dashboard: React.FC = () => {
                   <label className="text-sm font-medium mb-2 block">Категория</label>
                   <Select value={filterCategory} onValueChange={setFilterCategory}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Выберите категорию" />
+                      <SelectValue placeholder="Категория" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Все категории</SelectItem>
@@ -257,20 +282,20 @@ const Dashboard: React.FC = () => {
 
                 {/* Статистика по фильтрам */}
                 <div className="pt-4 border-t">
-                  <h4 className="text-sm font-medium mb-2">Найдено ресурсов</h4>
+                  <h4 className="text-sm font-medium mb-2">Найдено</h4>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Всего:</span>
                       <span className="font-medium">{filteredResources.length}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Критических:</span>
+                      <span>Критич.:</span>
                       <span className="font-medium text-red-500">
                         {filteredResources.filter(r => r.status === ResourceStatus.CRITICAL).length}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span>Инвестиционных:</span>
+                      <span>Инвест.:</span>
                       <span className="font-medium text-blue-500">
                         {filteredResources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
                       </span>
@@ -281,6 +306,7 @@ const Dashboard: React.FC = () => {
                 {/* Кнопка сброса фильтров */}
                 <Button 
                   variant="outline" 
+                  size="sm"
                   className="w-full"
                   onClick={() => {
                     setSearchTerm('');
@@ -290,64 +316,34 @@ const Dashboard: React.FC = () => {
                   }}
                 >
                   <Filter className="h-4 w-4 mr-2" />
-                  Сбросить фильтры
+                  Сброс
                 </Button>
               </CardContent>
             </Card>
 
             {/* Список объектов */}
-            <div className="max-h-[600px] overflow-y-auto">
+            <div className="max-h-[400px] overflow-y-auto">
               <ObjectsList 
                 resources={resources}
                 searchTerm={searchTerm}
                 filterStatus={filterStatus}
                 filterCategory={filterCategory}
+                onResourceSelect={handleResourceSelect}
               />
             </div>
           </div>
+        </div>
 
-          {/* Правая часть - глобус и информация (2/3) */}
-          <div className="xl:col-span-3 space-y-6">
-            {/* Интерактивный глобус */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="h-5 w-5" />
-                  {t('dashboard.globe.title', 'Интерактивный глобус водных ресурсов')}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <div className="text-center py-20">
-                    <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p>{t('dashboard.globe.loading', 'Загрузка глобуса...')}</p>
-                  </div>
-                ) : error ? (
-                  <div className="text-center py-20">
-                    <p className="text-red-500 mb-4">{t('dashboard.globe.error', 'Ошибка загрузки данных')}</p>
-                    <Button onClick={() => window.location.reload()}>
-                      Попробовать снова
-                    </Button>
-                  </div>
-                ) : (
-                  <EarthGlobe 
-                    resources={filteredResources}
-                    onResourceSelect={handleResourceSelect}
-                  />
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Информационный блок */}
-            <Card>
-              <CardContent className="p-6">
-                <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="overview">
-                      {selectedResource ? 'Детали ресурса' : 'Общая информация'}
-                    </TabsTrigger>
-                    <TabsTrigger value="analytics">Аналитика</TabsTrigger>
-                  </TabsList>
+        {/* Нижняя панель - информация об объектах */}
+        <Card className="mt-6">
+          <CardContent className="p-6">
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="overview">
+                  {selectedResource ? 'Объектная информация' : 'Общая информация'}
+                </TabsTrigger>
+                <TabsTrigger value="list">Перечень объектов</TabsTrigger>
+              </TabsList>
                   
                   <TabsContent value="overview" className="mt-6">
                     {selectedResource ? (
@@ -508,39 +504,99 @@ const Dashboard: React.FC = () => {
                     )}
                   </TabsContent>
                   
-                  <TabsContent value="analytics" className="mt-6">
+                  <TabsContent value="list" className="mt-6">
                     <div className="space-y-4">
-                      <h3 className="text-xl font-semibold">Аналитика и тренды</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card>
-                          <CardContent className="p-4">
-                            <h4 className="font-medium mb-2">Критические ресурсы</h4>
-                            <p className="text-2xl font-bold text-red-500">{criticalCount}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Требуют немедленного вмешательства
-                            </p>
-                          </CardContent>
-                        </Card>
-                        
-                        <Card>
-                          <CardContent className="p-4">
-                            <h4 className="font-medium mb-2">Инвестиционный потенциал</h4>
-                            <p className="text-2xl font-bold text-green-500">
-                              {resources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Доступных проектов
-                            </p>
-                          </CardContent>
-                        </Card>
+                      <h3 className="text-xl font-semibold">Перечень водных ресурсов</h3>
+                      
+                      {/* Быстрая статистика */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div className="text-center p-3 bg-muted/30 rounded-lg">
+                          <p className="font-semibold text-lg">{resources.length}</p>
+                          <p className="text-sm text-muted-foreground">Всего объектов</p>
+                        </div>
+                        <div className="text-center p-3 bg-red-500/10 rounded-lg">
+                          <p className="font-semibold text-lg text-red-500">{criticalCount}</p>
+                          <p className="text-sm text-muted-foreground">Критических</p>
+                        </div>
+                        <div className="text-center p-3 bg-blue-500/10 rounded-lg">
+                          <p className="font-semibold text-lg text-blue-500">
+                            {resources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
+                          </p>
+                          <p className="text-sm text-muted-foreground">Инвестиционных</p>
+                        </div>
+                        <div className="text-center p-3 bg-green-500/10 rounded-lg">
+                          <p className="font-semibold text-lg text-green-500">
+                            ${totalInvestments.toLocaleString()}
+                          </p>
+                          <p className="text-sm text-muted-foreground">Общие инвестиции</p>
+                        </div>
+                      </div>
+
+                      {/* Список объектов в табличном виде */}
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b">
+                              <th className="text-left p-2">Название</th>
+                              <th className="text-left p-2">Регион</th>
+                              <th className="text-left p-2">Статус</th>
+                              <th className="text-left p-2">Категория</th>
+                              <th className="text-left p-2">Качество</th>
+                              <th className="text-left p-2">Действия</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {filteredResources.map((resource) => (
+                              <tr key={resource.id} className="border-b hover:bg-muted/20 cursor-pointer" 
+                                  onClick={() => handleResourceSelect(resource)}>
+                                <td className="p-2 font-medium">{resource.name}</td>
+                                <td className="p-2">{resource.region}, {resource.country}</td>
+                                <td className="p-2">
+                                  <Badge 
+                                    variant={
+                                      resource.status === ResourceStatus.CRITICAL ? 'destructive' :
+                                      resource.status === ResourceStatus.NEEDS_ATTENTION ? 'outline' :
+                                      'secondary'
+                                    }
+                                    className={
+                                      resource.status === ResourceStatus.NEEDS_ATTENTION ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                      resource.status === ResourceStatus.STABLE ? 'bg-green-500/10 text-green-500 border-green-500/20' :
+                                      ''
+                                    }
+                                  >
+                                    {resource.status}
+                                  </Badge>
+                                </td>
+                                <td className="p-2">
+                                  {resource.category === ResourceCategory.INVESTMENT && (
+                                    <Badge variant="outline" className="bg-green-500/10 text-green-500">
+                                      Инвест.
+                                    </Badge>
+                                  )}
+                                </td>
+                                <td className="p-2">{resource.qualityIndex}%</td>
+                                <td className="p-2">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleResourceSelect(resource);
+                                    }}
+                                  >
+                                    Выбрать
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </TabsContent>
                 </Tabs>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

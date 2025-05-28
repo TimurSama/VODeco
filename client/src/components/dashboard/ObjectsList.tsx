@@ -25,13 +25,15 @@ interface ObjectsListProps {
   searchTerm: string;
   filterStatus: string;
   filterCategory: string;
+  onResourceSelect?: (resource: WaterResource) => void;
 }
 
 const ObjectsList: React.FC<ObjectsListProps> = ({
   resources,
   searchTerm,
   filterStatus,
-  filterCategory
+  filterCategory,
+  onResourceSelect
 }) => {
   const { t } = useTranslation();
   const [selectedForStaking, setSelectedForStaking] = useState<string | null>(null);
@@ -262,12 +264,11 @@ const ObjectsList: React.FC<ObjectsListProps> = ({
                       variant="outline" 
                       className="flex items-center gap-2"
                       onClick={() => {
-                        // Логика просмотра деталей на карте/глобусе
-                        console.log(`Showing ${resource.name} on map`);
+                        onResourceSelect?.(resource);
                       }}
                     >
                       <MapPin className="h-4 w-4" />
-                      Показать на карте
+                      Выбрать объект
                     </Button>
                     
                     {resource.category === ResourceCategory.INVESTMENT && (
