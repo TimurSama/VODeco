@@ -6,6 +6,7 @@ import { getQueryFn } from '@/lib/queryClient';
 import { WaterResource, ResourceStatus, ResourceCategory } from '@/types';
 import StatsCard from '@/components/dashboard/StatsCard';
 import WelcomeBanner from '@/components/dashboard/WelcomeBanner';
+import ObjectsList from '@/components/dashboard/ObjectsList';
 import EarthGlobe from '@/components/globo/EarthGlobe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -200,8 +201,9 @@ const Dashboard: React.FC = () => {
 
         {/* Интерактивный глобус и информационная панель */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
-          {/* Левая колонка - фильтры и настройки (1/3) */}
-          <div className="xl:col-span-1">
+          {/* Левая колонка - фильтры и список объектов (1/3) */}
+          <div className="xl:col-span-1 space-y-4">
+            {/* Фильтры и настройки */}
             <Card className="sticky top-4">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -292,6 +294,16 @@ const Dashboard: React.FC = () => {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Список объектов */}
+            <div className="max-h-[600px] overflow-y-auto">
+              <ObjectsList 
+                resources={resources}
+                searchTerm={searchTerm}
+                filterStatus={filterStatus}
+                filterCategory={filterCategory}
+              />
+            </div>
           </div>
 
           {/* Правая часть - глобус и информация (2/3) */}
