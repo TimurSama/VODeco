@@ -15,6 +15,23 @@ import {
   insertGroupPostSchema
 } from "@shared/schema";
 import { z } from "zod";
+import { 
+  usersTable, 
+  sessionsTable, 
+  waterResourcesTable, 
+  projectsTable, 
+  daoProposalsTable, 
+  daoEventsTable, 
+  votesTable, 
+  investmentsTable, 
+  groupsTable, 
+  groupMembersTable, 
+  groupPostsTable,
+  investmentObjectsTable,
+  completedProjectsTable
+} from '../shared/schema.js';
+import { eq } from "drizzle-orm";
+import { db } from "./db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Настройка нашей собственной системы аутентификации
@@ -935,6 +952,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating user:", error);
       res.status(500).json({ message: "Ошибка при обновлении пользователя" });
+    }
+  });
+
+  // Получение инвестиционных объектов
+  app.get("/api/investment-objects", async (req, res) => {
+    try {
+      const objects = await db.select().from(investmentObjectsTable);
+      res.json(objects);
+    } catch (error) {
+      console.error('Error fetching investment objects:', error);
+      res.status(500).json({ message: 'Ошибка при получении инвестиционных объектов' });
+    }
+  });
+
+  // Получение завершенных проектов
+  app.get("/api/completed-projects", async (req, res) => {
+    try {
+      const projects = await db.select().from(completedProjectsTable);
+      res.json(projects);
+    } catch (error) {
+      console.error('Error fetching completed projects:', error);
+      res.status(500).json({ message: 'Ошибка при получении завершенных проектов' });
+    }
+  });
+
+  // Получение конкретного завершенного проекта
+  app.get("/api/completed-projects/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const project = await db.select().from(completedProjectsTable).where(eq(completedProjectsTable.id, id)).limit(1);
+
+      if (project.length === 0) {
+        return res.status(404).json({ message: 'Проект не найден' });
+      }
+
+      res.json(project[0]);
+    } catch (error) {
+      console.error('Error fetching completed project:', error);
+      res.status(500).json({ message: 'Ошибка при получении проекта' });
     }
   });
 

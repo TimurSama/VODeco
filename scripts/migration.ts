@@ -184,6 +184,67 @@ async function main() {
       );
     `);
 
+      // Создаем таблицу инвестиционных объектов
+    console.log('- Создание таблицы инвестиционных объектов...');
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS investment_objects (
+        "id" SERIAL PRIMARY KEY,
+        "name" TEXT NOT NULL,
+        "type" TEXT NOT NULL,
+        "status" TEXT NOT NULL,
+        "location" TEXT NOT NULL,
+        "region" TEXT NOT NULL,
+        "country" TEXT NOT NULL,
+        "capacity" REAL,
+        "total_funding" REAL NOT NULL,
+        "dao_funding" REAL NOT NULL,
+        "estimated_irr" REAL NOT NULL,
+        "project_duration" INTEGER NOT NULL,
+        "latitude" REAL NOT NULL,
+        "longitude" REAL NOT NULL,
+        "description" TEXT NOT NULL,
+        "technical_partners" TEXT,
+        "investment_stage" TEXT NOT NULL,
+        "metadata" TEXT,
+        "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Создаем таблицу завершенных проектов
+    console.log('- Создание таблицы завершенных проектов...');
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS "completed_projects" (
+        "id" SERIAL PRIMARY KEY,
+        "name" TEXT NOT NULL,
+        "type" TEXT NOT NULL,
+        "status" TEXT NOT NULL,
+        "location" TEXT NOT NULL,
+        "region" TEXT NOT NULL,
+        "country" TEXT NOT NULL,
+        "completion_date" TEXT NOT NULL,
+        "capacity" REAL,
+        "total_investment" REAL,
+        "beneficiaries" INTEGER,
+        "latitude" REAL,
+        "longitude" REAL,
+        "description" TEXT NOT NULL,
+        "achievements" TEXT,
+        "partners" TEXT,
+        "technologies" TEXT,
+        "impact" TEXT,
+        "image_url" TEXT,
+        "client_company" TEXT,
+        "industry" TEXT,
+        "equipment_used" TEXT,
+        "operational_since" TEXT,
+        "maintenance_period" INTEGER,
+        "quality_standards" TEXT,
+        "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     console.log("Миграция успешно завершена!");
   } catch (error) {
     console.error("Ошибка при выполнении миграции:", error);

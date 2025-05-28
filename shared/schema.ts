@@ -407,3 +407,4 @@ export type TempSession = typeof tempSessions.$inferSelect;
 
 export type InsertUserStaking = z.infer<typeof insertUserStakingSchema>;
 export type UserStaking = typeof userStaking.$inferSelect;
+```
