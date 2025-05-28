@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // @ts-ignore
@@ -15,6 +16,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedResource, setSelectedResource] = useState<WaterResource | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
   const globeInstanceRef = useRef<{
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera;
@@ -39,21 +41,19 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
 
     // Создание сцены
     const scene = new THREE.Scene();
-    // Убираем темный фон, делаем прозрачным
     scene.background = null;
 
-    // Создание камеры с оптимизацией для мобильных устройств
+    // Создание камеры
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     
-    // Лучшее позиционирование для смартфонов - центрированный вид
-    if (width < 768) { // мобильные устройства
+    if (width < 768) {
       camera.position.set(0, 20, 180);
       camera.lookAt(0, 0, 0);
     } else {
       camera.position.z = 200;
     }
 
-    // Создание рендерера с прозрачным фоном
+    // Создание рендерера
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true, 
       alpha: true, 
@@ -61,36 +61,31 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0); // Прозрачный фон
+    renderer.setClearColor(0x000000, 0);
 
-    // Очистка контейнера и добавление canvas
     while (container.firstChild) {
       container.removeChild(container.firstChild);
     }
     container.appendChild(renderer.domElement);
 
-    // Освещение для лучшего отображения текстур
+    // Освещение
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
 
-    // Основной свет (имитация солнца)
     const sunLight = new THREE.DirectionalLight(0xffffff, 1.2);
     sunLight.position.set(100, 50, 50);
     sunLight.castShadow = true;
     scene.add(sunLight);
 
-    // Дополнительный мягкий свет для освещения темной стороны
     const fillLight = new THREE.DirectionalLight(0x4a9eff, 0.3);
     fillLight.position.set(-100, -50, -50);
     scene.add(fillLight);
 
-    // Создание глобуса с настоящими спутниковыми текстурами NASA
-    const globeGeometry = new THREE.SphereGeometry(80, 128, 128); // Увеличиваем детализацию
+    // Создание глобуса
+    const globeGeometry = new THREE.SphereGeometry(80, 128, 128);
     
-    // Загрузчик текстур
     const textureLoader = new THREE.TextureLoader();
     
-    // Настоящие спутниковые текстуры NASA Blue Marble в высоком разрешении
     const earthDayTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-blue-marble.jpg',
       (texture) => {
@@ -102,12 +97,10 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       undefined,
       (error) => {
         console.error('Error loading day texture:', error);
-        // Fallback на ночную текстуру
         setIsLoading(false);
       }
     );
     
-    // Ночная текстура с огнями городов (NASA)
     const earthNightTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-night.jpg',
       (texture) => {
@@ -117,7 +110,6 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       }
     );
     
-    // Карта рельефа (bump map) NASA для реалистичных гор и впадин
     const earthBumpTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-topology.png',
       (texture) => {
@@ -127,7 +119,6 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       }
     );
     
-    // Карта облаков NASA (живые облачные покровы)
     const earthCloudsTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-clouds.png',
       (texture) => {
@@ -137,7 +128,6 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       }
     );
     
-    // Карта водной поверхности (specular map) для реалистичных отражений океанов
     const earthSpecularTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-water.png',
       (texture) => {
@@ -147,42 +137,40 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       }
     );
     
-    // Материал с реальными NASA текстурами
     const globeMaterial = new THREE.MeshPhongMaterial({
-      map: earthDayTexture, // Основная дневная текстура NASA Blue Marble
-      bumpMap: earthBumpTexture, // Карта рельефа для объемности гор и впадин
-      bumpScale: 0.3, // Уменьшаем для более реалистичного эффекта
-      specularMap: earthSpecularTexture, // Карта отражений для океанов
-      specular: new THREE.Color(0x4444aa), // Цвет отражений океанов
-      shininess: 30, // Блеск водной поверхности
+      map: earthDayTexture,
+      bumpMap: earthBumpTexture,
+      bumpScale: 0.3,
+      specularMap: earthSpecularTexture,
+      specular: new THREE.Color(0x4444aa),
+      shininess: 30,
       transparent: false,
       opacity: 1.0
     });
     
-    // Переменные для управления переходом текстур при зуме
     let currentDistance = 200;
     let isMapMode = false;
 
     const globeMesh = new THREE.Mesh(globeGeometry, globeMaterial);
     scene.add(globeMesh);
 
-    // Слой облаков NASA (отдельный объект для анимации)
+    // Слой облаков
     const cloudsGeometry = new THREE.SphereGeometry(80.5, 64, 64);
     const cloudsMaterial = new THREE.MeshPhongMaterial({
       map: earthCloudsTexture,
       transparent: true,
       opacity: 0.4,
       side: THREE.DoubleSide,
-      depthWrite: false // Важно для правильного отображения прозрачности
+      depthWrite: false
     });
     
     const cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
     scene.add(cloudsMesh);
 
-    // Атмосфера с более реалистичным видом
+    // Атмосфера
     const atmosphereGeometry = new THREE.SphereGeometry(82, 64, 64);
     const atmosphereMaterial = new THREE.MeshPhongMaterial({
-      color: 0x87ceeb, // Небесно-голубой
+      color: 0x87ceeb,
       side: THREE.BackSide,
       transparent: true,
       opacity: 0.15,
@@ -193,7 +181,6 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
     scene.add(atmosphere);
 
-    // Дополнительное внешнее свечение атмосферы
     const outerAtmosphereGeometry = new THREE.SphereGeometry(84, 32, 32);
     const outerAtmosphereMaterial = new THREE.MeshPhongMaterial({
       color: 0x4a9eff,
@@ -207,18 +194,50 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     const outerAtmosphere = new THREE.Mesh(outerAtmosphereGeometry, outerAtmosphereMaterial);
     scene.add(outerAtmosphere);
 
-    // Управление с улучшенными настройками для плавного зума
+    // Управление
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.2; // Медленнее для лучшего просмотра
-    controls.enablePan = false; // Отключаем панорамирование для мобильных
-    controls.minDistance = 90; // Ближе для детального просмотра карты
-    controls.maxDistance = 400; // Дальше для общего вида
-    controls.enableZoom = true;
-    controls.zoomSpeed = 0.8; // Более быстрый зум для лучшего UX
-    controls.rotateSpeed = 0.3; // Комфортная скорость вращения
+    controls.autoRotateSpeed = 0.2;
+    controls.enablePan = false;
+    controls.minDistance = 90;
+    controls.maxDistance = 400;
+    controls.enableZoom = false; // Отключаем зум по умолчанию
+    controls.zoomSpeed = 0.8;
+    controls.rotateSpeed = 0.3;
+
+    // Обработчики для контроля зума только над глобусом
+    let isOverGlobe = false;
+
+    const handleMouseEnter = () => {
+      isOverGlobe = true;
+      controls.enableZoom = true;
+    };
+
+    const handleMouseLeave = () => {
+      isOverGlobe = false;
+      controls.enableZoom = false;
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (!isOverGlobe) {
+        event.preventDefault();
+        // Позволяем скроллу страницы работать
+        const scrollEvent = new WheelEvent('wheel', {
+          deltaY: event.deltaY,
+          deltaX: event.deltaX,
+          deltaZ: event.deltaZ,
+          bubbles: true,
+          cancelable: true
+        });
+        document.dispatchEvent(scrollEvent);
+      }
+    };
+
+    container.addEventListener('mouseenter', handleMouseEnter);
+    container.addEventListener('mouseleave', handleMouseLeave);
+    container.addEventListener('wheel', handleWheel, { passive: false });
 
     // Группа маркеров
     const markersGroup = new THREE.Group();
@@ -226,69 +245,56 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
 
     // Создание маркеров
     resources.forEach((resource) => {
-      const marker = createDropMarker(resource);
+      const marker = createWaterDropMarker(resource);
       markersGroup.add(marker);
     });
 
-    // Анимация с плавным переходом текстур
+    // Анимация
     const animate = () => {
       const animationId = requestAnimationFrame(animate);
       
       controls.update();
       
-      // Отслеживаем расстояние камеры для переключения текстур
       const distance = camera.position.distanceTo(globeMesh.position);
       
-      // Плавный переход между дневной и ночной текстурой при зуме
       if (distance < 150 && !isMapMode) {
-        // Переключаемся в режим карты при сильном приближении
         isMapMode = true;
         console.log('Switching to map mode');
         
-        // Плавный переход к ночной текстуре с огнями городов
         globeMaterial.map = earthNightTexture;
         globeMaterial.emissive = new THREE.Color(0x222222);
         globeMaterial.emissiveIntensity = 0.3;
         
-        // Усиливаем облака для более драматичного эффекта
         cloudsMaterial.opacity = 0.6;
         
-        // Изменяем цвет атмосферы для ночного режима
         atmosphereMaterial.color.setHex(0x4a90e2);
         atmosphereMaterial.emissive.setHex(0x4a90e2);
         atmosphereMaterial.opacity = 0.25;
         
       } else if (distance > 180 && isMapMode) {
-        // Возвращаемся к дневному режиму при отдалении
         isMapMode = false;
         console.log('Switching to globe mode');
         
-        // Возвращаем дневную текстуру
         globeMaterial.map = earthDayTexture;
         globeMaterial.emissive = new THREE.Color(0x000000);
         globeMaterial.emissiveIntensity = 0;
         
-        // Уменьшаем облака
         cloudsMaterial.opacity = 0.4;
         
-        // Возвращаем дневной цвет атмосферы
         atmosphereMaterial.color.setHex(0x87ceeb);
         atmosphereMaterial.emissive.setHex(0x87ceeb);
         atmosphereMaterial.opacity = 0.15;
       }
       
-      // Плавная анимация облаков (медленное вращение)
       const time = Date.now() * 0.0001;
       cloudsMesh.rotation.y = time * 0.5;
       
-      // Пульсация маркеров
       const pulseTime = Date.now() * 0.001;
       markersGroup.children.forEach((marker, index) => {
         const scale = 1 + Math.sin(pulseTime * 2 + index) * 0.2;
         marker.scale.setScalar(scale);
       });
 
-      // Обновляем материал для применения изменений
       globeMaterial.needsUpdate = true;
       cloudsMaterial.needsUpdate = true;
       atmosphereMaterial.needsUpdate = true;
@@ -322,6 +328,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
           if (resource) {
             console.log("Resource selected:", resource);
             setSelectedResource(resource);
+            setShowPopup(true);
             onResourceSelect(resource);
           }
         }
@@ -365,26 +372,26 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
       
       window.removeEventListener('resize', handleResize);
       container.removeEventListener('click', handleClick);
+      container.removeEventListener('mouseenter', handleMouseEnter);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+      container.removeEventListener('wheel', handleWheel);
       
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
 
-      // Очистка Three.js ресурсов
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           if (object.geometry) object.geometry.dispose();
           if (object.material) {
             if (Array.isArray(object.material)) {
               object.material.forEach(material => {
-                // Очищаем все текстуры
                 if (material.map) material.map.dispose();
                 if (material.bumpMap) material.bumpMap.dispose();
                 if (material.specularMap) material.specularMap.dispose();
                 material.dispose();
               });
             } else {
-              // Очищаем все текстуры
               if (object.material.map) object.material.map.dispose();
               if (object.material.bumpMap) object.material.bumpMap.dispose();
               if (object.material.specularMap) object.material.specularMap.dispose();
@@ -394,7 +401,6 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
         }
       });
       
-      // Дополнительная очистка текстур
       earthDayTexture.dispose();
       earthNightTexture.dispose();
       earthBumpTexture.dispose();
@@ -406,43 +412,83 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     };
   }, [resources, onResourceSelect]);
 
-  // Создание маркера в виде капли
-  const createDropMarker = (resource: WaterResource) => {
-    // Простая форма капли из сферы и конуса
+  // Создание маркера в виде реалистичной капли воды
+  const createWaterDropMarker = (resource: WaterResource) => {
     const dropGroup = new THREE.Group();
 
-    // Основа капли (сфера)
-    const dropGeometry = new THREE.SphereGeometry(2, 8, 8);
+    // Создание формы капли воды
+    const dropShape = new THREE.Shape();
+    
+    // Основная округлая часть капли
+    dropShape.absarc(0, 0, 1.5, 0, Math.PI * 2, false);
+    
+    // Хвостик капли (заостренная часть снизу)
+    const extrudeSettings = {
+      depth: 0.2,
+      bevelEnabled: true,
+      bevelSegments: 8,
+      steps: 2,
+      bevelSize: 0.1,
+      bevelThickness: 0.1
+    };
+
+    // Основная часть капли
+    const mainDropGeometry = new THREE.SphereGeometry(1.8, 16, 16);
+    
+    // Хвостик капли
+    const tailGeometry = new THREE.ConeGeometry(0.8, 2.5, 12);
     
     // Цвет по статусу
     let color = 0x3b82f6;
+    let emissiveColor = 0x1e40af;
+    
     if (resource.status === ResourceStatus.CRITICAL) {
       color = 0xef4444;
+      emissiveColor = 0xdc2626;
     } else if (resource.status === ResourceStatus.NEEDS_ATTENTION) {
       color = 0xf59e0b;
+      emissiveColor = 0xd97706;
     } else if (resource.category === ResourceCategory.INVESTMENT) {
       color = 0x06b6d4;
+      emissiveColor = 0x0891b2;
     } else {
       color = 0x10b981;
+      emissiveColor = 0x059669;
     }
 
-    const dropMaterial = new THREE.MeshPhongMaterial({
+    // Реалистичный материал воды
+    const waterMaterial = new THREE.MeshPhongMaterial({
       color: color,
-      emissive: color,
-      emissiveIntensity: 0.2,
+      emissive: emissiveColor,
+      emissiveIntensity: 0.3,
       shininess: 100,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.85,
+      specular: 0xffffff,
+      reflectivity: 0.3
     });
 
-    const dropMesh = new THREE.Mesh(dropGeometry, dropMaterial);
-    dropGroup.add(dropMesh);
+    // Основная часть капли
+    const mainDrop = new THREE.Mesh(mainDropGeometry, waterMaterial);
+    mainDrop.position.y = 0.5;
+    dropGroup.add(mainDrop);
 
-    // Хвостик капли (конус)
-    const tailGeometry = new THREE.ConeGeometry(1, 3, 6);
-    const tailMesh = new THREE.Mesh(tailGeometry, dropMaterial);
-    tailMesh.position.y = -2.5;
-    dropGroup.add(tailMesh);
+    // Хвостик капли
+    const tailDrop = new THREE.Mesh(tailGeometry, waterMaterial);
+    tailDrop.position.y = -1.8;
+    dropGroup.add(tailDrop);
+
+    // Блик на капле для реалистичности
+    const highlightGeometry = new THREE.SphereGeometry(0.6, 8, 8);
+    const highlightMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.4
+    });
+    
+    const highlight = new THREE.Mesh(highlightGeometry, highlightMaterial);
+    highlight.position.set(0.5, 1, 0.5);
+    dropGroup.add(highlight);
 
     // Позиционирование на глобусе
     const phi = (90 - resource.latitude) * (Math.PI / 180);
@@ -456,20 +502,41 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
     dropGroup.position.set(x, y, z);
     dropGroup.lookAt(x * 2, y * 2, z * 2);
 
+    // Масштабирование по важности
+    let scale = 1;
+    if (resource.status === ResourceStatus.CRITICAL) {
+      scale = 1.4;
+    } else if (resource.status === ResourceStatus.NEEDS_ATTENTION) {
+      scale = 1.2;
+    } else if (resource.category === ResourceCategory.INVESTMENT) {
+      scale = 1.1;
+    }
+    
+    dropGroup.scale.setScalar(scale);
+
     // Данные для кликов
     dropGroup.userData = {
       resourceId: resource.id,
       resourceName: resource.name
     };
 
+    // Все части капли должны реагировать на клики
+    mainDrop.userData = dropGroup.userData;
+    tailDrop.userData = dropGroup.userData;
+    highlight.userData = dropGroup.userData;
+
     return dropGroup;
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+    setSelectedResource(null);
   };
 
   return (
     <div className="relative w-full flex flex-col">
-      {/* Контейнер глобуса на голом фоне */}
+      {/* Контейнер глобуса */}
       <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden bg-transparent">
-        {/* Canvas контейнер */}
         <div 
           ref={containerRef} 
           className="w-full h-full"
@@ -485,9 +552,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
           </div>
         )}
         
-        
-        
-        {/* Легенда - адаптивная */}
+        {/* Легенда */}
         <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-30 bg-black/50 p-2 sm:p-3 rounded-md text-xs text-white/70">
           <div className="space-y-1">
             <div className="flex items-center gap-1 sm:gap-2">
@@ -510,66 +575,128 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
         </div>
       </div>
 
-      {/* Информационное окно снизу */}
-      {selectedResource && (
-        <div className="mt-4 bg-gradient-to-r from-[#0a1428] to-[#1e3a8a] rounded-lg border border-[#0d2245] p-4">
-          <div className="flex justify-between items-start mb-3">
-            <h3 className="text-lg font-semibold text-white">{selectedResource.name}</h3>
+      {/* Popup окно с полной информацией */}
+      {showPopup && selectedResource && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-[#0a1428] to-[#1e3a8a] rounded-xl border border-[#0d2245] p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto relative">
+            {/* Кнопка закрытия */}
             <button 
-              onClick={() => setSelectedResource(null)}
-              className="text-white/60 hover:text-white transition-colors text-xl"
+              onClick={closePopup}
+              className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors text-2xl z-10"
             >
               ×
             </button>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-white/70 mb-1">{t('globo.location', 'Местоположение')}:</p>
-              <p className="text-white">{selectedResource.region}, {selectedResource.country}</p>
+            
+            {/* Заголовок */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-white mb-2">{selectedResource.name}</h2>
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  selectedResource.status === ResourceStatus.CRITICAL ? 'bg-red-500/20 text-red-400' :
+                  selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'bg-yellow-500/20 text-yellow-400' :
+                  'bg-green-500/20 text-green-400'
+                }`}>
+                  {selectedResource.status === ResourceStatus.CRITICAL ? t('globo.critical', 'Критический') :
+                   selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? t('globo.needsAttention', 'Требует внимания') :
+                   t('globo.stable', 'Стабильный')}
+                </span>
+                {selectedResource.category === ResourceCategory.INVESTMENT && (
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-cyan-500/20 text-cyan-400">
+                    {t('globo.investment', 'Инвестиционный')}
+                  </span>
+                )}
+              </div>
             </div>
             
-            <div>
-              <p className="text-white/70 mb-1">{t('globo.status', 'Статус')}:</p>
-              <p className={`font-medium ${
-                selectedResource.status === ResourceStatus.CRITICAL ? 'text-red-400' :
-                selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? 'text-yellow-400' :
-                'text-green-400'
-              }`}>
-                {selectedResource.status === ResourceStatus.CRITICAL ? t('globo.critical', 'Критический') :
-                 selectedResource.status === ResourceStatus.NEEDS_ATTENTION ? t('globo.needsAttention', 'Требует внимания') :
-                 t('globo.stable', 'Стабильный')}
-              </p>
-            </div>
-            
-            <div>
-              <p className="text-white/70 mb-1">{t('globo.qualityIndex', 'Индекс качества')}:</p>
-              <p className="text-white">{selectedResource.qualityIndex}%</p>
-            </div>
-            
-            <div>
-              <p className="text-white/70 mb-1">{t('globo.flowRate', 'Расход')}:</p>
-              <p className="text-white">{selectedResource.flowRate} м³/с</p>
-            </div>
-            
-            {selectedResource.category === ResourceCategory.INVESTMENT && (
-              <>
+            {/* Основная информация */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="space-y-4">
                 <div>
-                  <p className="text-white/70 mb-1">{t('globo.totalFunding', 'Общее финансирование')}:</p>
-                  <p className="text-white">${selectedResource.totalFunding?.toLocaleString()}</p>
+                  <h3 className="text-white/70 text-sm mb-1">{t('globo.location', 'Местоположение')}</h3>
+                  <p className="text-white text-lg">{selectedResource.region}, {selectedResource.country}</p>
+                  <p className="text-white/60 text-sm">
+                    {selectedResource.latitude.toFixed(4)}°, {selectedResource.longitude.toFixed(4)}°
+                  </p>
                 </div>
                 
                 <div>
-                  <p className="text-white/70 mb-1">{t('globo.irr', 'IRR')}:</p>
-                  <p className="text-green-400">{selectedResource.irr}%</p>
+                  <h3 className="text-white/70 text-sm mb-1">{t('globo.qualityIndex', 'Индекс качества')}</h3>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 bg-white/10 rounded-full h-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          selectedResource.qualityIndex >= 80 ? 'bg-green-500' :
+                          selectedResource.qualityIndex >= 60 ? 'bg-yellow-500' :
+                          'bg-red-500'
+                        }`}
+                        style={{ width: `${selectedResource.qualityIndex}%` }}
+                      />
+                    </div>
+                    <span className="text-white font-medium">{selectedResource.qualityIndex}%</span>
+                  </div>
                 </div>
-              </>
-            )}
-          </div>
-          
-          <div className="mt-3">
-            <p className="text-white/70 mb-1">{t('globo.description', 'Описание')}:</p>
-            <p className="text-white/90 text-sm leading-relaxed">{selectedResource.description}</p>
+                
+                <div>
+                  <h3 className="text-white/70 text-sm mb-1">{t('globo.flowRate', 'Расход воды')}</h3>
+                  <p className="text-white text-lg">{selectedResource.flowRate} м³/с</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                {selectedResource.category === ResourceCategory.INVESTMENT && (
+                  <>
+                    <div>
+                      <h3 className="text-white/70 text-sm mb-1">{t('globo.totalFunding', 'Общее финансирование')}</h3>
+                      <p className="text-white text-lg font-semibold">${selectedResource.totalFunding?.toLocaleString()}</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-white/70 text-sm mb-1">{t('globo.irr', 'Внутренняя норма доходности')}</h3>
+                      <p className="text-green-400 text-lg font-semibold">{selectedResource.irr}%</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-white/70 text-sm mb-1">Доступно для стейкинга</h3>
+                      <p className="text-cyan-400 text-lg font-semibold">
+                        ${((selectedResource.totalFunding || 0) * 0.3).toLocaleString()}
+                      </p>
+                    </div>
+                  </>
+                )}
+                
+                <div>
+                  <h3 className="text-white/70 text-sm mb-1">Последнее обновление</h3>
+                  <p className="text-white/80">{new Date().toLocaleDateString('ru-RU')}</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Описание */}
+            <div className="mb-6">
+              <h3 className="text-white/70 text-sm mb-2">{t('globo.description', 'Описание')}</h3>
+              <p className="text-white/90 leading-relaxed">{selectedResource.description}</p>
+            </div>
+            
+            {/* Интерактивные кнопки */}
+            <div className="flex flex-wrap gap-3">
+              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                {t('globo.viewDetails', 'Подробнее')}
+              </button>
+              
+              {selectedResource.category === ResourceCategory.INVESTMENT && (
+                <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors">
+                  {t('globo.staking', 'Стейкинг')}
+                </button>
+              )}
+              
+              <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+                {t('globo.monitoring', 'Мониторинг')}
+              </button>
+              
+              <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+                {t('globo.analytics', 'Аналитика')}
+              </button>
+            </div>
           </div>
         </div>
       )}
