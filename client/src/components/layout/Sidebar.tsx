@@ -34,7 +34,6 @@ const Sidebar: React.FC<SidebarProps> = ({ open, setOpen }) => {
     { name: t('common.dao'), path: '/dao', icon: Database },
     { name: t('common.missions'), path: '/missions', icon: MessagesSquare },
     { name: t('common.tokenHub'), path: '/token-hub', icon: Bookmark },
-    { name: t('common.globo'), path: '/globo', icon: Globe },
     { name: t('common.bank'), path: '/bank', icon: BadgeDollarSign },
     { name: t('common.cabinets'), path: '/cabinets', icon: HardDrive },
     { name: t('common.settings'), path: '/settings', icon: Settings },

@@ -13,7 +13,6 @@ import AuthPage from "@/pages/auth-page";
 import { AuthProvider } from "@/hooks/useAuth.tsx";
 import Dashboard from "@/pages/Dashboard";
 import WalletPage from "@/pages/WalletPage";
-import GloboPage from "@/pages/GloboPage";
 import DAOPage from "@/pages/DAOPage";
 import AccountPage from "@/pages/AccountPage";
 import GroupsPage from "@/pages/GroupsPage";
@@ -84,9 +83,6 @@ function Router() {
       </Route>
       <Route path="/token-hub">
         <TokenHubPage />
-      </Route>
-      <Route path="/globo">
-        <GloboPage />
       </Route>
       <Route path="/bank">
         <BankPage />
