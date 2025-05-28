@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { UserInterface, LoginData, RegisterData } from "@shared/auth-schema";
 import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 type TempSession = {
   id: number;
