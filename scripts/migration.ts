@@ -36,34 +36,33 @@ async function main() {
         "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
     // Создаем таблицу водных ресурсов (если не существует)
     console.log("- Создание таблицы водных ресурсов...");
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS "water_resources" (
         "id" SERIAL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "region" TEXT NOT NULL,
-        "country" TEXT NOT NULL,
-        "status" TEXT NOT NULL,
-        "quality_index" INTEGER NOT NULL,
-        "flow_rate" REAL NOT NULL,
-        "is_active" BOOLEAN DEFAULT TRUE,
-        "latitude" REAL NOT NULL,
-        "longitude" REAL NOT NULL,
-        "description" TEXT,
-        "image_url" TEXT,
+        "name" VARCHAR(256) NOT NULL,
+        "type" VARCHAR(100) NOT NULL,
+        "status" VARCHAR(50) NOT NULL,
+        "location" VARCHAR(256) NOT NULL,
+        "region" VARCHAR(100),
+        "country" VARCHAR(100) DEFAULT 'Uzbekistan',
+        "capacity" REAL,
         "total_funding" REAL,
-        "available_for_dao" REAL,
-        "funding_progress" INTEGER DEFAULT 0,
-        "irr" REAL,
-        "participants_count" INTEGER DEFAULT 0,
-        "project_type" TEXT,
-        "investment_status" TEXT DEFAULT 'open',
-        "category" TEXT
+        "dao_funding" REAL,
+        "estimated_irr" REAL,
+        "project_duration" INTEGER,
+        "latitude" REAL,
+        "longitude" REAL,
+        "description" TEXT,
+        "technical_partners" TEXT,
+        "investment_stage" VARCHAR(50) DEFAULT 'planning',
+        "last_update" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "metadata" TEXT
       );
     `);
-    
+
     // Создаем таблицу проектов (если не существует)
     console.log("- Создание таблицы проектов...");
     await db.execute(sql`
@@ -82,7 +81,7 @@ async function main() {
         "end_date" TIMESTAMP NOT NULL
       );
     `);
-    
+
     // Создаем таблицу предложений DAO (если не существует)
     console.log("- Создание таблицы предложений DAO...");
     await db.execute(sql`
@@ -100,7 +99,7 @@ async function main() {
         "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
     // Создаем таблицу событий DAO (если не существует)
     console.log("- Создание таблицы событий DAO...");
     await db.execute(sql`
@@ -114,7 +113,7 @@ async function main() {
         "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
     // Создаем таблицу голосов (если не существует)
     console.log("- Создание таблицы голосов...");
     await db.execute(sql`
@@ -127,7 +126,7 @@ async function main() {
         "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
     // Создаем таблицу инвестиций (если не существует)
     console.log("- Создание таблицы инвестиций...");
     await db.execute(sql`
@@ -139,7 +138,7 @@ async function main() {
         "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
-    
+
     // Создаем таблицу групп (если не существует)
     console.log("- Создание таблицы групп...");
     await db.execute(sql`
@@ -156,7 +155,7 @@ async function main() {
         "is_active" BOOLEAN DEFAULT TRUE
       );
     `);
-    
+
     // Создаем таблицу участников группы (если не существует)
     console.log("- Создание таблицы участников группы...");
     await db.execute(sql`
@@ -168,7 +167,7 @@ async function main() {
         "joined_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
       );
     `);
-    
+
     // Создаем таблицу постов группы (если не существует)
     console.log("- Создание таблицы постов группы...");
     await db.execute(sql`
