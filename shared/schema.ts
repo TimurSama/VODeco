@@ -407,4 +407,97 @@ export type TempSession = typeof tempSessions.$inferSelect;
 
 export type InsertUserStaking = z.infer<typeof insertUserStakingSchema>;
 export type UserStaking = typeof userStaking.$inferSelect;
-```
+
+// Completed Projects table
+export const completedProjectsTable = pgTable("completed_projects", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(),
+  status: text("status").notNull(),
+  location: text("location").notNull(),
+  region: text("region").notNull(),
+  country: text("country").notNull(),
+  capacity: real("capacity"),
+  totalFunding: real("total_funding").notNull(),
+  daoFunding: real("dao_funding").notNull(),
+  estimatedIrr: real("estimated_irr").notNull(),
+  projectDuration: integer("project_duration").notNull(),
+  latitude: real("latitude").notNull(),
+  longitude: real("longitude").notNull(),
+  description: text("description").notNull(),
+  technicalPartners: text("technical_partners"),
+  investmentStage: text("investment_stage").notNull(),
+  metadata: text("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow()
+});
+
+export const insertCompletedProjectSchema = createInsertSchema(completedProjectsTable).pick({
+  name: true,
+  type: true,
+  status: true,
+  location: true,
+  region: true,
+  country: true,
+  capacity: true,
+  totalFunding: true,
+  daoFunding: true,
+  estimatedIrr: true,
+  projectDuration: true,
+  latitude: true,
+  longitude: true,
+  description: true,
+  technicalPartners: true,
+  investmentStage: true,
+  metadata: true
+});
+
+export type InsertCompletedProject = z.infer<typeof insertCompletedProjectSchema>;
+export type CompletedProject = typeof completedProjectsTable.$inferSelect;
+
+// Investment Objects table
+export const investmentObjectsTable = pgTable("investment_objects", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull(),
+  status: text("status").notNull(),
+  location: text("location").notNull(),
+  region: text("region").notNull(),
+  country: text("country").notNull(),
+  capacity: real("capacity"),
+  totalFunding: real("total_funding").notNull(),
+  daoFunding: real("dao_funding").notNull(),
+  estimatedIrr: real("estimated_irr").notNull(),
+  projectDuration: integer("project_duration").notNull(),
+  latitude: real("latitude").notNull(),
+  longitude: real("longitude").notNull(),
+  description: text("description").notNull(),
+  technicalPartners: text("technical_partners"),
+  investmentStage: text("investment_stage").notNull(),
+  metadata: text("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow()
+});
+
+export const insertInvestmentObjectSchema = createInsertSchema(investmentObjectsTable).pick({
+  name: true,
+  type: true,
+  status: true,
+  location: true,
+  region: true,
+  country: true,
+  capacity: true,
+  totalFunding: true,
+  daoFunding: true,
+  estimatedIrr: true,
+  projectDuration: true,
+  latitude: true,
+  longitude: true,
+  description: true,
+  technicalPartners: true,
+  investmentStage: true,
+  metadata: true
+});
+
+export type InsertInvestmentObject = z.infer<typeof insertInvestmentObjectSchema>;
+export type InvestmentObject = typeof investmentObjectsTable.$inferSelect;
