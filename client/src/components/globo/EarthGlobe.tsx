@@ -250,10 +250,18 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     const markersGroup = new THREE.Group();
     scene.add(markersGroup);
 
-    // Создание маркеров
+    // Создание маркеров для водных ресурсов
     resources.forEach((resource) => {
       const marker = createWaterDropMarker(resource);
       markersGroup.add(marker);
+    });
+
+    // Создание маркеров для завершенных проектов
+    completedProjects.forEach((project) => {
+      if (project.latitude && project.longitude) {
+        const marker = createCompletedProjectMarker(project);
+        markersGroup.add(marker);
+      }
     });
 
     // Анимация
@@ -417,7 +425,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       renderer.dispose();
       globeInstanceRef.current = null;
     };
-  }, [resources, onResourceSelect]);
+  }, [resources, completedProjects, onResourceSelect, onProjectSelect]);
 
   // Создание маркера в виде реалистичной капли воды
   const createWaterDropMarker = (resource: WaterResource) => {
@@ -533,6 +541,77 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     highlight.userData = dropGroup.userData;
 
     return dropGroup;
+  };
+
+  // Создание маркера для завершенного проекта (зеленый щит)
+  const createCompletedProjectMarker = (project: CompletedProject) => {
+    const shieldGroup = new THREE.Group();
+
+    // Основная форма щита
+    const shieldGeometry = new THREE.CylinderGeometry(2, 2.5, 0.5, 8);
+    const shieldMaterial = new THREE.MeshPhongMaterial({
+      color: 0x22c55e,
+      emissive: 0x15803d,
+      emissiveIntensity: 0.4,
+      shininess: 80,
+      transparent: true,
+      opacity: 0.9,
+      specular: 0xffffff
+    });
+
+    const shield = new THREE.Mesh(shieldGeometry, shieldMaterial);
+    shieldGroup.add(shield);
+
+    // Верхняя часть щита (корона)
+    const crownGeometry = new THREE.ConeGeometry(1.5, 1.5, 6);
+    const crown = new THREE.Mesh(crownGeometry, shieldMaterial);
+    crown.position.y = 1;
+    shieldGroup.add(crown);
+
+    // Символ галочки в центре щита
+    const checkGeometry = new THREE.BoxGeometry(0.3, 1.2, 0.2);
+    const checkMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    
+    const check1 = new THREE.Mesh(checkGeometry, checkMaterial);
+    check1.rotation.z = Math.PI / 4;
+    check1.position.set(-0.3, -0.2, 0.3);
+    shieldGroup.add(check1);
+    
+    const check2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2, 0.2), checkMaterial);
+    check2.rotation.z = -Math.PI / 4;
+    check2.position.set(0.5, 0.2, 0.3);
+    shieldGroup.add(check2);
+
+    // Позиционирование на глобусе
+    const latRad = (project.latitude! * Math.PI) / 180;
+    const lonRad = (project.longitude! * Math.PI) / 180;
+    const radius = 51.5;
+
+    const x = radius * Math.cos(latRad) * Math.cos(lonRad);
+    const y = radius * Math.sin(latRad);
+    const z = radius * Math.cos(latRad) * Math.sin(lonRad);
+
+    shieldGroup.position.set(x, y, z);
+    
+    // Ориентация к центру Земли
+    shieldGroup.lookAt(new THREE.Vector3(0, 0, 0));
+    shieldGroup.rotateX(Math.PI);
+
+    // Добавляем данные проекта
+    shieldGroup.userData = { 
+      type: 'completed_project', 
+      project,
+      projectId: project.id,
+      projectName: project.name 
+    };
+
+    // Все части щита должны реагировать на клики
+    shield.userData = shieldGroup.userData;
+    crown.userData = shieldGroup.userData;
+    check1.userData = shieldGroup.userData;
+    check2.userData = shieldGroup.userData;
+
+    return shieldGroup;
   };
 
   const closePopup = () => {

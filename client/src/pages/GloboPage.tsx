@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import EarthGlobe from '@/components/globo/EarthGlobe';
 import ResourceList from '@/components/globo/ResourceList';
-import { WaterResource, ResourceStatus, ResourceCategory } from '@/types';
+import { WaterResource, ResourceStatus, ResourceCategory, CompletedProject } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { getQueryFn } from '@/lib/queryClient';
@@ -17,6 +17,12 @@ const GloboPage: React.FC = () => {
   const { data: resources = [], isLoading, error } = useQuery({
     queryKey: ['/api/water-resources'],
     queryFn: getQueryFn<WaterResource[]>({ on401: 'throw' }),
+  });
+
+  // Загрузка завершенных проектов
+  const { data: completedProjects = [], isLoading: isLoadingProjects, error: projectsError } = useQuery({
+    queryKey: ['/api/completed-projects'],
+    queryFn: getQueryFn<CompletedProject[]>({ on401: 'throw' }),
   });
 
   // Показываем ошибку, если не удалось загрузить данные
