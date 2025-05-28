@@ -461,8 +461,8 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
 
   return (
     <div className="relative w-full flex flex-col">
-      {/* Контейнер глобуса - оптимизирован для мобильных */}
-      <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden rounded-lg bg-[#040B1B] border border-[#0d2245]">
+      {/* Контейнер глобуса на голом фоне */}
+      <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden bg-transparent">
         {/* Canvas контейнер */}
         <div 
           ref={containerRef} 
@@ -479,15 +479,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) 
           </div>
         )}
         
-        {/* Заголовок - адаптивный */}
-        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 z-30 bg-black/50 p-2 rounded-md text-xs sm:text-sm text-white/90">
-          {t('globo.earthGlobe', '3D Глобус Земли')}
-        </div>
         
-        {/* Управление - скрыто на очень маленьких экранах */}
-        <div className="hidden sm:block absolute bottom-4 right-4 z-30 bg-black/50 p-2 rounded-md text-xs text-white/70 max-w-[200px]">
-          {t('globo.globeControls', 'Вращайте, масштабируйте и нажимайте на капли')}
-        </div>
         
         {/* Легенда - адаптивная */}
         <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-30 bg-black/50 p-2 sm:p-3 rounded-md text-xs text-white/70">

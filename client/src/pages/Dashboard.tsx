@@ -199,115 +199,108 @@ const Dashboard: React.FC = () => {
           />
         </div>
 
-        {/* Глобус с панелями настроек и информации */}
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
-          {/* Основная область - глобус (4/5) */}
-          <div className="xl:col-span-4">
-            {/* Интерактивный глобус без окна */}
-            <div className="relative">
-              {isLoading ? (
-                <div className="text-center py-20">
+        {/* Глобус с боковой панелью справа */}
+        <div className="relative min-h-[600px]">
+          {/* Глобус на голом фоне */}
+          <div className="absolute inset-0">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
                   <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
                   <p>{t('dashboard.globe.loading', 'Загрузка глобуса...')}</p>
                 </div>
-              ) : error ? (
-                <div className="text-center py-20">
+              </div>
+            ) : error ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center">
                   <p className="text-red-500 mb-4">{t('dashboard.globe.error', 'Ошибка загрузки данных')}</p>
                   <Button onClick={() => window.location.reload()}>
                     Попробовать снова
                   </Button>
                 </div>
-              ) : (
-                <EarthGlobe 
-                  resources={filteredResources}
-                  onResourceSelect={handleResourceSelect}
-                />
-              )}
-            </div>
+              </div>
+            ) : (
+              <EarthGlobe 
+                resources={filteredResources}
+                onResourceSelect={handleResourceSelect}
+              />
+            )}
           </div>
 
-          {/* Правая панель - настройки и фильтры (1/5) */}
-          <div className="xl:col-span-1 space-y-4">
-            {/* Фильтры и настройки */}
-            <Card className="sticky top-4">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  {t('dashboard.filters.title', 'Фильтры')}
+          {/* Компактная боковая панель справа */}
+          <div className="absolute top-4 right-4 w-72 space-y-3 z-20">
+            {/* Компактная панель фильтров */}
+            <Card className="bg-background/80 backdrop-blur-sm border-border/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Фильтры
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3 pt-0">
                 {/* Поиск */}
                 <div className="relative">
-                  <Search className="absolute top-2.5 left-3 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute top-2 left-2 h-3 w-3 text-muted-foreground" />
                   <Input
                     placeholder="Поиск..."
-                    className="pl-9"
+                    className="pl-7 h-8 text-sm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
-                {/* Фильтр по статусу */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Статус</label>
+                {/* Фильтры в одну строку */}
+                <div className="grid grid-cols-2 gap-2">
                   <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs">
                       <SelectValue placeholder="Статус" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Все статусы</SelectItem>
-                      <SelectItem value={ResourceStatus.CRITICAL}>Критический</SelectItem>
-                      <SelectItem value={ResourceStatus.NEEDS_ATTENTION}>Требует внимания</SelectItem>
-                      <SelectItem value={ResourceStatus.STABLE}>Стабильный</SelectItem>
-                      <SelectItem value={ResourceStatus.EXCELLENT}>Отличный</SelectItem>
+                      <SelectItem value="all">Все</SelectItem>
+                      <SelectItem value={ResourceStatus.CRITICAL}>Критич.</SelectItem>
+                      <SelectItem value={ResourceStatus.NEEDS_ATTENTION}>Внимание</SelectItem>
+                      <SelectItem value={ResourceStatus.STABLE}>Стабильн.</SelectItem>
+                      <SelectItem value={ResourceStatus.EXCELLENT}>Отличн.</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
 
-                {/* Фильтр по категории */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Категория</label>
                   <Select value={filterCategory} onValueChange={setFilterCategory}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-8 text-xs">
                       <SelectValue placeholder="Категория" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Все категории</SelectItem>
-                      <SelectItem value={ResourceCategory.INVESTMENT}>Инвестиционные</SelectItem>
+                      <SelectItem value="all">Все</SelectItem>
+                      <SelectItem value={ResourceCategory.INVESTMENT}>Инвест.</SelectItem>
                       <SelectItem value={ResourceCategory.PATH}>Путевые</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                {/* Статистика по фильтрам */}
-                <div className="pt-4 border-t">
-                  <h4 className="text-sm font-medium mb-2">Найдено</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Всего:</span>
-                      <span className="font-medium">{filteredResources.length}</span>
+                {/* Компактная статистика */}
+                <div className="grid grid-cols-3 gap-1 text-xs">
+                  <div className="text-center">
+                    <div className="font-medium">{filteredResources.length}</div>
+                    <div className="text-muted-foreground">Всего</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-medium text-red-500">
+                      {filteredResources.filter(r => r.status === ResourceStatus.CRITICAL).length}
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Критич.:</span>
-                      <span className="font-medium text-red-500">
-                        {filteredResources.filter(r => r.status === ResourceStatus.CRITICAL).length}
-                      </span>
+                    <div className="text-muted-foreground">Критич.</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-medium text-blue-500">
+                      {filteredResources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Инвест.:</span>
-                      <span className="font-medium text-blue-500">
-                        {filteredResources.filter(r => r.category === ResourceCategory.INVESTMENT).length}
-                      </span>
-                    </div>
+                    <div className="text-muted-foreground">Инвест.</div>
                   </div>
                 </div>
 
-                {/* Кнопка сброса фильтров */}
+                {/* Кнопка сброса */}
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="w-full"
+                  className="w-full h-7 text-xs"
                   onClick={() => {
                     setSearchTerm('');
                     setFilterStatus('all');
@@ -315,22 +308,11 @@ const Dashboard: React.FC = () => {
                     setSelectedResource(null);
                   }}
                 >
-                  <Filter className="h-4 w-4 mr-2" />
+                  <Filter className="h-3 w-3 mr-1" />
                   Сброс
                 </Button>
               </CardContent>
             </Card>
-
-            {/* Список объектов */}
-            <div className="max-h-[400px] overflow-y-auto">
-              <ObjectsList 
-                resources={resources}
-                searchTerm={searchTerm}
-                filterStatus={filterStatus}
-                filterCategory={filterCategory}
-                onResourceSelect={handleResourceSelect}
-              />
-            </div>
           </div>
         </div>
 
