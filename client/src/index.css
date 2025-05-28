@@ -96,9 +96,8 @@
   }
 
   body {
-    @apply font-sans antialiased bg-background text-foreground;0 140L60 200'/%3E%3C/svg%3E");
-    background-size: 120px 200px;
-    background-attachment: fixed;
+    @apply font-sans antialiased bg-background text-foreground;
+    background-color: #000b1e;
   }
 }
 
