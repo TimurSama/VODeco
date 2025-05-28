@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import EarthGlobe from '@/components/globo/EarthGlobe';
-import ResourceList from '@/components/globo/ResourceList';
+import EnhancedResourceList from '@/components/globo/EnhancedResourceList';
 import { WaterResource, ResourceStatus, ResourceCategory, CompletedProject } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -86,15 +86,31 @@ const GloboPage: React.FC = () => {
               <div className="lg:w-2/3">
                 <EarthGlobe 
                   resources={resources}
-                  onResourceSelect={handleResourceSelect} 
+                  completedProjects={completedProjects}
+                  onResourceSelect={handleResourceSelect}
+                  onProjectSelect={(project) => {
+                    console.log("Completed project selected:", project);
+                    toast({
+                      title: project.name,
+                      description: `${project.location}, ${project.country} (${project.completion_date})`,
+                    });
+                  }}
                 />
               </div>
               
               {/* Resource Information Panel */}
               <div className="lg:w-1/3">
-                <ResourceList 
-                  resources={resources} 
+                <EnhancedResourceList 
+                  resources={resources}
+                  completedProjects={completedProjects}
                   onResourceSelect={handleResourceSelect}
+                  onProjectSelect={(project) => {
+                    console.log("Project selected from list:", project);
+                    toast({
+                      title: project.name,
+                      description: `${project.type} - ${project.location}, ${project.country}`,
+                    });
+                  }}
                   selectedResource={selectedResource} 
                 />
               </div>
