@@ -3,15 +3,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // @ts-ignore
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { WaterResource, ResourceStatus, ResourceCategory } from '@/types';
+import { WaterResource, ResourceStatus, ResourceCategory, CompletedProject } from '@/types';
 import { useTranslation } from 'react-i18next';
 
 interface EarthGlobeProps {
   resources: WaterResource[];
+  completedProjects?: CompletedProject[];
   onResourceSelect: (resource: WaterResource) => void;
+  onProjectSelect?: (project: CompletedProject) => void;
 }
 
-const EarthGlobe: React.FC<EarthGlobeProps> = ({ resources, onResourceSelect }) => {
+const EarthGlobe: React.FC<EarthGlobeProps> = ({ 
+  resources, 
+  completedProjects = [], 
+  onResourceSelect, 
+  onProjectSelect 
+}) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
