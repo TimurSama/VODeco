@@ -465,7 +465,12 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     // Хвостик капли
     const tailGeometry = new THREE.ConeGeometry(0.8, 2.5, 12);
 
-    // Цвет по статусу
+    // Для завершенных проектов используем шестеренку
+    if (resource.category === ResourceCategory.COMPLETED || resource.status === ResourceStatus.COMPLETED) {
+      return createCompletedGearMarker(resource);
+    }
+
+    // Цвет по статусу для обычных ресурсов
     let color = 0x3b82f6;
     let emissiveColor = 0x1e40af;
 

@@ -82,7 +82,8 @@ export enum ResourceStatus {
   CRITICAL = 'Critical',
   NEEDS_ATTENTION = 'Needs Attention',
   STABLE = 'Stable',
-  EXCELLENT = 'Excellent'
+  EXCELLENT = 'Excellent',
+  COMPLETED = 'completed'
 }
 
 export enum ResourceCategory {
