@@ -32,8 +32,14 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     animationId: number;
   } | null>(null);
 
-  console.log("EarthGlobe rendered with", resources.length, "resources");
-  console.log("EarthGlobe rendered with", completedProjects.length, "completed projects");
+  // Фильтруем активные ресурсы и завершенные проекты из общего списка
+  const activeResources = resources.filter(resource => resource.category !== 'COMPLETED');
+  const completedResourcesFromList = resources.filter(resource => resource.category === 'COMPLETED');
+
+  console.log("EarthGlobe rendered with", resources.length, "total resources");
+  console.log("EarthGlobe - Active resources:", activeResources.length);
+  console.log("EarthGlobe - Completed projects from resources:", completedResourcesFromList.length);
+  console.log("EarthGlobe - Completed projects from props:", completedProjects.length);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -250,22 +256,47 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     const markersGroup = new THREE.Group();
     scene.add(markersGroup);
 
-    // Создание маркеров для водных ресурсов
-    resources.forEach((resource) => {
+    // Создание маркеров для активных водных ресурсов (синие капли)
+    console.log("Creating markers for", activeResources.length, "active resources");
+    activeResources.forEach((resource) => {
       const marker = createWaterDropMarker(resource);
       markersGroup.add(marker);
     });
 
-    // Создание маркеров для завершенных проектов
-    console.log("Creating markers for", completedProjects.length, "completed projects");
-    completedProjects.forEach((project, index) => {
-      console.log(`Project ${index + 1}:`, project.name, "at", project.latitude, project.longitude);
+    // Создание маркеров для завершенных проектов (зеленые шестеренки)
+    console.log("Creating markers for", completedResourcesFromList.length, "completed projects from resources");
+    completedResourcesFromList.forEach((project, index) => {
+      console.log(`Completed project ${index + 1}:`, project.name, "at", project.latitude, project.longitude);
       if (project.latitude && project.longitude) {
-        const marker = createCompletedProjectMarker(project);
+        // Преобразуем WaterResource в CompletedProject формат
+        const completedProject = {
+          id: project.id,
+          name: project.name,
+          location: project.region,
+          country: project.country,
+          latitude: project.latitude,
+          longitude: project.longitude,
+          completionDate: new Date().toISOString(),
+          description: project.description || ''
+        };
+        const marker = createCompletedProjectMarker(completedProject);
         markersGroup.add(marker);
         console.log("Added completed project marker for:", project.name);
       } else {
-        console.log("Missing coordinates for project:", project.name);
+        console.log("Missing coordinates for completed project:", project.name);
+      }
+    });
+
+    // Создание маркеров для завершенных проектов из отдельного API (если есть)
+    console.log("Creating markers for", completedProjects.length, "completed projects from separate API");
+    completedProjects.forEach((project, index) => {
+      console.log(`API Project ${index + 1}:`, project.name, "at", project.latitude, project.longitude);
+      if (project.latitude && project.longitude) {
+        const marker = createCompletedProjectMarker(project);
+        markersGroup.add(marker);
+        console.log("Added API completed project marker for:", project.name);
+      } else {
+        console.log("Missing coordinates for API project:", project.name);
       }
     });
 
