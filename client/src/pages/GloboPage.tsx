@@ -83,12 +83,12 @@ const GloboPage: React.FC = () => {
           {t('globo.title', 'Глобальные водные ресурсы')}
         </h2>
 
-        {isLoading ? (
+        {(isLoadingResources || isLoadingProjects) ? (
           <div className="text-center py-20">
             <p className="text-xl mb-4">{t('globo.loading', 'Загрузка данных ресурсов...')}</p>
             <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
           </div>
-        ) : error ? (
+        ) : (resourcesError || projectsError) ? (
           <div className="text-center py-20">
             <p className="text-xl mb-4 text-red-500">{t('globo.errorLoading', 'Ошибка загрузки ресурсов')}</p>
             <Button onClick={() => window.location.reload()}>
