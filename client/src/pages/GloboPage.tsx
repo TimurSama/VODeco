@@ -13,18 +13,6 @@ const GloboPage: React.FC = () => {
   const [selectedResource, setSelectedResource] = useState<WaterResource | undefined>();
   const { toast } = useToast();
 
-  const { data: waterResources = [], isLoading, error } = useQuery({
-    queryKey: ['water-resources'],
-    queryFn: getQueryFn<WaterResource[]>('/api/water-resources'),
-    staleTime: 5 * 60 * 1000
-  });
-
-  const { data: completedProjects = [] } = useQuery({
-    queryKey: ['completed-projects'],
-    queryFn: getQueryFn<CompletedProject[]>('/api/completed-projects'),
-    staleTime: 5 * 60 * 1000
-  });
-
   // Загрузка данных с помощью React Query
   const { data: resources = [], isLoading: isLoadingResources, error: resourcesError } = useQuery({
     queryKey: ['/api/water-resources'],
@@ -32,22 +20,30 @@ const GloboPage: React.FC = () => {
   });
 
   // Загрузка завершенных проектов
-  const { data: completedProjectsData = [], isLoading: isLoadingProjects, error: projectsError } = useQuery({
+  const { data: completedProjects = [], isLoading: isLoadingProjects, error: projectsError } = useQuery({
     queryKey: ['/api/completed-projects'],
     queryFn: getQueryFn<CompletedProject[]>({ on401: 'throw' }),
   });
 
   // Показываем ошибку, если не удалось загрузить данные
   useEffect(() => {
-    if (error) {
-      console.error("Error loading water resources:", error);
+    if (resourcesError) {
+      console.error("Error loading water resources:", resourcesError);
       toast({
         title: t('globo.errorTitle', 'Ошибка загрузки ресурсов'),
         description: t('globo.errorDescription', 'Не удалось загрузить данные о водных ресурсах.'),
         variant: 'destructive'
       });
     }
-  }, [error, toast]);
+    if (projectsError) {
+      console.error("Error loading completed projects:", projectsError);
+      toast({
+        title: t('globo.projectsErrorTitle', 'Ошибка загрузки проектов'),
+        description: t('globo.projectsErrorDescription', 'Не удалось загрузить данные о завершенных проектах.'),
+        variant: 'destructive'
+      });
+    }
+  }, [resourcesError, projectsError, toast, t]);
 
   useEffect(() => {
     if (resources && resources.length > 0) {

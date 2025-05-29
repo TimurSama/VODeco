@@ -437,7 +437,6 @@ export const completedProjectsTable = pgTable("completed_projects", {
   metadata: text("metadata"),
   created_at: timestamp("created_at").defaultNow(),
   updated_at: timestamp("updated_at").defaultNow()
-});mp("updated_at").defaultNow()
 });
 
 export const insertCompletedProjectSchema = createInsertSchema(completedProjectsTable).pick({
