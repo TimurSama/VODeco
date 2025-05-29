@@ -16,13 +16,13 @@ const GloboPage: React.FC = () => {
   // Загрузка данных с помощью React Query
   const { data: resources = [], isLoading: isLoadingResources, error: resourcesError } = useQuery({
     queryKey: ['/api/water-resources'],
-    queryFn: getQueryFn<WaterResource[]>({ on401: 'throw' }),
+    queryFn: getQueryFn<WaterResource[]>({ on401: 'returnNull' }),
   });
 
   // Загрузка завершенных проектов
   const { data: completedProjects = [], isLoading: isLoadingProjects, error: projectsError } = useQuery({
     queryKey: ['/api/completed-projects'],
-    queryFn: getQueryFn<CompletedProject[]>({ on401: 'throw' }),
+    queryFn: getQueryFn<CompletedProject[]>({ on401: 'returnNull' }),
   });
 
   // Показываем ошибку, если не удалось загрузить данные
