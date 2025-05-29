@@ -272,11 +272,14 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         const completedProject = {
           id: project.id,
           name: project.name,
+          type: project.projectType || 'Water Infrastructure',
+          status: 'completed',
           location: project.region,
+          region: project.region,
           country: project.country,
           latitude: project.latitude,
           longitude: project.longitude,
-          completionDate: new Date().toISOString(),
+          completion_date: new Date().toISOString(),
           description: project.description || ''
         };
         const marker = createCompletedProjectMarker(completedProject);
@@ -630,14 +633,14 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     check2.position.set(0.5, 0.2, 0.3);
     shieldGroup.add(check2);
 
-    // Позиционирование на глобусе
-    const latRad = (project.latitude! * Math.PI) / 180;
-    const lonRad = (project.longitude! * Math.PI) / 180;
-    const radius = 51.5;
+    // Позиционирование на глобусе (используем тот же радиус что и для синих капель)
+    const phi = (90 - project.latitude!) * (Math.PI / 180);
+    const theta = (project.longitude! + 180) * (Math.PI / 180);
+    const radius = 85; // Тот же радиус что и у синих капель
 
-    const x = radius * Math.cos(latRad) * Math.cos(lonRad);
-    const y = radius * Math.sin(latRad);
-    const z = radius * Math.cos(latRad) * Math.sin(lonRad);
+    const x = -radius * Math.sin(phi) * Math.cos(theta);
+    const y = radius * Math.cos(phi);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
 
     shieldGroup.position.set(x, y, z);
 
