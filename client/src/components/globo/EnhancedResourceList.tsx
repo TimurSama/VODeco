@@ -18,7 +18,8 @@ import {
   Search,
   Building,
   Factory,
-  Zap
+  Zap,
+  CheckCircle
 } from 'lucide-react';
 
 interface EnhancedResourceListProps {
@@ -37,7 +38,7 @@ const EnhancedResourceList: React.FC<EnhancedResourceListProps> = ({
   selectedResource,
 }) => {
   const { t } = useTranslation();
-  
+
   // Фильтры
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -51,7 +52,7 @@ const EnhancedResourceList: React.FC<EnhancedResourceListProps> = ({
       const matchesSearch = resource.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            resource.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            resource.country.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       const matchesStatus = statusFilter === 'all' || resource.status === statusFilter;
       const matchesCategory = categoryFilter === 'all' || resource.category === categoryFilter;
       const matchesCountry = countryFilter === 'all' || resource.country === countryFilter;
@@ -66,7 +67,7 @@ const EnhancedResourceList: React.FC<EnhancedResourceListProps> = ({
       const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            project.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            project.country.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       const matchesType = typeFilter === 'all' || project.type === typeFilter;
       const matchesCountry = countryFilter === 'all' || project.country === countryFilter;
 
@@ -152,6 +153,66 @@ const EnhancedResourceList: React.FC<EnhancedResourceListProps> = ({
     }
     return num.toString();
   };
+
+  const CompletedProjectCard: React.FC<{
+    project: CompletedProject;
+    onSelect?: (project: CompletedProject) => void;
+  }> = ({ project, onSelect }) => (
+    <Card 
+      className="glassmorphism border-primary/30 hover:border-primary/50 cursor-pointer transition-all duration-200 hover:shadow-lg"
+      onClick={() => onSelect?.(project)}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex-1">
+            <h4 className="font-medium text-white mb-1 line-clamp-2">{project.name}</h4>
+            <p className="text-sm text-white/70 mb-2">
+              {project.location}, {project.country}
+            </p>
+          </div>
+          <Badge 
+            variant="secondary" 
+            className="bg-blue-500/20 text-blue-400 border-blue-500/30 ml-2"
+          >
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Завершен
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          {project.total_investment && (
+            <div>
+              <span className="text-white/50">Инвестиции:</span>
+              <span className="text-white ml-1">
+                ${(project.total_investment / 1000000).toFixed(1)}M
+              </span>
+            </div>
+          )}
+          {project.beneficiaries && (
+            <div>
+              <span className="text-white/50">Пользователи:</span>
+              <span className="text-white ml-1">
+                {project.beneficiaries > 1000000 
+                  ? `${(project.beneficiaries / 1000000).toFixed(1)}M`
+                  : `${(project.beneficiaries / 1000).toFixed(0)}K`
+                }
+              </span>
+            </div>
+          )}
+          <div>
+            <span className="text-white/50">Год:</span>
+            <span className="text-white ml-1">
+              {new Date(project.completion_date).getFullYear()}
+            </span>
+          </div>
+          <div>
+            <span className="text-white/50">Тип:</span>
+            <span className="text-white ml-1">{project.type}</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div className="space-y-4">

@@ -12,15 +12,27 @@ const GloboPage: React.FC = () => {
   const { t } = useTranslation();
   const [selectedResource, setSelectedResource] = useState<WaterResource | undefined>();
   const { toast } = useToast();
-  
+
+  const { data: waterResources = [], isLoading, error } = useQuery({
+    queryKey: ['water-resources'],
+    queryFn: getQueryFn<WaterResource[]>('/api/water-resources'),
+    staleTime: 5 * 60 * 1000
+  });
+
+  const { data: completedProjects = [] } = useQuery({
+    queryKey: ['completed-projects'],
+    queryFn: getQueryFn<CompletedProject[]>('/api/completed-projects'),
+    staleTime: 5 * 60 * 1000
+  });
+
   // Загрузка данных с помощью React Query
-  const { data: resources = [], isLoading, error } = useQuery({
+  const { data: resources = [], isLoading: isLoadingResources, error: resourcesError } = useQuery({
     queryKey: ['/api/water-resources'],
     queryFn: getQueryFn<WaterResource[]>({ on401: 'throw' }),
   });
 
   // Загрузка завершенных проектов
-  const { data: completedProjects = [], isLoading: isLoadingProjects, error: projectsError } = useQuery({
+  const { data: completedProjectsData = [], isLoading: isLoadingProjects, error: projectsError } = useQuery({
     queryKey: ['/api/completed-projects'],
     queryFn: getQueryFn<CompletedProject[]>({ on401: 'throw' }),
   });
@@ -41,7 +53,7 @@ const GloboPage: React.FC = () => {
     if (resources && resources.length > 0) {
       console.log("Resources loaded:", resources.length);
       console.log("Sample resource:", resources[0]);
-      
+
       // Проверяем распределение категорий
       const investmentCount = resources.filter(r => r.category === ResourceCategory.INVESTMENT).length;
       const pathCount = resources.filter(r => r.category === ResourceCategory.PATH).length;
@@ -60,13 +72,21 @@ const GloboPage: React.FC = () => {
     });
   };
 
+  const handleProjectSelect = (project: CompletedProject) => {
+    console.log('Selected completed project:', project);
+    toast({
+      title: 'Завершенный проект',
+      description: `${project.name} в ${project.location}, ${project.country}`
+    });
+  };
+
   return (
     <section id="globo" className="py-8 px-4">
       <div className="container mx-auto">
         <h2 className="text-2xl mb-6 flex items-center text-primary">
           {t('globo.title', 'Глобальные водные ресурсы')}
         </h2>
-        
+
         {isLoading ? (
           <div className="text-center py-20">
             <p className="text-xl mb-4">{t('globo.loading', 'Загрузка данных ресурсов...')}</p>
@@ -88,30 +108,17 @@ const GloboPage: React.FC = () => {
                   resources={resources}
                   completedProjects={completedProjects}
                   onResourceSelect={handleResourceSelect}
-                  onProjectSelect={(project) => {
-                    console.log("Completed project selected:", project);
-                    toast({
-                      title: project.name,
-                      description: `${project.location}, ${project.country} (${project.completion_date})`,
-                    });
-                  }}
+                  onProjectSelect={handleProjectSelect}
                 />
               </div>
-              
-              {/* Resource Information Panel */}
+
+              {/* Resource List */}
               <div className="lg:w-1/3">
                 <EnhancedResourceList 
                   resources={resources}
                   completedProjects={completedProjects}
                   onResourceSelect={handleResourceSelect}
-                  onProjectSelect={(project) => {
-                    console.log("Project selected from list:", project);
-                    toast({
-                      title: project.name,
-                      description: `${project.type} - ${project.location}, ${project.country}`,
-                    });
-                  }}
-                  selectedResource={selectedResource} 
+                  onProjectSelect={handleProjectSelect}
                 />
               </div>
             </div>

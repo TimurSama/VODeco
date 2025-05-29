@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 // @ts-ignore
@@ -52,7 +51,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
 
     // Создание камеры
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    
+
     if (width < 768) {
       camera.position.set(0, 20, 180);
       camera.lookAt(0, 0, 0);
@@ -90,9 +89,9 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
 
     // Создание глобуса
     const globeGeometry = new THREE.SphereGeometry(80, 128, 128);
-    
+
     const textureLoader = new THREE.TextureLoader();
-    
+
     const earthDayTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-blue-marble.jpg',
       (texture) => {
@@ -107,7 +106,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         setIsLoading(false);
       }
     );
-    
+
     const earthNightTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-night.jpg',
       (texture) => {
@@ -116,7 +115,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         texture.wrapT = THREE.ClampToEdgeWrapping;
       }
     );
-    
+
     const earthBumpTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-topology.png',
       (texture) => {
@@ -125,7 +124,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         texture.wrapT = THREE.ClampToEdgeWrapping;
       }
     );
-    
+
     const earthCloudsTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-clouds.png',
       (texture) => {
@@ -134,7 +133,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         texture.wrapT = THREE.ClampToEdgeWrapping;
       }
     );
-    
+
     const earthSpecularTexture = textureLoader.load(
       'https://unpkg.com/three-globe@2/example/img/earth-water.png',
       (texture) => {
@@ -143,7 +142,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         texture.wrapT = THREE.ClampToEdgeWrapping;
       }
     );
-    
+
     const globeMaterial = new THREE.MeshPhongMaterial({
       map: earthDayTexture,
       bumpMap: earthBumpTexture,
@@ -154,7 +153,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       transparent: false,
       opacity: 1.0
     });
-    
+
     let currentDistance = 200;
     let isMapMode = false;
 
@@ -170,7 +169,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       side: THREE.DoubleSide,
       depthWrite: false
     });
-    
+
     const cloudsMesh = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
     scene.add(cloudsMesh);
 
@@ -267,43 +266,43 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     // Анимация
     const animate = () => {
       const animationId = requestAnimationFrame(animate);
-      
+
       controls.update();
-      
+
       const distance = camera.position.distanceTo(globeMesh.position);
-      
+
       if (distance < 150 && !isMapMode) {
         isMapMode = true;
         console.log('Switching to map mode');
-        
+
         globeMaterial.map = earthNightTexture;
         globeMaterial.emissive = new THREE.Color(0x222222);
         globeMaterial.emissiveIntensity = 0.3;
-        
+
         cloudsMaterial.opacity = 0.6;
-        
+
         atmosphereMaterial.color.setHex(0x4a90e2);
         atmosphereMaterial.emissive.setHex(0x4a90e2);
         atmosphereMaterial.opacity = 0.25;
-        
+
       } else if (distance > 180 && isMapMode) {
         isMapMode = false;
         console.log('Switching to globe mode');
-        
+
         globeMaterial.map = earthDayTexture;
         globeMaterial.emissive = new THREE.Color(0x000000);
         globeMaterial.emissiveIntensity = 0;
-        
+
         cloudsMaterial.opacity = 0.4;
-        
+
         atmosphereMaterial.color.setHex(0x87ceeb);
         atmosphereMaterial.emissive.setHex(0x87ceeb);
         atmosphereMaterial.opacity = 0.15;
       }
-      
+
       const time = Date.now() * 0.0001;
       cloudsMesh.rotation.y = time * 0.5;
-      
+
       const pulseTime = Date.now() * 0.001;
       markersGroup.children.forEach((marker, index) => {
         const scale = 1 + Math.sin(pulseTime * 2 + index) * 0.2;
@@ -315,7 +314,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       atmosphereMaterial.needsUpdate = true;
 
       renderer.render(scene, camera);
-      
+
       if (globeInstanceRef.current) {
         globeInstanceRef.current.animationId = animationId;
       }
@@ -337,7 +336,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       if (intersects.length > 0) {
         const marker = intersects[0].object;
         const resourceId = marker.userData?.resourceId;
-        
+
         if (resourceId) {
           const resource = resources.find(r => r.id === resourceId);
           if (resource) {
@@ -346,6 +345,13 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
             setShowPopup(true);
             onResourceSelect(resource);
           }
+        }
+
+        if (marker.userData?.projectId) {
+          const project = completedProjects.find(p => p.id === marker.userData.projectId);
+            if (project && onProjectSelect) {
+              onProjectSelect(project);
+            }
         }
       }
     };
@@ -380,17 +386,17 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     // Очистка
     return () => {
       console.log("Cleaning up Earth Globe");
-      
+
       if (globeInstanceRef.current) {
         cancelAnimationFrame(globeInstanceRef.current.animationId);
       }
-      
+
       window.removeEventListener('resize', handleResize);
       container.removeEventListener('click', handleClick);
       container.removeEventListener('mouseenter', handleMouseEnter);
       container.removeEventListener('mouseleave', handleMouseLeave);
       container.removeEventListener('wheel', handleWheel);
-      
+
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -415,7 +421,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
           }
         }
       });
-      
+
       earthDayTexture.dispose();
       earthNightTexture.dispose();
       earthBumpTexture.dispose();
@@ -433,10 +439,10 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
 
     // Создание формы капли воды
     const dropShape = new THREE.Shape();
-    
+
     // Основная округлая часть капли
     dropShape.absarc(0, 0, 1.5, 0, Math.PI * 2, false);
-    
+
     // Хвостик капли (заостренная часть снизу)
     const extrudeSettings = {
       depth: 0.2,
@@ -449,14 +455,14 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
 
     // Основная часть капли
     const mainDropGeometry = new THREE.SphereGeometry(1.8, 16, 16);
-    
+
     // Хвостик капли
     const tailGeometry = new THREE.ConeGeometry(0.8, 2.5, 12);
-    
+
     // Цвет по статусу
     let color = 0x3b82f6;
     let emissiveColor = 0x1e40af;
-    
+
     if (resource.status === ResourceStatus.CRITICAL) {
       color = 0xef4444;
       emissiveColor = 0xdc2626;
@@ -500,7 +506,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       transparent: true,
       opacity: 0.4
     });
-    
+
     const highlight = new THREE.Mesh(highlightGeometry, highlightMaterial);
     highlight.position.set(0.5, 1, 0.5);
     dropGroup.add(highlight);
@@ -526,7 +532,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     } else if (resource.category === ResourceCategory.INVESTMENT) {
       scale = 1.1;
     }
-    
+
     dropGroup.scale.setScalar(scale);
 
     // Данные для кликов
@@ -571,12 +577,12 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     // Символ галочки в центре щита
     const checkGeometry = new THREE.BoxGeometry(0.3, 1.2, 0.2);
     const checkMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    
+
     const check1 = new THREE.Mesh(checkGeometry, checkMaterial);
     check1.rotation.z = Math.PI / 4;
     check1.position.set(-0.3, -0.2, 0.3);
     shieldGroup.add(check1);
-    
+
     const check2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 2, 0.2), checkMaterial);
     check2.rotation.z = -Math.PI / 4;
     check2.position.set(0.5, 0.2, 0.3);
@@ -592,7 +598,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     const z = radius * Math.cos(latRad) * Math.sin(lonRad);
 
     shieldGroup.position.set(x, y, z);
-    
+
     // Ориентация к центру Земли
     shieldGroup.lookAt(new THREE.Vector3(0, 0, 0));
     shieldGroup.rotateX(Math.PI);
@@ -627,7 +633,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
           ref={containerRef} 
           className="w-full h-full"
         />
-        
+
         {/* Индикатор загрузки */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center z-50">
@@ -637,7 +643,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
             </div>
           </div>
         )}
-        
+
         {/* Легенда */}
         <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-30 bg-black/50 p-2 sm:p-3 rounded-md text-xs text-white/70">
           <div className="space-y-1">
@@ -672,7 +678,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
             >
               ×
             </button>
-            
+
             {/* Заголовок */}
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-white mb-2">{selectedResource.name}</h2>
@@ -693,7 +699,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
                 )}
               </div>
             </div>
-            
+
             {/* Основная информация */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-4">
@@ -704,7 +710,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
                     {selectedResource.latitude.toFixed(4)}°, {selectedResource.longitude.toFixed(4)}°
                   </p>
                 </div>
-                
+
                 <div>
                   <h3 className="text-white/70 text-sm mb-1">{t('globo.qualityIndex', 'Индекс качества')}</h3>
                   <div className="flex items-center gap-2">
@@ -721,13 +727,13 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
                     <span className="text-white font-medium">{selectedResource.qualityIndex}%</span>
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-white/70 text-sm mb-1">{t('globo.flowRate', 'Расход воды')}</h3>
                   <p className="text-white text-lg">{selectedResource.flowRate} м³/с</p>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 {selectedResource.category === ResourceCategory.INVESTMENT && (
                   <>
@@ -735,12 +741,12 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
                       <h3 className="text-white/70 text-sm mb-1">{t('globo.totalFunding', 'Общее финансирование')}</h3>
                       <p className="text-white text-lg font-semibold">${selectedResource.totalFunding?.toLocaleString()}</p>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-white/70 text-sm mb-1">{t('globo.irr', 'Внутренняя норма доходности')}</h3>
                       <p className="text-green-400 text-lg font-semibold">{selectedResource.irr}%</p>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-white/70 text-sm mb-1">Доступно для стейкинга</h3>
                       <p className="text-cyan-400 text-lg font-semibold">
@@ -749,36 +755,36 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
                     </div>
                   </>
                 )}
-                
+
                 <div>
                   <h3 className="text-white/70 text-sm mb-1">Последнее обновление</h3>
                   <p className="text-white/80">{new Date().toLocaleDateString('ru-RU')}</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Описание */}
             <div className="mb-6">
               <h3 className="text-white/70 text-sm mb-2">{t('globo.description', 'Описание')}</h3>
               <p className="text-white/90 leading-relaxed">{selectedResource.description}</p>
             </div>
-            
+
             {/* Интерактивные кнопки */}
             <div className="flex flex-wrap gap-3">
               <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
                 {t('globo.viewDetails', 'Подробнее')}
               </button>
-              
+
               {selectedResource.category === ResourceCategory.INVESTMENT && (
                 <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors">
                   {t('globo.staking', 'Стейкинг')}
                 </button>
               )}
-              
+
               <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
                 {t('globo.monitoring', 'Мониторинг')}
               </button>
-              
+
               <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
                 {t('globo.analytics', 'Аналитика')}
               </button>

@@ -144,8 +144,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = await pool.query(`
         SELECT id, name, type, status, location, region, country, 
                completion_date, capacity, total_investment, beneficiaries, 
-               latitude, longitude, description
+               latitude, longitude, description, impact_description,
+               environmental_impact, technical_specifications, sdg_alignment
         FROM completed_projects
+        ORDER BY completion_date DESC
       `);
       return res.json(result.rows);
     } catch (error) {
