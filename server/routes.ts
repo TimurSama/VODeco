@@ -128,8 +128,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all water resources
   app.get("/api/water-resources", async (_req, res) => {
     try {
-      const resources = await storage.getAllWaterResources();
-      return res.json(resources);
+      const result = await pool.query(`
+        SELECT 
+          id, name, region, country, status, 
+          quality_index as "qualityIndex",
+          flow_rate as "flowRate",
+          is_active as "isActive",
+          latitude, longitude, description,
+          image_url as "imageUrl",
+          total_funding as "totalFunding",
+          available_for_dao as "availableForDAO",
+          funding_progress as "fundingProgress",
+          irr, participants_count as "participantsCount",
+          project_type as "projectType",
+          investment_status as "investmentStatus",
+          category
+        FROM water_resources
+        ORDER BY id
+      `);
+      return res.json(result.rows);
     } catch (error) {
       console.error("Error getting water resources:", error);
       return res.status(500).json({ message: "Internal server error" });
