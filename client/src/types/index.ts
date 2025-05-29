@@ -100,14 +100,26 @@ export interface CompletedProject {
   location: string;
   region: string;
   country: string;
-  completion_date: string;
+  completion_date?: string;
   capacity?: number;
   total_investment?: number;
+  totalFunding?: number; // для обратной совместимости
+  dao_funding?: number;
+  estimated_irr?: number;
+  project_duration?: number;
   beneficiaries?: number;
-  latitude?: number;
-  longitude?: number;
-  description?: string;
+  latitude: number;
+  longitude: number;
+  description: string;
+  impact_description?: string;
+  environmental_impact?: string;
+  technical_specifications?: string;
+  sdg_alignment?: string;
+  technical_partners?: string;
+  investment_stage?: string;
+  metadata?: string;
   created_at?: string;
+  updated_at?: string;
 }
 
 // Project Types

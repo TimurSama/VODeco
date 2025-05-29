@@ -413,23 +413,31 @@ export const completedProjectsTable = pgTable("completed_projects", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   type: text("type").notNull(),
-  status: text("status").notNull(),
+  status: text("status").default("completed"),
   location: text("location").notNull(),
   region: text("region").notNull(),
   country: text("country").notNull(),
+  completion_date: text("completion_date"),
   capacity: real("capacity"),
-  totalFunding: real("total_funding").notNull(),
-  daoFunding: real("dao_funding").notNull(),
-  estimatedIrr: real("estimated_irr").notNull(),
-  projectDuration: integer("project_duration").notNull(),
-  latitude: real("latitude").notNull(),
-  longitude: real("longitude").notNull(),
-  description: text("description").notNull(),
-  technicalPartners: text("technical_partners"),
-  investmentStage: text("investment_stage").notNull(),
+  total_investment: real("total_investment"),
+  total_funding: real("total_funding"), // для обратной совместимости
+  dao_funding: real("dao_funding"),
+  estimated_irr: real("estimated_irr"),
+  project_duration: integer("project_duration"),
+  beneficiaries: integer("beneficiaries"),
+  latitude: real("latitude"),
+  longitude: real("longitude"),
+  description: text("description"),
+  impact_description: text("impact_description"),
+  environmental_impact: text("environmental_impact"),
+  technical_specifications: text("technical_specifications"),
+  sdg_alignment: text("sdg_alignment"),
+  technical_partners: text("technical_partners"),
+  investment_stage: text("investment_stage"),
   metadata: text("metadata"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow()
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow()
+});mp("updated_at").defaultNow()
 });
 
 export const insertCompletedProjectSchema = createInsertSchema(completedProjectsTable).pick({
