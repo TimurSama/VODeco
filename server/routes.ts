@@ -141,8 +141,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all completed projects
   app.get("/api/completed-projects", async (_req, res) => {
     try {
-      const projects = await db.select().from(completedProjectsTable);
-      return res.json(projects);
+      const result = await db.execute(sql`
+        SELECT id, name, type, status, location, region, country, 
+               completion_date, capacity, total_investment, beneficiaries, 
+               latitude, longitude, description
+        FROM completed_projects
+      `);
+      return res.json(result);
     } catch (error) {
       console.error("Error getting completed projects:", error);
       return res.status(500).json({ message: "Internal server error" });
@@ -157,12 +162,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid project ID" });
       }
 
-      const [project] = await db.select().from(completedProjectsTable).where(eq(completedProjectsTable.id, id));
-      if (!project) {
+      const result = await db.execute(sql`
+        SELECT id, name, type, status, location, region, country, 
+               completion_date, capacity, total_investment, beneficiaries, 
+               latitude, longitude, description
+        FROM completed_projects 
+        WHERE id = ${id}
+      `);
+      
+      if (result.length === 0) {
         return res.status(404).json({ message: "Completed project not found" });
       }
 
-      return res.json(project);
+      return res.json(result[0]);
     } catch (error) {
       console.error("Error getting completed project:", error);
       return res.status(500).json({ message: "Internal server error" });
