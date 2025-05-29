@@ -631,6 +631,72 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     return shieldGroup;
   };
 
+  // Создание маркера в виде зеленой шестеренки для завершенных проектов
+  const createCompletedGearMarker = (resource: WaterResource) => {
+    const gearGroup = new THREE.Group();
+
+    // Основная шестеренка
+    const gearGeometry = new THREE.CylinderGeometry(2, 2, 0.4, 8);
+    const gearMaterial = new THREE.MeshPhongMaterial({
+      color: 0x22c55e,
+      emissive: 0x15803d,
+      emissiveIntensity: 0.4,
+      shininess: 80,
+      transparent: true,
+      opacity: 0.9,
+      specular: 0xffffff
+    });
+
+    const mainGear = new THREE.Mesh(gearGeometry, gearMaterial);
+    gearGroup.add(mainGear);
+
+    // Зубья шестеренки
+    for (let i = 0; i < 8; i++) {
+      const toothGeometry = new THREE.BoxGeometry(0.4, 0.6, 0.6);
+      const tooth = new THREE.Mesh(toothGeometry, gearMaterial);
+      
+      const angle = (i / 8) * Math.PI * 2;
+      tooth.position.x = Math.cos(angle) * 2.2;
+      tooth.position.z = Math.sin(angle) * 2.2;
+      
+      gearGroup.add(tooth);
+    }
+
+    // Центральная часть
+    const centerGeometry = new THREE.CylinderGeometry(0.8, 0.8, 0.6, 16);
+    const center = new THREE.Mesh(centerGeometry, gearMaterial);
+    gearGroup.add(center);
+
+    // Позиционирование на глобусе
+    const latRad = (resource.latitude * Math.PI) / 180;
+    const lonRad = (resource.longitude * Math.PI) / 180;
+    const radius = 51.5;
+
+    const x = radius * Math.cos(latRad) * Math.cos(lonRad);
+    const y = radius * Math.sin(latRad);
+    const z = radius * Math.cos(latRad) * Math.sin(lonRad);
+
+    gearGroup.position.set(x, y, z);
+
+    // Ориентация к центру Земли
+    gearGroup.lookAt(new THREE.Vector3(0, 0, 0));
+    gearGroup.rotateX(Math.PI);
+
+    // Данные ресурса
+    gearGroup.userData = { 
+      type: 'completed_resource', 
+      resource,
+      resourceId: resource.id,
+      resourceName: resource.name
+    };
+
+    // Все части шестеренки должны реагировать на клики
+    mainGear.userData = gearGroup.userData;
+    center.userData = gearGroup.userData;
+
+    return gearGroup;
+  };
+
   const closePopup = () => {
     setShowPopup(false);
     setSelectedResource(null);
