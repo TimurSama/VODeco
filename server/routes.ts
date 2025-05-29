@@ -31,7 +31,7 @@ import {
   completedProjectsTable
 } from '../shared/schema.js';
 import { eq, sql } from "drizzle-orm";
-import { db } from "./db";
+import { db, pool } from "./db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Настройка нашей собственной системы аутентификации
@@ -141,13 +141,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all completed projects
   app.get("/api/completed-projects", async (_req, res) => {
     try {
-      const result = await db.execute(`
+      const result = await pool.query(`
         SELECT id, name, type, status, location, region, country, 
                completion_date, capacity, total_investment, beneficiaries, 
                latitude, longitude, description
         FROM completed_projects
       `);
-      return res.json(result.rows || result);
+      return res.json(result.rows);
     } catch (error) {
       console.error("Error getting completed projects:", error);
       return res.status(500).json({ message: "Internal server error" });
@@ -162,20 +162,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid project ID" });
       }
 
-      const result = await db.execute(`
+      const result = await pool.query(`
         SELECT id, name, type, status, location, region, country, 
                completion_date, capacity, total_investment, beneficiaries, 
                latitude, longitude, description
         FROM completed_projects 
-        WHERE id = ${id}
-      `);
+        WHERE id = $1
+      `, [id]);
       
-      const rows = result.rows || result;
-      if (!rows || rows.length === 0) {
+      if (!result.rows || result.rows.length === 0) {
         return res.status(404).json({ message: "Completed project not found" });
       }
 
-      return res.json(rows[0]);
+      return res.json(result.rows[0]);
     } catch (error) {
       console.error("Error getting completed project:", error);
       return res.status(500).json({ message: "Internal server error" });
