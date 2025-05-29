@@ -33,6 +33,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
   } | null>(null);
 
   console.log("EarthGlobe rendered with", resources.length, "resources");
+  console.log("EarthGlobe rendered with", completedProjects.length, "completed projects");
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -256,10 +257,15 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
     });
 
     // Создание маркеров для завершенных проектов
-    completedProjects.forEach((project) => {
+    console.log("Creating markers for", completedProjects.length, "completed projects");
+    completedProjects.forEach((project, index) => {
+      console.log(`Project ${index + 1}:`, project.name, "at", project.latitude, project.longitude);
       if (project.latitude && project.longitude) {
         const marker = createCompletedProjectMarker(project);
         markersGroup.add(marker);
+        console.log("Added completed project marker for:", project.name);
+      } else {
+        console.log("Missing coordinates for project:", project.name);
       }
     });
 
