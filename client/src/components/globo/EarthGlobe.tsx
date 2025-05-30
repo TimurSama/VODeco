@@ -371,27 +371,49 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
 
-      const intersects = raycaster.intersectObjects(markersGroup.children);
+      // Проверяем пересечения рекурсивно для всех вложенных объектов
+      const intersects = raycaster.intersectObjects(markersGroup.children, true);
 
       if (intersects.length > 0) {
         const marker = intersects[0].object;
-        const resourceId = marker.userData?.resourceId;
+        console.log("Clicked marker userData:", marker.userData);
 
+        // Проверяем, это синий маркер ресурса
+        const resourceId = marker.userData?.resourceId;
         if (resourceId) {
-          const resource = resources.find(r => r.id === resourceId);
+          const resource = activeResources.find(r => r.id === resourceId);
           if (resource) {
-            console.log("Resource selected:", resource);
+            console.log("Active resource selected:", resource);
             setSelectedResource(resource);
             setShowPopup(true);
             onResourceSelect(resource);
+            return;
           }
         }
 
-        if (marker.userData?.projectId) {
-          const project = completedProjects.find(p => p.id === marker.userData.projectId);
-            if (project && onProjectSelect) {
-              onProjectSelect(project);
-            }
+        // Проверяем, это зеленый маркер завершенного проекта
+        if (marker.userData?.type === 'completed_project') {
+          const projectId = marker.userData.projectId;
+          console.log("Looking for completed project with ID:", projectId);
+          
+          // Ищем среди завершенных проектов из ресурсов
+          const completedProject = completedResourcesFromList.find(p => p.id === projectId);
+          if (completedProject) {
+            console.log("Completed project selected:", completedProject);
+            // Создаем объект в формате WaterResource для показа попапа
+            setSelectedResource(completedProject);
+            setShowPopup(true);
+            onResourceSelect(completedProject);
+            return;
+          }
+
+          // Ищем среди завершенных проектов из отдельного API
+          const apiProject = completedProjects.find(p => p.id === projectId);
+          if (apiProject && onProjectSelect) {
+            console.log("API completed project selected:", apiProject);
+            onProjectSelect(apiProject);
+            return;
+          }
         }
       }
     };
