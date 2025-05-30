@@ -25,7 +25,7 @@ export default function HexOceanWaves() {
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
-      time += 0.008;
+      time += 0.025; // Увеличил скорость с 0.008 до 0.025
 
       for (let row = -1; row < height / vertSpacing + 2; row++) {
         for (let col = -1; col < width / horizSpacing + 2; col++) {
@@ -48,9 +48,9 @@ export default function HexOceanWaves() {
         const baseX = cx + hexSize * Math.cos(angle);
         const baseY = cy + hexSize * Math.sin(angle);
         const waveOffset = (
-          Math.sin(baseX * 0.01 + time * 2) * 10 +
-          Math.cos(baseY * 0.015 + time * 2) * 10 +
-          Math.sin((baseX + baseY) * 0.02 + time * 2) * 6
+          Math.sin(baseX * 0.01 + time * 3) * 18 +
+          Math.cos(baseY * 0.015 + time * 3.5) * 16 +
+          Math.sin((baseX + baseY) * 0.02 + time * 4) * 12
         );
         const x = baseX;
         const y = baseY + waveOffset;
@@ -69,14 +69,14 @@ export default function HexOceanWaves() {
 
       for (const [x, y] of points) {
         ctx.beginPath();
-        ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
-        const intensity = 0.5 + 0.3 * Math.sin((x + y + time * 100) * 0.01);
-        const r = Math.floor(0 + 100 * intensity);
-        const g = Math.floor(200 + 55 * intensity);
+        ctx.arc(x, y, 2, 0, 2 * Math.PI);
+        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 150) * 0.015);
+        const r = Math.floor(0 + 120 * intensity);
+        const g = Math.floor(220 + 35 * intensity);
         const b = Math.floor(255);
-        ctx.fillStyle = `rgba(${r},${g},${b},${intensity})`;
-        ctx.shadowBlur = 4;
-        ctx.shadowColor = `rgba(${r},${g},${b},0.8)`;
+        ctx.fillStyle = `rgba(${r},${g},${b},${intensity * 0.9})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `rgba(${r},${g},${b},${intensity})`;
         ctx.fill();
       }
     }
