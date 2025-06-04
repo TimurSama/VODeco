@@ -49,10 +49,10 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
   const hexagons: HexagonType[] = [
     {
       id: 'government',
-      title: 'Государство',
+      title: 'Государства',
       icon: Building,
       color: '#ff7700',
-      position: { x: 0, y: -220 }, // Верхний полукруг - центр
+      position: { x: 120, y: -180 }, // Верх справа от DAO
       content: {
         problems: [
           'Фальсификация данных мониторинга',
@@ -89,7 +89,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Научное сообщество',
       icon: Beaker,
       color: '#8a2be2',
-      position: { x: 280, y: -110 }, // Верхний полукруг - правый
+      position: { x: -80, y: 160 }, // Нижний полукруг - левый внутренний
       content: {
         problems: [
           'Недостаток данных для исследований',
@@ -126,7 +126,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Объекты водохозяйственного комплекса',
       icon: Droplets,
       color: '#00e5ff',
-      position: { x: -280, y: -110 }, // Верхний полукруг - левый
+      position: { x: -240, y: 140 }, // Нижний полукруг - крайний левый
       content: {
         problems: [
           'Износ инфраструктуры',
@@ -163,7 +163,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Водопользователи',
       icon: Users,
       color: '#00ff88',
-      position: { x: -200, y: 180 }, // Нижний полукруг - левый внутренний
+      position: { x: 80, y: 160 }, // Нижний полукруг - правый внутренний
       content: {
         problems: [
           'Непрозрачное тарифообразование',
@@ -200,7 +200,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Инвесторы',
       icon: DollarSign,
       color: '#ffd700',
-      position: { x: -320, y: 110 }, // Нижний полукруг - левый внешний
+      position: { x: 240, y: 140 }, // Нижний полукруг - крайний правый
       content: {
         problems: [
           'Высокие риски инвестиций в инфраструктуру',
@@ -234,10 +234,10 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
     },
     {
       id: 'contractors',
-      title: 'Подрядчики',
+      title: 'Бизнес',
       icon: Settings,
       color: '#0088ff',
-      position: { x: 320, y: 110 }, // Нижний полукруг - правый внешний
+      position: { x: 280, y: -180 }, // Верх справа
       content: {
         problems: [
           'Сложность выхода на рынок',
@@ -274,7 +274,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'DAO',
       icon: Hexagon,
       color: '#ff00ff',
-      position: { x: 200, y: 180 }, // Нижний полукруг - правый внутренний
+      position: { x: -120, y: -180 }, // Верх слева
       content: {
         problems: [
           'Централизованное принятие решений',
@@ -340,7 +340,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
 
 
       {/* Центральный контейнер с глобусом */}
-      <div className="absolute inset-0 flex items-center justify-center" style={{ marginTop: '-80px' }}>
+      <div className="absolute inset-0 flex items-center justify-center" style={{ marginTop: '-40px' }}>
         {/* Реальный глобус Земли с маркерами водных ресурсов */}
         <div className="w-96 h-96">
           <EarthGlobe
