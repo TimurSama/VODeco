@@ -50,7 +50,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Государство',
       icon: Building,
       color: '#ff7700',
-      position: { x: -200, y: -150 },
+      position: { x: 0, y: -280 }, // Верх
       content: {
         problems: [
           'Фальсификация данных мониторинга',
@@ -87,7 +87,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Научное сообщество',
       icon: Beaker,
       color: '#8a2be2',
-      position: { x: 200, y: -150 },
+      position: { x: 242, y: -140 }, // Верх-право
       content: {
         problems: [
           'Недостаток данных для исследований',
@@ -124,7 +124,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Объекты водохозяйственного комплекса',
       icon: Droplets,
       color: '#00e5ff',
-      position: { x: -200, y: 150 },
+      position: { x: 242, y: 140 }, // Право
       content: {
         problems: [
           'Износ инфраструктуры',
@@ -161,7 +161,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Водопользователи',
       icon: Users,
       color: '#00ff88',
-      position: { x: 200, y: 150 },
+      position: { x: 0, y: 280 }, // Низ
       content: {
         problems: [
           'Непрозрачное тарифообразование',
@@ -198,7 +198,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Инвесторы',
       icon: DollarSign,
       color: '#ffd700',
-      position: { x: 0, y: -200 },
+      position: { x: -242, y: 140 }, // Лево
       content: {
         problems: [
           'Высокие риски инвестиций в инфраструктуру',
@@ -235,7 +235,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Подрядчики',
       icon: Settings,
       color: '#0088ff',
-      position: { x: -120, y: 200 },
+      position: { x: -242, y: -140 }, // Верх-лево
       content: {
         problems: [
           'Сложность выхода на рынок',
@@ -272,7 +272,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'DAO',
       icon: Hexagon,
       color: '#ff00ff',
-      position: { x: 120, y: 200 },
+      position: { x: -150, y: 240 }, // Низ-лево
       content: {
         problems: [
           'Централизованное принятие решений',
@@ -547,10 +547,8 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
     const isInactive = activeHexagon && activeHexagon !== hexagon.id;
     
     return {
-      transform: `translate(${hexagon.position.x}px, ${hexagon.position.y}px) ${
-        isActive ? 'scale(1.2)' : isInactive ? 'scale(0.8)' : 'scale(1)'
-      }`,
-      opacity: isInactive ? 0.3 : 1,
+      transform: `translate(${hexagon.position.x}px, ${hexagon.position.y}px)`, // Убрал масштабирование
+      opacity: isInactive ? 0.5 : 1, // Уменьшил прозрачность неактивных
       borderColor: hexagon.color,
       backgroundColor: isActive ? `${hexagon.color}30` : 'rgba(0, 50, 80, 0.7)',
     };
