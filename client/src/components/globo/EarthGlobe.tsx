@@ -777,27 +777,7 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
           </div>
         )}
 
-        {/* Легенда */}
-        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-30 bg-black/50 p-2 sm:p-3 rounded-md text-xs text-white/70">
-          <div className="space-y-1">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full"></div>
-              <span className="text-xs">{t('globo.critical', 'Критич.')}</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 rounded-full"></div>
-              <span className="text-xs">{t('globo.needsAttention', 'Внимание')}</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-cyan-500 rounded-full"></div>
-              <span className="text-xs">{t('globo.investment', 'Инвест.')}</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
-              <span className="text-xs">{t('globo.stable', 'Стабильн.')}</span>
-            </div>
-          </div>
-        </div>
+
       </div>
 
       {/* Popup окно с полной информацией */}
