@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import * as THREE from "three";
+import { useQuery } from "@tanstack/react-query";
+import EarthGlobe from "@/components/globo/EarthGlobe";
+import { WaterResource } from "@/types";
 import { 
   Building, 
   Beaker, 
@@ -34,15 +37,14 @@ interface HexagonType {
 }
 
 export default function InteractivePresentation({ onComplete }: InteractivePresentationProps) {
-  const globeRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<THREE.Scene>();
-  const rendererRef = useRef<THREE.WebGLRenderer>();
-  const globeObjectRef = useRef<THREE.Mesh>();
-  const cameraRef = useRef<THREE.PerspectiveCamera>();
   const [activeHexagon, setActiveHexagon] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'problems' | 'solutions' | 'benefits' | 'functions'>('problems');
-  const [isDragging, setIsDragging] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  // Загрузка данных водных ресурсов
+  const { data: resources = [] } = useQuery<WaterResource[]>({
+    queryKey: ['/api/water-resources'],
+    refetchOnWindowFocus: false,
+  });
 
   const hexagons: HexagonType[] = [
     {
@@ -306,231 +308,10 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
     }
   ];
 
-  // Инициализация 3D глобуса
-  useEffect(() => {
-    if (!globeRef.current) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      globeRef.current.clientWidth / globeRef.current.clientHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-
-    renderer.setSize(globeRef.current.clientWidth, globeRef.current.clientHeight);
-    renderer.setClearColor(0x000000, 0);
-    globeRef.current.appendChild(renderer.domElement);
-
-    // Создание глобуса
-    const geometry = new THREE.SphereGeometry(5, 64, 64);
-    const textureLoader = new THREE.TextureLoader();
-    
-    const material = new THREE.MeshPhongMaterial({
-      color: 0x004080,
-      transparent: true,
-      opacity: 0.8,
-      wireframe: false
-    });
-
-    const globe = new THREE.Mesh(geometry, material);
-    scene.add(globe);
-
-    // Создание точек на глобусе (узлы сети)
-    const networkNodes: THREE.Vector3[] = [];
-    const nodeCount = 50;
-    
-    for (let i = 0; i < nodeCount; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.random() * Math.PI;
-      const radius = 5.1;
-      
-      const x = radius * Math.sin(phi) * Math.cos(theta);
-      const y = radius * Math.cos(phi);
-      const z = radius * Math.sin(phi) * Math.sin(theta);
-      
-      networkNodes.push(new THREE.Vector3(x, y, z));
-    }
-    
-    // Создание статических точек (узлы)
-    const nodeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
-    const nodeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00e5ff,
-      transparent: true,
-      opacity: 0.9
-    });
-    
-    networkNodes.forEach(nodePos => {
-      const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
-      node.position.copy(nodePos);
-      scene.add(node);
-    });
-    
-    // Создание линий между узлами (блокчейн-паутина)
-    const connections: { start: THREE.Vector3; end: THREE.Vector3; line: THREE.Line }[] = [];
-    
-    for (let i = 0; i < networkNodes.length; i++) {
-      for (let j = i + 1; j < networkNodes.length; j++) {
-        const distance = networkNodes[i].distanceTo(networkNodes[j]);
-        
-        // Соединяем только близкие узлы
-        if (distance < 3 && Math.random() > 0.7) {
-          const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-            networkNodes[i],
-            networkNodes[j]
-          ]);
-          
-          const lineMaterial = new THREE.LineBasicMaterial({
-            color: 0x00e5ff,
-            transparent: true,
-            opacity: 0.3
-          });
-          
-          const line = new THREE.Line(lineGeometry, lineMaterial);
-          scene.add(line);
-          
-          connections.push({
-            start: networkNodes[i],
-            end: networkNodes[j],
-            line
-          });
-        }
-      }
-    }
-    
-    // Создание движущихся частиц по линиям
-    const particles: { 
-      mesh: THREE.Mesh; 
-      connection: typeof connections[0]; 
-      progress: number; 
-      direction: number;
-      speed: number;
-    }[] = [];
-    
-    const particleGeometry = new THREE.SphereGeometry(0.02, 6, 6);
-    const particleMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00ffff,
-      transparent: true,
-      opacity: 1
-    });
-    
-    // Создаем частицы для каждого соединения
-    connections.forEach(connection => {
-      if (Math.random() > 0.5) { // Не все линии имеют частицы
-        const particle = new THREE.Mesh(particleGeometry, particleMaterial.clone());
-        scene.add(particle);
-        
-        particles.push({
-          mesh: particle,
-          connection,
-          progress: Math.random(),
-          direction: Math.random() > 0.5 ? 1 : -1,
-          speed: 0.005 + Math.random() * 0.01
-        });
-      }
-    });
-
-    // Освещение
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
-    scene.add(ambientLight);
-    
-    const directionalLight = new THREE.DirectionalLight(0x00e5ff, 1);
-    directionalLight.position.set(5, 3, 5);
-    scene.add(directionalLight);
-
-    camera.position.z = 10;
-
-    sceneRef.current = scene;
-    rendererRef.current = renderer;
-    globeObjectRef.current = globe;
-    cameraRef.current = camera;
-
-    // Анимация
-    const animate = () => {
-      requestAnimationFrame(animate);
-      
-      if (!isDragging) {
-        globe.rotation.y += 0.005;
-      }
-      
-      // Анимация движущихся частиц
-      particles.forEach(particle => {
-        particle.progress += particle.speed * particle.direction;
-        
-        // Разворот направления на концах
-        if (particle.progress >= 1) {
-          particle.progress = 1;
-          particle.direction = -1;
-        } else if (particle.progress <= 0) {
-          particle.progress = 0;
-          particle.direction = 1;
-        }
-        
-        // Обновление позиции частицы
-        const { start, end } = particle.connection;
-        particle.mesh.position.lerpVectors(start, end, particle.progress);
-        
-        // Пульсация яркости
-        const opacity = 0.5 + 0.5 * Math.sin(Date.now() * 0.005 + particle.progress * Math.PI);
-        (particle.mesh.material as THREE.MeshBasicMaterial).opacity = opacity;
-      });
-      
-      // Пульсация узлов
-      scene.children.forEach((child, index) => {
-        if (child instanceof THREE.Mesh && 
-            child.geometry instanceof THREE.SphereGeometry &&
-            child.material instanceof THREE.MeshBasicMaterial &&
-            (child.material as THREE.MeshBasicMaterial).color.getHex() === 0x00e5ff) {
-          const scale = 0.8 + 0.4 * Math.sin(Date.now() * 0.003 + index * 0.5);
-          child.scale.setScalar(scale);
-        }
-      });
-      
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    // Обработка изменения размера
-    const handleResize = () => {
-      if (!globeRef.current) return;
-      
-      camera.aspect = globeRef.current.clientWidth / globeRef.current.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(globeRef.current.clientWidth, globeRef.current.clientHeight);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (globeRef.current && renderer.domElement) {
-        globeRef.current.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
-    };
-  }, [isDragging]);
-
-  // Обработка перетаскивания глобуса
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !globeObjectRef.current) return;
-
-    const deltaX = e.clientX - mousePosition.x;
-    const deltaY = e.clientY - mousePosition.y;
-
-    globeObjectRef.current.rotation.y += deltaX * 0.01;
-    globeObjectRef.current.rotation.x += deltaY * 0.01;
-
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
+  // Обработчики для выбора ресурсов на глобусе
+  const handleResourceSelect = (resource: WaterResource) => {
+    // Можно показать информацию о выбранном ресурсе
+    console.log('Selected resource:', resource);
   };
 
   const handleHexagonClick = (hexagonId: string) => {
@@ -571,15 +352,13 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
 
       {/* Центральный контейнер с глобусом */}
       <div className="absolute inset-0 flex items-center justify-center">
-        {/* Глобус */}
-        <div 
-          ref={globeRef}
-          className="w-96 h-96 cursor-grab active:cursor-grabbing"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-        />
+        {/* Реальный глобус Земли с маркерами водных ресурсов */}
+        <div className="w-96 h-96">
+          <EarthGlobe
+            resources={resources}
+            onResourceSelect={handleResourceSelect}
+          />
+        </div>
 
         {/* Гексагональные блоки */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
