@@ -1,13 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hex Ocean Waves</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VODECO - Интерактивная презентация</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <canvas id="hexCanvas"></canvas>
-  <script src="script.js"></script>
+    <div class="background-container">
+        <div class="hexagon-bg"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <a href="https://vodeco.replit.app">VODECO</a>
+        </div>
+        <nav>
+            <button class="lang-switch">Сменить язык RU</button>
+            <a href="https://vodeco.replit.app" class="nav-button">На главную</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="presentation-container">
+            <div class="globe-container">
+                <div id="globe"></div>
+                <div class="globe-effects">
+                    <div class="water-effect"></div>
+                    <div class="blockchain-effect"></div>
+                </div>
+            </div>
+
+            <div class="hexagon-container">
+                <div class="hexagon" id="government" data-type="government">
+                    <div class="hexagon-content">
+                        <div class="hexagon-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 3L22 9V11H2V9L12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4 11V19H20V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M2 21H22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 11V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 11V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 11V19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Государство</h3>
+                    </div>
+                </div>
+
+                <div class="hexagon" id="science" data-type="science">
+                    <div class="hexagon-content">
+                        <div class="hexagon-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 3L9 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M15 3L15 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 9L21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 15L21 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 9C3 7.89543 3.89543 7 5 7H19C20.1046 7 21 7.89543 21 9V15C21 16.1046 20.1046 17 19 17H5C3.89543 17 3 16.1046 3 15V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Научное сообщество</h3>
+                    </div>
+                </div>
+
+                <div class="hexagon" id="water-objects" data-type="water-objects">
+                    <div class="hexagon-content">
+                        <div class="hexagon-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 3C12 3 16.5 9 16.5 13.5C16.5 15.4891 15.7098 17.3968 14.3033 18.8033C12.8968 20.2098 10.9891 21 9 21C7.01088 21 5.10322 20.2098 3.6967 18.8033C2.29018 17.3968 1.5 15.4891 1.5 13.5C1.5 9 6 3 6 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M19.5 10.5C19.5 10.5 21.5 12.5 21.5 14C21.5 14.7956 21.1839 15.5587 20.6213 16.1213C20.0587 16.6839 19.2956 17 18.5 17C17.7044 17 16.9413 16.6839 16.3787 16.1213C15.8161 15.5587 15.5 14.7956 15.5 14C15.5 12.5 17.5 10.5 17.5 10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Объекты водохозяйственного комплекса</h3>
+                    </div>
+                </div>
+
+                <div class="hexagon" id="users" data-type="users">
+                    <div class="hexagon-content">
+                        <div class="hexagon-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Водопользователи</h3>
+                    </div>
+                </div>
+
+                <div class="hexagon" id="investors" data-type="investors">
+                    <div class="hexagon-content">
+                        <div class="hexagon-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 1V23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Инвесторы</h3>
+                    </div>
+                </div>
+
+                <div class="hexagon" id="contractors" data-type="contractors">
+                    <div class="hexagon-content">
+                        <div class="hexagon-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 11C14 12.1046 13.1046 13 12 13C10.8954 13 10 12.1046 10 11C10 9.89543 10.8954 9 12 9C13.1046 9 14 9.89543 14 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M20.2426 9.75736C21.5858 11.1005 21.5858 13.2995 20.2426 14.6427C18.8995 15.9858 16.7005 15.9858 15.3574 14.6427L12 11.2854L8.64265 14.6427C7.29951 15.9858 5.10051 15.9858 3.75736 14.6427C2.41421 13.2995 2.41421 11.1005 3.75736 9.75736C5.10051 8.41421 7.29951 8.41421 8.64265 9.75736L12 13.1146L15.3574 9.75736C16.7005 8.41421 18.8995 8.41421 20.2426 9.75736Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3>Подрядчики</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-panel" id="info-panel">
+                <div class="info-header">
+                    <h2 id="info-title">Выберите направление</h2>
+                    <button class="close-btn" id="close-info">×</button>
+                </div>
+                <div class="info-tabs">
+                    <button class="tab-btn active" data-tab="problems">Проблемы</button>
+                    <button class="tab-btn" data-tab="solutions">Решения</button>
+                    <button class="tab-btn" data-tab="benefits">Выгоды</button>
+                    <button class="tab-btn" data-tab="functions">Функции</button>
+                </div>
+                <div class="info-content">
+                    <div class="tab-content active" id="problems">
+                        <p>Выберите направление, чтобы увидеть информацию о проблемах в этой области.</p>
+                    </div>
+                    <div class="tab-content" id="solutions">
+                        <p>Выберите направление, чтобы увидеть информацию о решениях в этой области.</p>
+                    </div>
+                    <div class="tab-content" id="benefits">
+                        <p>Выберите направление, чтобы увидеть информацию о выгодах в этой области.</p>
+                    </div>
+                    <div class="tab-content" id="functions">
+                        <p>Выберите направление, чтобы увидеть информацию о функциях в этой области.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 VODECO - DAO VOD ECO Platform</p>
+            <div class="footer-links">
+                <a href="https://vodeco.replit.app">Главная</a>
+                <a href="#">О проекте</a>
+                <a href="#">Контакты</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
