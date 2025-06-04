@@ -237,7 +237,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Подрядчики',
       icon: Settings,
       color: '#0088ff',
-      position: { x: -242, y: -140 }, // Верх-лево
+      position: { x: 320, y: 110 }, // Нижний полукруг - правый внешний
       content: {
         problems: [
           'Сложность выхода на рынок',
@@ -274,7 +274,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'DAO',
       icon: Hexagon,
       color: '#ff00ff',
-      position: { x: -150, y: 240 }, // Низ-лево
+      position: { x: 200, y: 180 }, // Нижний полукруг - правый внутренний
       content: {
         problems: [
           'Централизованное принятие решений',
@@ -328,10 +328,9 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
     const isInactive = activeHexagon && activeHexagon !== hexagon.id;
     
     return {
-      transform: `translate(${hexagon.position.x}px, ${hexagon.position.y}px)`, // Убрал масштабирование
-      opacity: isInactive ? 0.5 : 1, // Уменьшил прозрачность неактивных
-      borderColor: hexagon.color,
-      backgroundColor: isActive ? `${hexagon.color}30` : 'rgba(0, 50, 80, 0.7)',
+      opacity: isInactive ? 0.4 : 1,
+      backgroundColor: isActive ? `${hexagon.color}40` : 'rgba(0, 30, 60, 0.8)',
+      border: `2px solid ${hexagon.color}`,
     };
   };
 
@@ -341,7 +340,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
 
 
       {/* Центральный контейнер с глобусом */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center" style={{ marginTop: '-80px' }}>
         {/* Реальный глобус Земли с маркерами водных ресурсов */}
         <div className="w-96 h-96">
           <EarthGlobe
@@ -355,16 +354,25 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
           {hexagons.map((hexagon) => (
             <motion.div
               key={hexagon.id}
-              className="absolute w-32 h-36 cursor-pointer pointer-events-auto transition-all duration-500"
+              className="absolute w-32 h-36 cursor-pointer pointer-events-auto"
               style={{
                 clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                border: '3px solid',
                 backdropFilter: 'blur(3px)',
-                boxShadow: `0 0 20px ${hexagon.color}40, inset 0 0 20px ${hexagon.color}20`,
+                boxShadow: `0 0 15px ${hexagon.color}60, inset 0 0 10px ${hexagon.color}30`,
                 ...getHexagonStyle(hexagon)
               }}
               onClick={() => handleHexagonClick(hexagon.id)}
               whileTap={{ scale: 0.95 }}
+              animate={{
+                x: hexagon.position.x,
+                y: hexagon.position.y,
+              }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 200, 
+                damping: 25,
+                duration: 0.6
+              }}
             >
               <div className="flex flex-col items-center justify-center h-full text-center p-4">
                 <hexagon.icon 
