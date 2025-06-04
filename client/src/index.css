@@ -38,6 +38,16 @@
 }
 
 @layer base {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  #root {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
   :root {
     --background: 222 70% 6%;
     --foreground: 210 100% 98%;

@@ -335,7 +335,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
   };
 
   return (
-    <div className="w-full h-[90vh] relative overflow-hidden">{/* Уменьшил высоту для устранения прокрутки */}
+    <div className="w-full h-screen relative overflow-hidden">{/* Фиксированная высота экрана */}
 
 
 
