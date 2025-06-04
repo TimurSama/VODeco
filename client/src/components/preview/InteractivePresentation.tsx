@@ -52,7 +52,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Государство',
       icon: Building,
       color: '#ff7700',
-      position: { x: 0, y: -280 }, // Верх
+      position: { x: 0, y: -220 }, // Верхний полукруг - центр
       content: {
         problems: [
           'Фальсификация данных мониторинга',
@@ -89,7 +89,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Научное сообщество',
       icon: Beaker,
       color: '#8a2be2',
-      position: { x: 242, y: -140 }, // Верх-право
+      position: { x: 280, y: -110 }, // Верхний полукруг - правый
       content: {
         problems: [
           'Недостаток данных для исследований',
@@ -126,7 +126,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Объекты водохозяйственного комплекса',
       icon: Droplets,
       color: '#00e5ff',
-      position: { x: 242, y: 140 }, // Право
+      position: { x: -280, y: -110 }, // Верхний полукруг - левый
       content: {
         problems: [
           'Износ инфраструктуры',
@@ -163,7 +163,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Водопользователи',
       icon: Users,
       color: '#00ff88',
-      position: { x: 0, y: 280 }, // Низ
+      position: { x: -200, y: 180 }, // Нижний полукруг - левый внутренний
       content: {
         problems: [
           'Непрозрачное тарифообразование',
@@ -200,7 +200,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Инвесторы',
       icon: DollarSign,
       color: '#ffd700',
-      position: { x: -242, y: 140 }, // Лево
+      position: { x: -320, y: 110 }, // Нижний полукруг - левый внешний
       content: {
         problems: [
           'Высокие риски инвестиций в инфраструктуру',
@@ -338,17 +338,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
   return (
     <div className="w-full h-screen relative overflow-hidden">{/* Убрал фон, оставил только основной фон приложения */}
 
-      {/* Заголовок */}
-      <header className="absolute top-0 left-0 right-0 z-50 flex justify-between items-center p-6 bg-black/20 backdrop-blur-sm border-b border-primary/10">
-        <div className="text-2xl font-bold text-primary">VODECO</div>
-        <Button 
-          onClick={onComplete}
-          className="bg-primary hover:bg-primary/90 text-black font-medium"
-        >
-          Войти в Платформу
-          <ArrowRight className="ml-2 w-4 h-4" />
-        </Button>
-      </header>
+
 
       {/* Центральный контейнер с глобусом */}
       <div className="absolute inset-0 flex items-center justify-center">
