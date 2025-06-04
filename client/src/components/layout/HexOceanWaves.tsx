@@ -25,7 +25,7 @@ export default function HexOceanWaves() {
 
     function animate() {
       ctx.clearRect(0, 0, width, height);
-      time += 0.025; // Увеличил скорость с 0.008 до 0.025
+      time += 0.012; // Уменьшил скорость с 0.025 до 0.012
 
       for (let row = -1; row < height / vertSpacing + 2; row++) {
         for (let col = -1; col < width / horizSpacing + 2; col++) {
