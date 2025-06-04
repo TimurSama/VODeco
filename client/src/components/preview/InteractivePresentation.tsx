@@ -274,7 +274,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'DAO',
       icon: Hexagon,
       color: '#ff00ff',
-      position: { x: 0, y: -350 }, // Самый верх по центру
+      position: { x: 0, y: -250 }, // Верх по центру, но ниже
       content: {
         problems: [
           'Централизованное принятие решений',
@@ -463,7 +463,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.5 }}
-        className="absolute bottom-8 right-8 z-40"
+        className="absolute bottom-12 right-8 z-40"
       >
         <Button
           onClick={onComplete}
