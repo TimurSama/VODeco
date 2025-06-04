@@ -89,7 +89,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Научное сообщество',
       icon: Beaker,
       color: '#8a2be2',
-      position: { x: -173, y: -100 }, // Верх левый (угол 120°)
+      position: { x: -150, y: -150 }, // Верх левый диагональ
       content: {
         problems: [
           'Недостаток данных для исследований',
@@ -274,7 +274,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'DAO',
       icon: Hexagon,
       color: '#ff00ff',
-      position: { x: -120, y: -180 }, // Верх слева
+      position: { x: 150, y: -150 }, // Верх правый диагональ
       content: {
         problems: [
           'Централизованное принятие решений',
@@ -458,22 +458,21 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
         )}
       </AnimatePresence>
 
-      {/* Инструкция */}
-      {!activeHexagon && (
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center z-40"
+      {/* Кнопка "Далее" в правом нижнем углу */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 right-8 z-40"
+      >
+        <Button
+          onClick={onComplete}
+          size="lg"
+          className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
         >
-          <p className="text-white/80 text-lg mb-2">
-            Выберите направление, чтобы узнать больше
-          </p>
-          <p className="text-primary text-sm">
-            Нажмите на гексагон или вращайте глобус
-          </p>
-        </motion.div>
-      )}
+          Далее
+        </Button>
+      </motion.div>
     </div>
   );
 }
