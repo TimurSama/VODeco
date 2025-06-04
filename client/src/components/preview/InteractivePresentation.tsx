@@ -11,7 +11,8 @@ import {
   DollarSign, 
   Settings,
   X,
-  ArrowRight
+  ArrowRight,
+  Hexagon
 } from "lucide-react";
 
 interface InteractivePresentationProps {
@@ -234,7 +235,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Подрядчики',
       icon: Settings,
       color: '#0088ff',
-      position: { x: 0, y: 200 },
+      position: { x: -120, y: 200 },
       content: {
         problems: [
           'Сложность выхода на рынок',
@@ -263,6 +264,43 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
           'Система рейтинга и отзывов',
           'Инструменты для демонстрации кейсов',
           'Аналитика рынка и потребностей'
+        ]
+      }
+    },
+    {
+      id: 'dao',
+      title: 'DAO',
+      icon: Hexagon,
+      color: '#ff00ff',
+      position: { x: 120, y: 200 },
+      content: {
+        problems: [
+          'Централизованное принятие решений',
+          'Отсутствие прозрачности в управлении',
+          'Сложность координации между участниками',
+          'Недостаток доверия между сторонами',
+          'Неэффективность традиционных структур управления'
+        ],
+        solutions: [
+          'Децентрализованное автономное управление',
+          'Прозрачное голосование на блокчейне',
+          'Смарт-контракты для автоматизации решений',
+          'Токенизированная система стимулирования',
+          'Открытый доступ к данным и процессам'
+        ],
+        benefits: [
+          'Демократическое принятие решений',
+          'Полная прозрачность операций',
+          'Эффективная координация участников',
+          'Высокий уровень доверия',
+          'Быстрая адаптация к изменениям'
+        ],
+        functions: [
+          'Платформа для голосования и предложений',
+          'Система управления токенами VOD',
+          'Автоматическое исполнение решений',
+          'Мониторинг эффективности управления',
+          'Инструменты для создания рабочих групп'
         ]
       }
     }
@@ -299,32 +337,99 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
     const globe = new THREE.Mesh(geometry, material);
     scene.add(globe);
 
-    // Добавление точек на глобусе
-    const pointsGeometry = new THREE.BufferGeometry();
-    const pointsCount = 500;
-    const positions = new Float32Array(pointsCount * 3);
+    // Создание точек на глобусе (узлы сети)
+    const networkNodes: THREE.Vector3[] = [];
+    const nodeCount = 50;
     
-    for (let i = 0; i < pointsCount * 3; i += 3) {
+    for (let i = 0; i < nodeCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.random() * Math.PI;
       const radius = 5.1;
       
-      positions[i] = radius * Math.sin(phi) * Math.cos(theta);
-      positions[i + 1] = radius * Math.cos(phi);
-      positions[i + 2] = radius * Math.sin(phi) * Math.sin(theta);
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.cos(phi);
+      const z = radius * Math.sin(phi) * Math.sin(theta);
+      
+      networkNodes.push(new THREE.Vector3(x, y, z));
     }
     
-    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    
-    const pointsMaterial = new THREE.PointsMaterial({
+    // Создание статических точек (узлы)
+    const nodeGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+    const nodeMaterial = new THREE.MeshBasicMaterial({
       color: 0x00e5ff,
-      size: 0.1,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.9
     });
     
-    const points = new THREE.Points(pointsGeometry, pointsMaterial);
-    scene.add(points);
+    networkNodes.forEach(nodePos => {
+      const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+      node.position.copy(nodePos);
+      scene.add(node);
+    });
+    
+    // Создание линий между узлами (блокчейн-паутина)
+    const connections: { start: THREE.Vector3; end: THREE.Vector3; line: THREE.Line }[] = [];
+    
+    for (let i = 0; i < networkNodes.length; i++) {
+      for (let j = i + 1; j < networkNodes.length; j++) {
+        const distance = networkNodes[i].distanceTo(networkNodes[j]);
+        
+        // Соединяем только близкие узлы
+        if (distance < 3 && Math.random() > 0.7) {
+          const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+            networkNodes[i],
+            networkNodes[j]
+          ]);
+          
+          const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00e5ff,
+            transparent: true,
+            opacity: 0.3
+          });
+          
+          const line = new THREE.Line(lineGeometry, lineMaterial);
+          scene.add(line);
+          
+          connections.push({
+            start: networkNodes[i],
+            end: networkNodes[j],
+            line
+          });
+        }
+      }
+    }
+    
+    // Создание движущихся частиц по линиям
+    const particles: { 
+      mesh: THREE.Mesh; 
+      connection: typeof connections[0]; 
+      progress: number; 
+      direction: number;
+      speed: number;
+    }[] = [];
+    
+    const particleGeometry = new THREE.SphereGeometry(0.02, 6, 6);
+    const particleMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
+      transparent: true,
+      opacity: 1
+    });
+    
+    // Создаем частицы для каждого соединения
+    connections.forEach(connection => {
+      if (Math.random() > 0.5) { // Не все линии имеют частицы
+        const particle = new THREE.Mesh(particleGeometry, particleMaterial.clone());
+        scene.add(particle);
+        
+        particles.push({
+          mesh: particle,
+          connection,
+          progress: Math.random(),
+          direction: Math.random() > 0.5 ? 1 : -1,
+          speed: 0.005 + Math.random() * 0.01
+        });
+      }
+    });
 
     // Освещение
     const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
@@ -347,8 +452,40 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       
       if (!isDragging) {
         globe.rotation.y += 0.005;
-        points.rotation.y += 0.002;
       }
+      
+      // Анимация движущихся частиц
+      particles.forEach(particle => {
+        particle.progress += particle.speed * particle.direction;
+        
+        // Разворот направления на концах
+        if (particle.progress >= 1) {
+          particle.progress = 1;
+          particle.direction = -1;
+        } else if (particle.progress <= 0) {
+          particle.progress = 0;
+          particle.direction = 1;
+        }
+        
+        // Обновление позиции частицы
+        const { start, end } = particle.connection;
+        particle.mesh.position.lerpVectors(start, end, particle.progress);
+        
+        // Пульсация яркости
+        const opacity = 0.5 + 0.5 * Math.sin(Date.now() * 0.005 + particle.progress * Math.PI);
+        (particle.mesh.material as THREE.MeshBasicMaterial).opacity = opacity;
+      });
+      
+      // Пульсация узлов
+      scene.children.forEach((child, index) => {
+        if (child instanceof THREE.Mesh && 
+            child.geometry instanceof THREE.SphereGeometry &&
+            child.material instanceof THREE.MeshBasicMaterial &&
+            (child.material as THREE.MeshBasicMaterial).color.getHex() === 0x00e5ff) {
+          const scale = 0.8 + 0.4 * Math.sin(Date.now() * 0.003 + index * 0.5);
+          child.scale.setScalar(scale);
+        }
+      });
       
       renderer.render(scene, camera);
     };
@@ -420,15 +557,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
   };
 
   return (
-    <div className="w-full h-screen relative overflow-hidden bg-[#0a0e17]">
-      {/* Гексагональный фон */}
-      <div 
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><polygon points="50,0 100,25 100,75 50,100 0,75 0,25" fill="none" stroke="rgba(0, 229, 255, 0.1)" stroke-width="1"/></svg>')}")`,
-          backgroundSize: '150px 150px'
-        }}
-      />
+    <div className="w-full h-screen relative overflow-hidden">{/* Убрал фон, оставил только основной фон приложения */}
 
       {/* Заголовок */}
       <header className="absolute top-0 left-0 right-0 z-50 flex justify-between items-center p-6 bg-black/20 backdrop-blur-sm border-b border-primary/10">
@@ -462,12 +591,12 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
               className="absolute w-32 h-36 cursor-pointer pointer-events-auto transition-all duration-500"
               style={{
                 clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-                border: '2px solid',
+                border: '3px solid',
                 backdropFilter: 'blur(3px)',
+                boxShadow: `0 0 20px ${hexagon.color}40, inset 0 0 20px ${hexagon.color}20`,
                 ...getHexagonStyle(hexagon)
               }}
               onClick={() => handleHexagonClick(hexagon.id)}
-              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
               <div className="flex flex-col items-center justify-center h-full text-center p-4">
