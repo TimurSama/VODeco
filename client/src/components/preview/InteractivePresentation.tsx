@@ -52,7 +52,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Государства',
       icon: Building,
       color: '#ff7700',
-      position: { x: 120, y: -180 }, // Верх справа от DAO
+      position: { x: 0, y: -200 }, // Верх центр
       content: {
         problems: [
           'Фальсификация данных мониторинга',
@@ -89,7 +89,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Научное сообщество',
       icon: Beaker,
       color: '#8a2be2',
-      position: { x: -80, y: 160 }, // Нижний полукруг - левый внутренний
+      position: { x: -173, y: -100 }, // Верх левый (угол 120°)
       content: {
         problems: [
           'Недостаток данных для исследований',
@@ -126,7 +126,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Объекты водохозяйственного комплекса',
       icon: Droplets,
       color: '#00e5ff',
-      position: { x: -240, y: 140 }, // Нижний полукруг - крайний левый
+      position: { x: -173, y: 100 }, // Нижний левый (угол 240°)
       content: {
         problems: [
           'Износ инфраструктуры',
@@ -163,7 +163,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Водопользователи',
       icon: Users,
       color: '#00ff88',
-      position: { x: 80, y: 160 }, // Нижний полукруг - правый внутренний
+      position: { x: 0, y: 200 }, // Нижний центр (угол 270°)
       content: {
         problems: [
           'Непрозрачное тарифообразование',
@@ -200,7 +200,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Инвесторы',
       icon: DollarSign,
       color: '#ffd700',
-      position: { x: 240, y: 140 }, // Нижний полукруг - крайний правый
+      position: { x: 173, y: 100 }, // Нижний правый (угол 300°)
       content: {
         problems: [
           'Высокие риски инвестиций в инфраструктуру',
@@ -237,7 +237,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
       title: 'Бизнес',
       icon: Settings,
       color: '#0088ff',
-      position: { x: 280, y: -180 }, // Верх справа
+      position: { x: 173, y: -100 }, // Верх правый (угол 60°)
       content: {
         problems: [
           'Сложность выхода на рынок',
@@ -340,9 +340,9 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
 
 
       {/* Центральный контейнер с глобусом */}
-      <div className="absolute inset-0 flex items-center justify-center" style={{ marginTop: '-40px' }}>
+      <div className="absolute inset-0 flex items-center justify-center">
         {/* Реальный глобус Земли с маркерами водных ресурсов */}
-        <div className="w-96 h-96">
+        <div className="w-80 h-80">
           <EarthGlobe
             resources={resources}
             onResourceSelect={handleResourceSelect}
