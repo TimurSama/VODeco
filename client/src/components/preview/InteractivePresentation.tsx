@@ -335,7 +335,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
   };
 
   return (
-    <div className="w-full h-screen relative overflow-hidden">{/* Фиксированная высота экрана */}
+    <div className="w-full min-h-screen relative">{/* Восстанавливаем скрол */}
 
 
 
