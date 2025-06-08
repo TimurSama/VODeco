@@ -22,40 +22,33 @@ export default function HexOceanWaves() {
 
     let time = 0;
     let animationId: number;
-    let frameCount = 0;
-    const targetFPS = 30; // Ограничиваем FPS до 30
-    const frameInterval = 1000 / targetFPS;
-    let lastFrameTime = 0;
+    const cycleDuration = 8000; // 8 секунд на полный цикл
+    let cycleStartTime = 0;
+    let isAnimating = true;
 
     function animate(currentTime: number) {
-      // Ограничиваем частоту кадров
-      if (currentTime - lastFrameTime < frameInterval) {
-        animationId = requestAnimationFrame(animate);
-        return;
-      }
+      if (!cycleStartTime) cycleStartTime = currentTime;
       
-      lastFrameTime = currentTime;
-      frameCount++;
+      const elapsed = currentTime - cycleStartTime;
+      const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
       
-      // Обновляем только каждый 2-й кадр для дальнейшей оптимизации
-      if (frameCount % 2 === 0 && ctx) {
-        ctx.clearRect(0, 0, width, height);
-        time += 0.008; // Еще больше уменьшил скорость
+      // Создаем плавный зацикленный прогресс (0 -> 1 -> 0)
+      time = Math.sin(cycleProgress * Math.PI * 2) * 0.5 + 0.5;
+      
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
 
-        // Рисуем меньше гексагонов - каждый второй
-        for (let row = -1; row < height / vertSpacing + 2; row += 1) {
-          for (let col = -1; col < width / horizSpacing + 2; col += 1) {
-            // Пропускаем некоторые гексагоны для оптимизации
-            if ((row + col) % 2 === 0) {
-              const cx = col * horizSpacing;
-              const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
-              drawHexagon(cx, cy);
-            }
-          }
+      for (let row = -1; row < height / vertSpacing + 2; row++) {
+        for (let col = -1; col < width / horizSpacing + 2; col++) {
+          const cx = col * horizSpacing;
+          const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
+          drawHexagon(cx, cy);
         }
       }
 
-      animationId = requestAnimationFrame(animate);
+      if (isAnimating) {
+        animationId = requestAnimationFrame(animate);
+      }
     }
 
     // Предвычисляем углы для гексагона
@@ -64,42 +57,43 @@ export default function HexOceanWaves() {
     function drawHexagon(cx: number, cy: number) {
       if (!ctx) return;
       
+      const angle_deg = 60;
       const points: [number, number][] = [];
       
-      // Упрощенная волновая функция для лучшей производительности
-      const waveBase = Math.sin(cx * 0.01 + time * 2) * 12 + Math.cos(cy * 0.015 + time * 2.5) * 10;
-      
       for (let i = 0; i < 6; i++) {
-        const baseX = cx + hexSize * Math.cos(hexAngles[i]);
-        const baseY = cy + hexSize * Math.sin(hexAngles[i]);
-        const waveOffset = waveBase + Math.sin((baseX + baseY) * 0.015 + time * 3) * 8;
-        points.push([baseX, baseY + waveOffset]);
+        const angle = Math.PI / 180 * (angle_deg * i);
+        const baseX = cx + hexSize * Math.cos(angle);
+        const baseY = cy + hexSize * Math.sin(angle);
+        const waveOffset = (
+          Math.sin(baseX * 0.01 + time * 300) * 18 +
+          Math.cos(baseY * 0.015 + time * 350) * 16 +
+          Math.sin((baseX + baseY) * 0.02 + time * 400) * 12
+        );
+        const x = baseX;
+        const y = baseY + waveOffset;
+        points.push([x, y]);
       }
 
-      // Рисуем контур гексагона
       ctx.beginPath();
       ctx.moveTo(points[0][0], points[0][1]);
       for (let i = 1; i < 6; i++) {
         ctx.lineTo(points[i][0], points[i][1]);
       }
       ctx.closePath();
-      ctx.strokeStyle = "rgba(0, 255, 255, 0.06)";
-      ctx.lineWidth = 0.8;
+      ctx.strokeStyle = "rgba(0, 255, 255, 0.08)";
+      ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Рисуем только некоторые точки для производительности
-      for (let i = 0; i < 6; i += 2) {
-        const [x, y] = points[i];
+      for (const [x, y] of points) {
         ctx.beginPath();
-        ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
-        
-        // Упрощенная интенсивность
-        const intensity = 0.5 + 0.3 * Math.sin((x + y + time * 100) * 0.01);
-        const alpha = intensity * 0.7;
-        
-        ctx.fillStyle = `rgba(0, 220, 255, ${alpha})`;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = `rgba(0, 220, 255, ${alpha})`;
+        ctx.arc(x, y, 2, 0, 2 * Math.PI);
+        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 1500) * 0.015);
+        const r = Math.floor(0 + 120 * intensity);
+        const g = Math.floor(220 + 35 * intensity);
+        const b = Math.floor(255);
+        ctx.fillStyle = `rgba(${r},${g},${b},${intensity * 0.9})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `rgba(${r},${g},${b},${intensity})`;
         ctx.fill();
       }
     }
