@@ -223,25 +223,25 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
           >
-            <div className="max-w-6xl w-full">
+            <div className="max-w-6xl w-full h-full flex flex-col justify-center">
               {/* Анимация капли и глобуса */}
-              <div className="text-center mb-12">
+              <div className="text-center mb-6 lg:mb-8">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 1 }}
-                  className="inline-block mb-4"
+                  className="inline-block mb-2"
                 >
-                  <Droplets className="w-24 h-24 text-cyan-400 mx-auto mb-4" />
+                  <Droplets className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-cyan-400 mx-auto mb-2" />
                 </motion.div>
                 
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="text-2xl text-cyan-200 mb-8"
+                  className="text-lg sm:text-xl lg:text-2xl text-cyan-200 mb-4"
                 >
                   H₂O. Вода — первичный признак и главный фактор жизни.
                 </motion.p>
@@ -251,54 +251,54 @@ export default function PreviewPage() {
                   animate={{ scale: 1 }}
                   transition={{ delay: 1, duration: 1 }}
                 >
-                  <Globe className="w-32 h-32 text-blue-400 mx-auto" />
+                  <Globe className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-blue-400 mx-auto" />
                 </motion.div>
               </div>
 
               {/* Статистика кризиса */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5 }}
-                  className="bg-slate-800/80 rounded-lg p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-2">Ресурс Планеты</h3>
-                  <p className="text-3xl font-bold text-white mb-2">&lt;1%</p>
-                  <p className="text-gray-300 text-sm">пресной воды доступны человечеству</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Ресурс Планеты</h3>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">&lt;1%</p>
+                  <p className="text-gray-300 text-xs sm:text-sm">пресной воды доступны</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.7 }}
-                  className="bg-slate-800/80 rounded-lg p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-2">Экономика Воды</h3>
-                  <p className="text-3xl font-bold text-white mb-2">$1 трлн</p>
-                  <p className="text-gray-300 text-sm">ежегодный дефицит инвестиций</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Экономика Воды</h3>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">$1 трлн</p>
+                  <p className="text-gray-300 text-xs sm:text-sm">дефицит инвестиций</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.9 }}
-                  className="bg-slate-800/80 rounded-lg p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-2">Гуманитарный Кризис</h3>
-                  <p className="text-3xl font-bold text-white mb-2">2.2 млрд</p>
-                  <p className="text-gray-300 text-sm">людей без доступа к чистой воде</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Гуманитарный Кризис</h3>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">2.2 млрд</p>
+                  <p className="text-gray-300 text-xs sm:text-sm">без доступа к воде</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 2.1 }}
-                  className="bg-slate-800/80 rounded-lg p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-2">Прогноз Угрозы</h3>
-                  <p className="text-3xl font-bold text-white mb-2">5+ млрд</p>
-                  <p className="text-gray-300 text-sm">столкнутся с нехваткой к 2030 г.</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Прогноз Угрозы</h3>
+                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">5+ млрд</p>
+                  <p className="text-gray-300 text-xs sm:text-sm">нехватка к 2030 г.</p>
                 </motion.div>
               </div>
 
@@ -311,9 +311,9 @@ export default function PreviewPage() {
                 <Button
                   onClick={nextScreen}
                   size="lg"
-                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full"
+                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full"
                 >
-                  УЗНАТЬ РЕШЕНИЕ <ChevronRight className="ml-2 w-5 h-5" />
+                  УЗНАТЬ РЕШЕНИЕ <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </motion.div>
             </div>
@@ -327,33 +327,33 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white mb-12 text-center"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 lg:mb-8 text-center"
             >
               Экосистема VODeco: Синергия для Будущего
             </motion.h2>
 
-            <div className="relative w-full max-w-4xl h-[500px]">
+            <div className="relative w-full max-w-4xl h-[300px] sm:h-[400px] lg:h-[450px]">
               {/* Центральный глобус */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 z-20"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 z-20"
               >
                 <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center">
-                  <Globe className="w-16 h-16 text-white" />
+                  <Globe className="w-8 h-8 sm:w-10 sm:h-10 lg:w-16 lg:h-16 text-white" />
                 </div>
               </motion.div>
 
               {/* Гексагоны вокруг глобуса */}
               {hexagonData.map((hexagon, index) => {
                 const angle = (index * 360) / hexagonData.length;
-                const radius = 180;
+                const radius = window.innerWidth < 640 ? 120 : window.innerWidth < 1024 ? 140 : 160;
                 const x = Math.cos((angle * Math.PI) / 180) * radius;
                 const y = Math.sin((angle * Math.PI) / 180) * radius;
 
@@ -373,14 +373,14 @@ export default function PreviewPage() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <div className={`w-20 h-20 bg-gradient-to-br ${hexagon.color} rounded-lg shadow-lg border border-white/20 flex items-center justify-center text-white relative`}
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-18 lg:h-18 bg-gradient-to-br ${hexagon.color} rounded-lg shadow-lg border border-white/20 flex items-center justify-center text-white relative`}
                          style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}>
-                      <div className="w-8 h-8">
+                      <div className="w-4 h-4 sm:w-6 sm:h-6 lg:w-7 lg:h-7">
                         {hexagon.icon}
                       </div>
                     </div>
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-center">
-                      <p className="text-xs text-white font-medium">{hexagon.title}</p>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-center">
+                      <p className="text-xs sm:text-sm text-white font-medium max-w-16">{hexagon.title}</p>
                     </div>
                   </motion.div>
                 );
@@ -391,14 +391,14 @@ export default function PreviewPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2 }}
-              className="mt-12"
+              className="mt-6 lg:mt-8"
             >
               <Button
                 onClick={nextScreen}
                 size="lg"
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full"
               >
-                СМОТРЕТЬ РЕШЕНИЯ В ДЕЙСТВИИ <ChevronRight className="ml-2 w-5 h-5" />
+                СМОТРЕТЬ РЕШЕНИЯ В ДЕЙСТВИИ <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </motion.div>
@@ -411,18 +411,18 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white mb-8 text-center"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 sm:mb-6 lg:mb-8 text-center"
             >
               Механизмы Трансформации
             </motion.h2>
 
             {/* Табы */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 lg:mb-8">
               {[
                 { id: 'manage', title: 'Управление' },
                 { id: 'consume', title: 'Потребление' },
@@ -433,7 +433,7 @@ export default function PreviewPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   variant={activeTab === tab.id ? "default" : "outline"}
-                  className={`px-6 py-3 ${
+                  className={`px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 lg:py-3 text-xs sm:text-sm lg:text-base ${
                     activeTab === tab.id 
                       ? 'bg-cyan-600 text-white' 
                       : 'border-cyan-500 text-cyan-300 hover:bg-cyan-600/20'
@@ -445,7 +445,7 @@ export default function PreviewPage() {
             </div>
 
             {/* Контент табов */}
-            <div className="max-w-4xl w-full bg-slate-800/80 rounded-lg p-8 border border-cyan-500/20">
+            <div className="max-w-4xl w-full bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 max-h-[50vh] lg:max-h-[55vh]">
               <AnimatePresence mode="wait">
                 {activeTab === 'manage' && (
                   <motion.div
@@ -453,19 +453,19 @@ export default function PreviewPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="space-y-3 sm:space-y-4 lg:space-y-6"
                   >
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Проблема:</h3>
-                      <p className="text-gray-300">Централизация, непрозрачность, конфликт интересов в управлении водными ресурсами создают коррупцию и неэффективность.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Проблема:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Централизация, непрозрачность, конфликт интересов в управлении водными ресурсами создают коррупцию и неэффективность.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Решение:</h3>
-                      <p className="text-gray-300">DAO-управление через токены VOD, прозрачное голосование в блокчейне, делегирование полномочий экспертам, коллективное принятие стратегических решений.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Решение:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">DAO-управление через токены VOD, прозрачное голосование в блокчейне, делегирование полномочий экспертам, коллективное принятие стратегических решений.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Выгода:</h3>
-                      <p className="text-gray-300">Справедливое распределение ресурсов, учет интересов всех сторон, полная прозрачность процессов и исключение коррупции.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Выгода:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Справедливое распределение ресурсов, учет интересов всех сторон, полная прозрачность процессов и исключение коррупции.</p>
                     </div>
                   </motion.div>
                 )}
@@ -476,19 +476,19 @@ export default function PreviewPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="space-y-3 sm:space-y-4 lg:space-y-6"
                   >
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Проблема:</h3>
-                      <p className="text-gray-300">Нерациональное использование воды, непрозрачные тарифы, низкое качество услуг и отсутствие контроля со стороны потребителей.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Проблема:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Нерациональное использование воды, непрозрачные тарифы, низкое качество услуг и отсутствие контроля со стороны потребителей.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Решение:</h3>
-                      <p className="text-gray-300">Платформа VOD для мониторинга качества и расхода, экономические стимулы для водосбережения, общественный контроль через приложение VOD Check.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Решение:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Платформа VOD для мониторинга качества и расхода, экономические стимулы для водосбережения, общественный контроль через приложение VOD Check.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Выгода:</h3>
-                      <p className="text-gray-300">Экономия для потребителей, повышение качества услуг, активное участие граждан в защите водных ресурсов.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Выгода:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Экономия для потребителей, повышение качества услуг, активное участие граждан в защите водных ресурсов.</p>
                     </div>
                   </motion.div>
                 )}
@@ -499,19 +499,19 @@ export default function PreviewPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="space-y-3 sm:space-y-4 lg:space-y-6"
                   >
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Проблема:</h3>
-                      <p className="text-gray-300">Высокие барьеры входа в водный сектор, низкая ликвидность инвестиций, сложность оценки рисков и доходности.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Проблема:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Высокие барьеры входа в водный сектор, низкая ликвидность инвестиций, сложность оценки рисков и доходности.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Решение:</h3>
-                      <p className="text-gray-300">Токенизация активов (P-VOD, W-Bond), стейкинг токенов VOD, ликвидные пулы на DEX, прозрачная отчетность в реальном времени.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Решение:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Токенизация активов (P-VOD, W-Bond), стейкинг токенов VOD, ликвидные пулы на DEX, прозрачная отчетность в реальном времени.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Выгода:</h3>
-                      <p className="text-gray-300">Глобальный доступ к инвестициям в водную инфраструктуру, прогнозируемая доходность, ESG-соответствие портфеля.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Выгода:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Глобальный доступ к инвестициям в водную инфраструктуру, прогнозируемая доходность, ESG-соответствие портфеля.</p>
                     </div>
                   </motion.div>
                 )}
@@ -522,19 +522,19 @@ export default function PreviewPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-6"
+                    className="space-y-3 sm:space-y-4 lg:space-y-6"
                   >
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Проблема:</h3>
-                      <p className="text-gray-300">Загрязнение водных ресурсов, истощение запасов, климатические изменения и отсутствие экономических стимулов для экологических проектов.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Проблема:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Загрязнение водных ресурсов, истощение запасов, климатические изменения и отсутствие экономических стимулов для экологических проектов.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Решение:</h3>
-                      <p className="text-gray-300">Токенизация эко-проектов через W-Cert, глобальный мониторинг через IoT-датчики, вознаграждения за экологический вклад, углеродные кредиты.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Решение:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Токенизация эко-проектов через W-Cert, глобальный мониторинг через IoT-датчики, вознаграждения за экологический вклад, углеродные кредиты.</p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-cyan-300 mb-3">Выгода:</h3>
-                      <p className="text-gray-300">Целевое финансирование восстановления экосистем, устойчивое развитие, создание новой "зеленой" экономики.</p>
+                      <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-cyan-300 mb-2 lg:mb-3">Выгода:</h3>
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Целевое финансирование восстановления экосистем, устойчивое развитие, создание новой "зеленой" экономики.</p>
                     </div>
                   </motion.div>
                 )}
@@ -545,14 +545,14 @@ export default function PreviewPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-              className="mt-8"
+              className="mt-4 sm:mt-6 lg:mt-8"
             >
               <Button
                 onClick={nextScreen}
                 size="lg"
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full"
               >
-                ГЛОБАЛЬНЫЕ ЦЕЛИ <ChevronRight className="ml-2 w-5 h-5" />
+                ГЛОБАЛЬНЫЕ ЦЕЛИ <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </motion.div>
@@ -565,20 +565,20 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white mb-8 text-center"
+              className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-4 sm:mb-6 lg:mb-8 text-center leading-tight"
             >
               Вклад в Цели Устойчивого Развития ООН
             </motion.h2>
 
             {/* Табы ЦУР */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6 lg:mb-8">
               {[
-                { id: 'sdg6', title: 'Доступ к воде (ЦУР 6)' },
+                { id: 'sdg6', title: 'Вода (ЦУР 6)' },
                 { id: 'sdg12', title: 'Эффективность (ЦУР 12)' },
                 { id: 'sdg17', title: 'Сотрудничество (ЦУР 17)' },
                 { id: 'sdg9', title: 'Финансирование (ЦУР 9)' }
@@ -587,7 +587,7 @@ export default function PreviewPage() {
                   key={tab.id}
                   onClick={() => setActiveSDGTab(tab.id)}
                   variant={activeSDGTab === tab.id ? "default" : "outline"}
-                  className={`px-4 py-3 text-sm ${
+                  className={`px-2 sm:px-3 lg:px-4 py-2 sm:py-2.5 lg:py-3 text-xs sm:text-sm ${
                     activeSDGTab === tab.id 
                       ? 'bg-cyan-600 text-white' 
                       : 'border-cyan-500 text-cyan-300 hover:bg-cyan-600/20'
@@ -599,7 +599,7 @@ export default function PreviewPage() {
             </div>
 
             {/* Контент ЦУР */}
-            <div className="max-w-4xl w-full bg-slate-800/80 rounded-lg p-8 border border-cyan-500/20">
+            <div className="max-w-4xl w-full bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 max-h-[50vh] lg:max-h-[55vh]">
               <AnimatePresence mode="wait">
                 {activeSDGTab === 'sdg6' && (
                   <motion.div
@@ -719,64 +719,56 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8 overflow-y-auto"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white mb-12 text-center"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 lg:mb-8 text-center"
             >
               Дорожная Карта
             </motion.h2>
 
-            <div className="max-w-4xl w-full space-y-8">
+            <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 lg:mb-8">
               {[
                 {
                   year: '2024',
                   title: 'Pre-Sale & Запуск',
-                  description: 'Проведение раундов финансирования. Запуск пилотных проектов в Республике Узбекистан. Развертывание платформы VOD и приложения VOD Check.',
+                  description: 'Раунды финансирования. Пилоты в Узбекистане. Платформа VOD и VOD Check.',
                   delay: 0
                 },
                 {
                   year: '2025-2027',
                   title: 'Масштабирование',
-                  description: 'Листинг токена VOD на биржах. Расширение на Центральную Азию и Евразию. Подключение ключевых объектов. Формирование "Банка Воды".',
+                  description: 'Листинг VOD. Расширение в Центральную Азию. Формирование "Банка Воды".',
                   delay: 0.2
                 },
                 {
                   year: '2028-2030',
                   title: 'Глобальная экспансия',
-                  description: 'Выход на рынки Азии, Европы, Африки, Америки. Интеграция с программами ООН и Всемирного банка. Подключение 75% целевых объектов.',
+                  description: 'Выход на мировые рынки. Интеграция с ООН. Подключение 75% объектов.',
                   delay: 0.4
                 },
                 {
                   year: '2030+',
                   title: 'Экосистема Управления',
-                  description: 'VODeco — глобальный стандарт. Расширение на мониторинг воздуха, почвы, углеродные кредиты. Глобальная децентрализованная экономика.',
+                  description: 'Глобальный стандарт. Расширение на воздух, почву, углеродные кредиты.',
                   delay: 0.6
                 }
               ].map((item, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: item.delay }}
-                  className="flex items-start gap-8"
+                  className="bg-slate-800/80 rounded-lg p-4 sm:p-6 border border-cyan-500/20 flex flex-col items-center text-center"
                 >
-                  <div className="flex-shrink-0">
-                    <div className="w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {item.year}
-                    </div>
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base mb-4">
+                    {item.year}
                   </div>
                   
-                  <div className="flex-1 bg-slate-800/80 rounded-lg p-6 border border-cyan-500/20">
-                    <h3 className="text-2xl font-bold text-cyan-300 mb-3">{item.title}</h3>
-                    <p className="text-gray-300 leading-relaxed">{item.description}</p>
-                  </div>
-                  
-                  {index < 3 && (
-                    <div className="absolute left-12 mt-24 w-0.5 h-8 bg-gradient-to-b from-cyan-500 to-transparent"></div>
-                  )}
+                  <h3 className="text-lg sm:text-xl font-bold text-cyan-300 mb-3">{item.title}</h3>
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{item.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -785,14 +777,13 @@ export default function PreviewPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-              className="mt-12"
             >
               <Button
                 onClick={nextScreen}
                 size="lg"
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full"
               >
-                ПРИСОЕДИНИТЬСЯ К БУДУЩЕМУ <ChevronRight className="ml-2 w-5 h-5" />
+                ПРИСОЕДИНИТЬСЯ К БУДУЩЕМУ <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </motion.div>
@@ -805,52 +796,52 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-5xl font-bold text-white mb-12 text-center leading-tight"
+              className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-6 lg:mb-8 text-center leading-tight"
             >
               Будущее воды. Будущее планеты.<br />
               <span className="text-cyan-400">Оно создается сегодня. Вместе с вами.</span>
             </motion.h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl w-full mb-6 lg:mb-8">
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-slate-800/80 rounded-lg p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
+                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
                 onClick={() => setLocation('/auth')}
               >
-                <Users className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
-                <h3 className="text-2xl font-bold text-white mb-4">СТАТЬ ЧАСТЬЮ ЭКОСИСТЕМЫ</h3>
-                <p className="text-gray-300">Зарегистрируйтесь, чтобы получить доступ к аналитике и стать полноправным участником VODeco.</p>
+                <Users className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-cyan-400 mx-auto mb-4 lg:mb-6" />
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">СТАТЬ ЧАСТЬЮ ЭКОСИСТЕМЫ</h3>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Зарегистрируйтесь, чтобы получить доступ к аналитике и стать полноправным участником VODeco.</p>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-slate-800/80 rounded-lg p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
+                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
                 onClick={() => setLocation('/wallet')}
               >
-                <TrendingUp className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
-                <h3 className="text-2xl font-bold text-white mb-4">ИНВЕСТИРОВАТЬ В БУДУЩЕЕ</h3>
-                <p className="text-gray-300">Примите участие в Pre-Sale токена VOD. Ваши инвестиции — это чистая вода для миллионов и стабильный доход для вас.</p>
+                <TrendingUp className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-cyan-400 mx-auto mb-4 lg:mb-6" />
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">ИНВЕСТИРОВАТЬ В БУДУЩЕЕ</h3>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Примите участие в Pre-Sale токена VOD. Ваши инвестиции — это чистая вода для миллионов и стабильный доход для вас.</p>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="bg-slate-800/80 rounded-lg p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
+                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
                 onClick={() => setLocation('/contact')}
               >
-                <Building2 className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
-                <h3 className="text-2xl font-bold text-white mb-4">СТАТЬ ПАРТНЕРОМ</h3>
-                <p className="text-gray-300">Приглашаем к сотрудничеству правительства, корпорации и фонды для реализации этого исторического проекта.</p>
+                <Building2 className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-cyan-400 mx-auto mb-4 lg:mb-6" />
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">СТАТЬ ПАРТНЕРОМ</h3>
+                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Приглашаем к сотрудничеству правительства, корпорации и фонды для реализации этого исторического проекта.</p>
               </motion.div>
             </div>
 
@@ -858,14 +849,13 @@ export default function PreviewPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-              className="mt-12"
             >
               <Button
                 onClick={() => setLocation('/dashboard')}
                 size="lg"
-                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-12 py-4 text-xl font-bold rounded-full shadow-2xl"
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 sm:px-10 lg:px-12 py-3 sm:py-4 text-base sm:text-lg lg:text-xl font-bold rounded-full shadow-2xl"
               >
-                ВОЙТИ В ПЛАТФОРМУ <ArrowRight className="ml-3 w-6 h-6" />
+                ВОЙТИ В ПЛАТФОРМУ <ArrowRight className="ml-2 sm:ml-3 w-5 h-5 sm:w-6 sm:h-6" />
               </Button>
             </motion.div>
           </motion.div>
