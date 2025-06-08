@@ -22,7 +22,7 @@ export default function HexOceanWaves() {
 
     let time = 0;
     let animationId: number;
-    const cycleDuration = 8000; // 8 секунд на полный цикл
+    const cycleDuration = 24000; // 24 секунды на полный цикл (в 3 раза медленнее)
     let cycleStartTime = 0;
     let isAnimating = true;
 
