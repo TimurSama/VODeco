@@ -247,7 +247,7 @@ export default function PreviewPage() {
                   }}
                 >
                   <img 
-                    src={import.meta.env.BASE_URL + "attached_assets/image_1749416158552.png"}
+                    src="/un-sdg-logo.png"
                     alt="UN SDG Logo"
                     className="w-full h-full object-contain p-1"
                   />
@@ -275,7 +275,7 @@ export default function PreviewPage() {
                   }}
                 >
                   <img 
-                    src={import.meta.env.BASE_URL + "attached_assets/image_1749416171089.png"}
+                    src="/unicap-logo.png"
                     alt="UNICAP Logo"
                     className="w-full h-full object-contain p-1"
                   />
