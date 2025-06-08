@@ -128,27 +128,43 @@ export default function HexagonalSystem({ onContinue }: HexagonalSystemProps) {
   const [hexagons, setHexagons] = useState(initialHexagons);
   const mountRef = useRef<HTMLDivElement>(null);
 
-  // Позиции гексагонов вокруг центрального глобуса
-  const hexagonPositions = [
-    { x: 50, y: 15 }, // DAO - верх
-    { x: 80, y: 30 }, // Общество - правый верх
-    { x: 80, y: 70 }, // Государства - правый низ
-    { x: 50, y: 85 }, // Бизнес - низ
-    { x: 20, y: 70 }, // Научное сообщество - левый низ
-    { x: 20, y: 30 }, // Объекты - левый верх
-    { x: 50, y: 50 }, // Инвесторы - центр (вокруг глобуса)
-  ];
+  // Адаптивные позиции гексагонов для мобильных и десктопов
+  const getHexagonPositions = () => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      return [
+        { x: 50, y: 10 }, // DAO - верх
+        { x: 85, y: 25 }, // Общество - правый верх
+        { x: 85, y: 75 }, // Государства - правый низ
+        { x: 50, y: 90 }, // Бизнес - низ
+        { x: 15, y: 75 }, // Научное сообщество - левый низ
+        { x: 15, y: 25 }, // Объекты - левый верх
+        { x: 50, y: 50 }, // Инвесторы - центр
+      ];
+    }
+    return [
+      { x: 50, y: 12 }, // DAO - верх
+      { x: 82, y: 28 }, // Общество - правый верх
+      { x: 82, y: 72 }, // Государства - правый низ
+      { x: 50, y: 88 }, // Бизнес - низ
+      { x: 18, y: 72 }, // Научное сообщество - левый низ
+      { x: 18, y: 28 }, // Объекты - левый верх
+      { x: 50, y: 50 }, // Инвесторы - центр
+    ];
+  };
+
+  const hexagonPositions = getHexagonPositions();
 
   const selectedHexagonData = hexagons.find(h => h.id === selectedHexagon);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-black">
+    <div className="relative w-full min-h-screen overflow-hidden p-4">
       {/* Центральный глобус */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 z-10"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 z-10"
       >
         <div className="w-full h-full bg-gradient-to-b from-blue-400 via-green-500 to-blue-600 rounded-full shadow-2xl relative overflow-hidden">
           {/* Континенты */}
@@ -206,7 +222,7 @@ export default function HexagonalSystem({ onContinue }: HexagonalSystemProps) {
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            className={`relative w-20 h-20 bg-gradient-to-br ${hexagon.color} rounded-lg shadow-lg border border-white/20`}
+            className={`relative w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-gradient-to-br ${hexagon.color} rounded-lg shadow-lg border border-white/20`}
             style={{
               clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'
             }}
@@ -221,13 +237,15 @@ export default function HexagonalSystem({ onContinue }: HexagonalSystemProps) {
             
             {/* Иконка */}
             <div className="absolute inset-0 flex items-center justify-center text-white">
-              {hexagon.icon}
+              <div className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8">
+                {hexagon.icon}
+              </div>
             </div>
           </motion.div>
 
           {/* Подпись */}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 text-center">
-            <p className="text-xs text-white font-medium max-w-20">{hexagon.title}</p>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 sm:mt-2 text-center">
+            <p className="text-xs sm:text-sm text-white font-medium max-w-16 sm:max-w-20 leading-tight">{hexagon.title}</p>
           </div>
 
           {/* Потоки данных */}

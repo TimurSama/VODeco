@@ -22,8 +22,8 @@ export default function WaterDropAnimation({ onComplete }: WaterDropAnimationPro
   }, [onComplete]);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-black">
-      <div className="relative">
+    <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="relative w-full max-w-lg">
         {/* Анимированная капля воды */}
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -35,8 +35,7 @@ export default function WaterDropAnimation({ onComplete }: WaterDropAnimationPro
             scale: { duration: fadeOut ? 1 : 2, ease: "easeOut" },
             opacity: { duration: fadeOut ? 1 : 0.5 }
           }}
-          className="relative mx-auto"
-          style={{ width: '300px', height: '360px' }}
+          className="relative mx-auto w-64 h-80 sm:w-72 sm:h-96 md:w-80 md:h-96"
         >
           {/* Основная капля */}
           <div className="absolute inset-0 bg-gradient-to-b from-cyan-200 via-blue-300 to-blue-500 rounded-full opacity-90 shadow-2xl"
@@ -106,12 +105,12 @@ export default function WaterDropAnimation({ onComplete }: WaterDropAnimationPro
             y: showText ? 0 : 20 
           }}
           transition={{ duration: fadeOut ? 1 : 0.8 }}
-          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-8 text-center"
+          className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 sm:mt-6 md:mt-8 text-center px-4"
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">
             H₂O
           </h2>
-          <p className="text-lg md:text-xl text-cyan-200 max-w-lg leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-cyan-200 leading-relaxed max-w-xs sm:max-w-sm md:max-w-lg">
             вода - первичный и главный признак и фактор жизни
           </p>
         </motion.div>

@@ -32,7 +32,7 @@ export default function PreviewPage() {
   };
 
   return (
-    <div className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-black">
+    <div className="w-full min-h-screen relative overflow-hidden">
       <AnimatePresence mode="wait">
         {currentScene === 'water-drop' && (
           <motion.div

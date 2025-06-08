@@ -200,7 +200,7 @@ export default function EarthGlobeScene({ onContinue }: EarthGlobeSceneProps) {
   }, [hoveredWindow]);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full min-h-screen overflow-hidden p-2 sm:p-4">
       {/* 3D глобус */}
       <div ref={mountRef} className="absolute inset-0" />
       
@@ -208,20 +208,20 @@ export default function EarthGlobeScene({ onContinue }: EarthGlobeSceneProps) {
       {showDangerZones && (
         <div className="absolute inset-0 pointer-events-none">
           {/* Красные зоны (критические) */}
-          <div className="absolute w-8 h-8 bg-red-500 rounded-full opacity-60 animate-pulse"
-               style={{ top: '30%', left: '45%' }} /> {/* Африка */}
-          <div className="absolute w-6 h-6 bg-red-500 rounded-full opacity-60 animate-pulse"
-               style={{ top: '40%', left: '70%' }} /> {/* Индия */}
-          <div className="absolute w-10 h-10 bg-red-500 rounded-full opacity-60 animate-pulse"
-               style={{ top: '35%', left: '15%' }} /> {/* Ближний Восток */}
+          <div className="absolute w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-red-500 rounded-full opacity-60 animate-pulse"
+               style={{ top: '30%', left: '45%' }} />
+          <div className="absolute w-3 h-3 sm:w-4 sm:h-4 md:w-6 md:h-6 bg-red-500 rounded-full opacity-60 animate-pulse"
+               style={{ top: '40%', left: '70%' }} />
+          <div className="absolute w-5 h-5 sm:w-7 sm:h-7 md:w-10 md:h-10 bg-red-500 rounded-full opacity-60 animate-pulse"
+               style={{ top: '35%', left: '15%' }} />
           
           {/* Оранжевые зоны (риск) */}
-          <div className="absolute w-6 h-6 bg-orange-500 rounded-full opacity-50 animate-pulse"
-               style={{ top: '25%', left: '25%' }} /> {/* Европа */}
-          <div className="absolute w-8 h-8 bg-orange-500 rounded-full opacity-50 animate-pulse"
-               style={{ top: '45%', left: '85%' }} /> {/* Китай */}
-          <div className="absolute w-7 h-7 bg-orange-500 rounded-full opacity-50 animate-pulse"
-               style={{ top: '50%', left: '10%' }} /> {/* Южная Америка */}
+          <div className="absolute w-3 h-3 sm:w-4 sm:h-4 md:w-6 md:h-6 bg-orange-500 rounded-full opacity-50 animate-pulse"
+               style={{ top: '25%', left: '25%' }} />
+          <div className="absolute w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-orange-500 rounded-full opacity-50 animate-pulse"
+               style={{ top: '45%', left: '85%' }} />
+          <div className="absolute w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 bg-orange-500 rounded-full opacity-50 animate-pulse"
+               style={{ top: '50%', left: '10%' }} />
         </div>
       )}
 
@@ -230,54 +230,53 @@ export default function EarthGlobeScene({ onContinue }: EarthGlobeSceneProps) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2.5, duration: 0.8 }}
-        className="absolute top-8 left-1/2 transform -translate-x-1/2 text-center z-10"
+        className="absolute top-4 sm:top-6 md:top-8 left-1/2 transform -translate-x-1/2 text-center z-10 px-4 max-w-4xl"
       >
-        <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+        <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2 leading-tight">
           Водный кризис - одна из самых серьезных угроз человечеству в 21 веке
         </h1>
-        <p className="text-lg text-cyan-200">
+        <p className="text-sm sm:text-base md:text-lg text-cyan-200">
           Но у нас есть революционное решение
         </p>
       </motion.div>
 
-      {/* Информационные окна */}
-      {infoWindows.map((window, index) => (
-        <motion.div
-          key={window.id}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 3 + index * 0.2, duration: 0.6 }}
-          className={`absolute w-72 p-4 bg-slate-800/90 backdrop-blur-sm rounded-lg border border-cyan-500/30 z-10 cursor-pointer transition-all duration-300 ${
-            hoveredWindow === window.id ? 'bg-slate-700/95 border-cyan-400/50 shadow-xl' : ''
-          } ${
-            window.position === 'top-left' ? 'top-20 left-4' :
-            window.position === 'top-right' ? 'top-20 right-4' :
-            window.position === 'bottom-left' ? 'bottom-20 left-4' :
-            'bottom-20 right-4'
-          }`}
-          onMouseEnter={() => setHoveredWindow(window.id)}
-          onMouseLeave={() => setHoveredWindow(null)}
-        >
-          <h3 className="text-lg font-bold text-cyan-300 mb-3">{window.title}</h3>
-          <div className="space-y-2">
-            {(hoveredWindow === window.id && window.detailedData ? window.detailedData : window.data).map((item, i) => (
-              <p key={i} className="text-sm text-white">{item}</p>
-            ))}
-          </div>
-        </motion.div>
-      ))}
+      {/* Информационные окна - адаптивная сетка */}
+      <div className="absolute inset-0 z-10 p-4 pt-20 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-full max-w-6xl mx-auto">
+          {infoWindows.map((window, index) => (
+            <motion.div
+              key={window.id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 3 + index * 0.2, duration: 0.6 }}
+              className={`bg-slate-800/90 backdrop-blur-sm rounded-lg border border-cyan-500/30 p-3 sm:p-4 cursor-pointer transition-all duration-300 ${
+                hoveredWindow === window.id ? 'bg-slate-700/95 border-cyan-400/50 shadow-xl' : ''
+              } ${index < 2 ? 'md:self-start' : 'md:self-end'}`}
+              onMouseEnter={() => setHoveredWindow(window.id)}
+              onMouseLeave={() => setHoveredWindow(null)}
+            >
+              <h3 className="text-sm sm:text-base md:text-lg font-bold text-cyan-300 mb-2 sm:mb-3 leading-tight">{window.title}</h3>
+              <div className="space-y-1 sm:space-y-2">
+                {(hoveredWindow === window.id && window.detailedData ? window.detailedData : window.data).map((item, i) => (
+                  <p key={i} className="text-xs sm:text-sm text-white leading-relaxed">{item}</p>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
       {/* Кнопка продолжить */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 4, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
+        className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-20"
       >
         <Button
           onClick={onContinue}
           size="lg"
-          className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full shadow-lg"
+          className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg font-semibold rounded-full shadow-lg"
         >
           Продолжить
         </Button>
