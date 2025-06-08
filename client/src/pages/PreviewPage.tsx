@@ -18,7 +18,12 @@ export default function PreviewPage() {
 
   return (
     <div className="w-full h-screen relative overflow-hidden">
-      <InteractivePresentation onComplete={handleComplete} />
+      {/* Отключаем анимированный фон для презентации - используем простой статичный */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900" />
+      
+      <div className="relative z-10">
+        <InteractivePresentation onComplete={handleComplete} />
+      </div>
     </div>
   );
 }
