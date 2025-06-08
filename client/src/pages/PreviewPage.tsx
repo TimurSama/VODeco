@@ -168,15 +168,15 @@ export default function PreviewPage() {
   const [activeTab, setActiveTab] = useState('manage');
   const [activeSDGTab, setActiveSDGTab] = useState('sdg6');
 
-  // Автоматическое продвижение с intro на global-crisis
-  useEffect(() => {
-    if (currentScreen === 'intro') {
-      const timer = setTimeout(() => {
-        setCurrentScreen('global-crisis');
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [currentScreen]);
+  // Автоматическое переключение отключено
+  // useEffect(() => {
+  //   if (currentScreen === 'intro') {
+  //     const timer = setTimeout(() => {
+  //       setCurrentScreen('global-crisis');
+  //     }, 5000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [currentScreen]);
 
   const nextScreen = () => {
     const screens: ScreenType[] = ['intro', 'global-crisis', 'ecosystem', 'platform', 'mechanisms', 'sdg-goals', 'roadmap', 'cta'];
@@ -239,6 +239,14 @@ export default function PreviewPage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1 }}
                 className="text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                style={{
+                  textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
+                  filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))',
+                  border: '2px solid transparent',
+                  backgroundImage: 'linear-gradient(45deg, rgba(6, 182, 212, 0.3), rgba(37, 99, 235, 0.3))',
+                  backgroundClip: 'padding-box',
+                  borderRadius: '12px'
+                }}
               >
                 VODeco
               </motion.h1>
@@ -248,6 +256,14 @@ export default function PreviewPage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1.5 }}
                 className="text-2xl mb-8 text-gray-300"
+                style={{
+                  textShadow: '0 0 15px rgba(156, 163, 175, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
+                  padding: '12px 24px',
+                  border: '1px solid rgba(6, 182, 212, 0.3)',
+                  borderRadius: '8px',
+                  background: 'rgba(6, 182, 212, 0.1)',
+                  backdropFilter: 'blur(10px)'
+                }}
               >
                 Цифровая экосистема для управления будущим водных ресурсов планеты
               </motion.p>
@@ -386,6 +402,14 @@ export default function PreviewPage() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 lg:mb-8 text-center"
+              style={{
+                textShadow: '0 0 20px rgba(6, 182, 212, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
+                padding: '8px 16px',
+                border: '2px solid rgba(6, 182, 212, 0.4)',
+                borderRadius: '12px',
+                background: 'rgba(6, 182, 212, 0.1)',
+                backdropFilter: 'blur(8px)'
+              }}
             >
               Экосистема VODeco: Синергия для Будущего
             </motion.h2>
@@ -416,24 +440,58 @@ export default function PreviewPage() {
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 1 + index * 0.1 }}
-                    className="absolute cursor-pointer"
+                    className="absolute cursor-pointer group"
                     style={{
                       left: `calc(50% + ${x}px)`,
                       top: `calc(50% + ${y}px)`,
                       transform: 'translate(-50%, -50%)'
                     }}
                     onClick={() => setSelectedHexagon(hexagon.id)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.15, rotateY: 15 }}
+                    whileTap={{ scale: 0.9 }}
                   >
-                    <div className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-18 lg:h-18 bg-gradient-to-br ${hexagon.color} rounded-lg shadow-lg border border-white/20 flex items-center justify-center text-white relative`}
-                         style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}>
-                      <div className="w-4 h-4 sm:w-6 sm:h-6 lg:w-7 lg:h-7">
-                        {hexagon.icon}
+                    {/* 3D Hexagon Container */}
+                    <div className="relative perspective-1000">
+                      <div 
+                        className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br ${hexagon.color} transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-cyan-500/50`}
+                        style={{ 
+                          clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+                          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.2)',
+                          border: '2px solid rgba(255, 255, 255, 0.3)',
+                          filter: 'drop-shadow(0 0 15px rgba(6, 182, 212, 0.4))'
+                        }}
+                      >
+                        {/* Icon */}
+                        <div className="absolute inset-0 flex items-center justify-center text-white">
+                          <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 drop-shadow-lg">
+                            {hexagon.icon}
+                          </div>
+                        </div>
+                        
+                        {/* Glow effect */}
+                        <div 
+                          className={`absolute inset-0 bg-gradient-to-br ${hexagon.color} opacity-50 blur-sm group-hover:opacity-75 transition-opacity duration-300`}
+                          style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}
+                        />
                       </div>
-                    </div>
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 text-center">
-                      <p className="text-xs sm:text-sm text-white font-medium max-w-16">{hexagon.title}</p>
+                      
+                      {/* Floating Label */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.5 + index * 0.1 }}
+                        className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+                      >
+                        <div 
+                          className="px-2 py-1 bg-slate-800/90 text-white text-xs sm:text-sm rounded-md border border-cyan-500/30"
+                          style={{
+                            textShadow: '0 0 8px rgba(6, 182, 212, 0.6)',
+                            backdropFilter: 'blur(8px)'
+                          }}
+                        >
+                          {hexagon.title}
+                        </div>
+                      </motion.div>
                     </div>
                   </motion.div>
                 );
