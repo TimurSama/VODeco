@@ -65,9 +65,9 @@ export default function HexOceanWaves() {
         const baseX = cx + hexSize * Math.cos(angle);
         const baseY = cy + hexSize * Math.sin(angle);
         const waveOffset = (
-          Math.sin(baseX * 0.01 + time * 300) * 18 +
-          Math.cos(baseY * 0.015 + time * 350) * 16 +
-          Math.sin((baseX + baseY) * 0.02 + time * 400) * 12
+          Math.sin(baseX * 0.01 + time * 30) * 18 +
+          Math.cos(baseY * 0.015 + time * 35) * 16 +
+          Math.sin((baseX + baseY) * 0.02 + time * 40) * 12
         );
         const x = baseX;
         const y = baseY + waveOffset;
@@ -87,7 +87,7 @@ export default function HexOceanWaves() {
       for (const [x, y] of points) {
         ctx.beginPath();
         ctx.arc(x, y, 2, 0, 2 * Math.PI);
-        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 1500) * 0.015);
+        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 150) * 0.015);
         const r = Math.floor(0 + 120 * intensity);
         const g = Math.floor(220 + 35 * intensity);
         const b = Math.floor(255);
