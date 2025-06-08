@@ -22,62 +22,31 @@ export default function HexOceanWaves() {
 
     let time = 0;
     let animationId: number;
-    const cycleDuration = 20000; // 20 секунд на полный цикл
+    const cycleDuration = 25000; // 25 секунд на полный цикл
     let cycleStartTime = 0;
     let isAnimating = true;
-    
-    // Предварительный рендеринг кадров для плавности
-    const preRenderedFrames: ImageData[] = [];
-    const totalFrames = 120; // 120 кадров для плавной анимации
-    let currentFrame = 0;
-    let isPrerendered = false;
-
-    function preRenderFrames() {
-      if (!ctx) return;
-      
-      console.log("Pre-rendering animation frames...");
-      
-      for (let frame = 0; frame < totalFrames; frame++) {
-        const progress = frame / totalFrames;
-        const smoothProgress = 0.5 * (1 - Math.cos(progress * 2 * Math.PI));
-        const frameTime = smoothProgress * Math.PI * 2;
-        
-        ctx.clearRect(0, 0, width, height);
-        
-        // Рендерим все гексагоны для текущего кадра
-        for (let row = -1; row < height / vertSpacing + 2; row++) {
-          for (let col = -1; col < width / horizSpacing + 2; col++) {
-            const cx = col * horizSpacing;
-            const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
-            drawHexagonForFrame(cx, cy, frameTime);
-          }
-        }
-        
-        // Сохраняем кадр
-        preRenderedFrames[frame] = ctx.getImageData(0, 0, width, height);
-      }
-      
-      isPrerendered = true;
-      console.log("Pre-rendering complete!");
-    }
 
     function animate(currentTime: number) {
       if (!cycleStartTime) cycleStartTime = currentTime;
       
-      if (!isPrerendered) {
-        preRenderFrames();
-        return;
-      }
+      const elapsed = currentTime - cycleStartTime;
+      const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
+      
+      // Плавный бесшовный круговой цикл
+      const smoothProgress = 0.5 * (1 - Math.cos(cycleProgress * 2 * Math.PI));
+      time = smoothProgress * Math.PI * 2;
       
       if (!ctx) return;
       
-      const elapsed = currentTime - cycleStartTime;
-      const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
-      currentFrame = Math.floor(cycleProgress * totalFrames) % totalFrames;
-      
-      // Воспроизводим предварительно отрендеренный кадр
-      if (preRenderedFrames[currentFrame]) {
-        ctx.putImageData(preRenderedFrames[currentFrame], 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      // Рендерим все гексагоны
+      for (let row = -1; row < height / vertSpacing + 2; row++) {
+        for (let col = -1; col < width / horizSpacing + 2; col++) {
+          const cx = col * horizSpacing;
+          const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
+          drawHexagon(cx, cy);
+        }
       }
 
       if (isAnimating) {
@@ -87,52 +56,6 @@ export default function HexOceanWaves() {
 
     // Предвычисляем углы для гексагона
     const hexAngles = [0, 60, 120, 180, 240, 300].map(deg => deg * Math.PI / 180);
-    
-    function drawHexagonForFrame(cx: number, cy: number, frameTime: number) {
-      if (!ctx) return;
-      
-      const angle_deg = 60;
-      const points: [number, number][] = [];
-      
-      for (let i = 0; i < 6; i++) {
-        const angle = Math.PI / 180 * (angle_deg * i);
-        const baseX = cx + hexSize * Math.cos(angle);
-        const baseY = cy + hexSize * Math.sin(angle);
-        
-        const smoothTime = frameTime * 0.7;
-        const waveOffset = (
-          Math.sin(baseX * 0.008 + smoothTime * 0.6) * 20 +
-          Math.cos(baseY * 0.012 + smoothTime * 0.8) * 16 +
-          Math.sin((baseX + baseY) * 0.015 + smoothTime * 1.0) * 12
-        );
-        const x = baseX;
-        const y = baseY + waveOffset;
-        points.push([x, y]);
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(points[0][0], points[0][1]);
-      for (let i = 1; i < 6; i++) {
-        ctx.lineTo(points[i][0], points[i][1]);
-      }
-      ctx.closePath();
-      ctx.strokeStyle = "rgba(0, 255, 255, 0.08)";
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      for (const [x, y] of points) {
-        ctx.beginPath();
-        ctx.arc(x, y, 2, 0, 2 * Math.PI);
-        const intensity = 0.6 + 0.4 * Math.sin((x + y + frameTime * 3) * 0.015);
-        const r = Math.floor(0 + 120 * intensity);
-        const g = Math.floor(220 + 35 * intensity);
-        const b = Math.floor(255);
-        ctx.fillStyle = `rgba(${r},${g},${b},${intensity * 0.9})`;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = `rgba(${r},${g},${b},${intensity})`;
-        ctx.fill();
-      }
-    }
     
     function drawHexagon(cx: number, cy: number) {
       if (!ctx) return;
@@ -144,8 +67,8 @@ export default function HexOceanWaves() {
         const angle = Math.PI / 180 * (angle_deg * i);
         const baseX = cx + hexSize * Math.cos(angle);
         const baseY = cy + hexSize * Math.sin(angle);
-        // Добавляем сглаживание для устранения дерганых движений
-        const smoothTime = time * 0.7; // Дополнительное замедление
+        
+        const smoothTime = time * 0.7;
         const waveOffset = (
           Math.sin(baseX * 0.008 + smoothTime * 0.6) * 20 +
           Math.cos(baseY * 0.012 + smoothTime * 0.8) * 16 +
