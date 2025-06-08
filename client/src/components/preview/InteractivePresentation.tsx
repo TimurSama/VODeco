@@ -181,173 +181,267 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
 
   // Экран 1: Космический фон с каплей воды
   const CosmicIntroScreen = () => (
-    <div className="relative w-full h-screen overflow-hidden">
-      {/* Адаптивный космический фон */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
-        {/* Упрощенная сетка звезд */}
-        {[...Array(50)].map((_, i) => (
+    <div className="relative w-full h-screen overflow-hidden bg-black">
+      {/* Динамичный космический фон с галактиками */}
+      <div className="absolute inset-0">
+        {/* Главный градиент космоса */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-900/50 to-indigo-900/30" />
+        
+        {/* Анимированные галактики */}
+        <motion.div
+          className="absolute inset-0"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
+        >
+          <div 
+            className="absolute w-96 h-96 opacity-20"
+            style={{
+              top: '10%',
+              left: '15%',
+              background: 'radial-gradient(ellipse 200px 100px at center, rgba(147, 51, 234, 0.3) 0%, rgba(59, 130, 246, 0.2) 30%, transparent 70%)',
+              filter: 'blur(2px)',
+            }}
+          />
+          <div 
+            className="absolute w-64 h-64 opacity-15"
+            style={{
+              top: '60%',
+              right: '20%',
+              background: 'radial-gradient(ellipse 150px 80px at center, rgba(219, 39, 119, 0.3) 0%, rgba(168, 85, 247, 0.2) 40%, transparent 70%)',
+              filter: 'blur(3px)',
+            }}
+          />
+        </motion.div>
+
+        {/* Звездное поле */}
+        {[...Array(200)].map((_, i) => {
+          const size = Math.random() * 2 + 0.5;
+          const brightness = Math.random() * 0.8 + 0.2;
+          return (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                opacity: brightness,
+              }}
+              animate={{
+                opacity: [brightness * 0.3, brightness, brightness * 0.3],
+                scale: [0.8, 1.2, 0.8],
+              }}
+              transition={{
+                duration: Math.random() * 4 + 2,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+              }}
+            />
+          );
+        })}
+
+        {/* Движущиеся частицы космической пыли */}
+        {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-0.5 h-0.5 bg-white rounded-full"
+            className="absolute w-1 h-1 bg-blue-200 rounded-full opacity-30"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              opacity: [0.4, 0.8, 0.4],
+              x: [0, Math.random() * 200 - 100],
+              y: [0, Math.random() * 200 - 100],
+              opacity: [0.3, 0.7, 0.3],
             }}
             transition={{
-              duration: 3,
+              duration: Math.random() * 15 + 10,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              ease: "linear",
             }}
           />
         ))}
-        
-        {/* Простая анимация градиента */}
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
       </div>
 
-      {/* Реалистичная 3D капля воды */}
+      {/* VODeco заголовок вверху по центру */}
+      <motion.div
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1 }}
+        className="absolute top-16 left-1/2 transform -translate-x-1/2 text-center z-20"
+      >
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
+          VODeco
+        </h1>
+        <p className="text-lg md:text-xl text-blue-200 opacity-90">
+          Управление водными ресурсами будущего
+        </p>
+      </motion.div>
+
+      {/* Реалистичная капля воды */}
       <AnimatePresence>
         {showWaterDrop && (
           <motion.div
-            initial={{ scale: 0.1, y: 50 }}
+            initial={{ scale: 0.1, y: 100 }}
             animate={{ scale: 1, y: 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-48 md:h-64">
-              {/* Основная капля с заострённым верхом */}
-              <div 
-                className="w-full h-full relative"
-                style={{
-                  background: 'linear-gradient(145deg, rgba(59, 130, 246, 0.95) 0%, rgba(147, 197, 253, 0.8) 40%, rgba(219, 234, 254, 0.6) 70%, rgba(255, 255, 255, 0.9) 90%)',
-                  borderRadius: '50% 50% 50% 50% / 80% 80% 60% 60%',
-                  clipPath: 'ellipse(50% 45% at 50% 60%)',
-                  boxShadow: `
-                    0 0 30px rgba(59, 130, 246, 0.5),
-                    inset -5px -5px 15px rgba(0, 0, 0, 0.1),
-                    inset 5px 5px 15px rgba(255, 255, 255, 0.4)
-                  `,
-                  backdropFilter: 'blur(2px)',
-                }}
-              >
-                {/* Заострённый верх капли */}
-                <div 
-                  className="absolute w-4 h-8 left-1/2 transform -translate-x-1/2 -top-2"
-                  style={{
-                    background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(147, 197, 253, 0.8) 100%)',
-                    clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
-                    filter: 'blur(0.5px)',
-                  }}
-                />
+            <div className="relative">
+              {/* Основная капля в форме слезы */}
+              <div className="relative w-40 h-56 md:w-48 md:h-64">
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 100 140"
+                  className="absolute inset-0"
+                >
+                  <defs>
+                    <radialGradient id="waterGradient" cx="0.3" cy="0.3">
+                      <stop offset="0%" stopColor="rgba(255, 255, 255, 0.9)" />
+                      <stop offset="30%" stopColor="rgba(147, 197, 253, 0.8)" />
+                      <stop offset="70%" stopColor="rgba(59, 130, 246, 0.9)" />
+                      <stop offset="100%" stopColor="rgba(29, 78, 216, 0.95)" />
+                    </radialGradient>
+                    <filter id="waterShadow">
+                      <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="rgba(59, 130, 246, 0.5)" />
+                    </filter>
+                  </defs>
+                  {/* Форма капли */}
+                  <path
+                    d="M50 10 Q50 10 50 10 Q70 30 70 70 Q70 100 50 120 Q30 100 30 70 Q30 30 50 10 Z"
+                    fill="url(#waterGradient)"
+                    filter="url(#waterShadow)"
+                    style={{
+                      backdropFilter: 'blur(2px)',
+                    }}
+                  />
+                  {/* Блик */}
+                  <ellipse
+                    cx="42"
+                    cy="40"
+                    rx="8"
+                    ry="12"
+                    fill="rgba(255, 255, 255, 0.6)"
+                    style={{ filter: 'blur(1px)' }}
+                  />
+                </svg>
 
-                {/* Молекула воды H2O в центре */}
+                {/* 3D Молекула воды H2O */}
                 <motion.div
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10"
                   animate={{
                     rotateY: [0, 360],
-                    rotateX: [0, 15, 0, -15, 0],
+                    rotateZ: [0, 10, -10, 0],
                   }}
                   transition={{
-                    duration: 6,
+                    duration: 8,
                     repeat: Infinity,
                     ease: "linear",
                   }}
+                  style={{
+                    transformStyle: 'preserve-3d',
+                  }}
                 >
-                  {/* Атом кислорода (красный) */}
-                  <div 
-                    className="relative w-6 h-6 rounded-full"
+                  {/* Атом кислорода (красный, больше) */}
+                  <motion.div 
+                    className="relative w-8 h-8 rounded-full"
                     style={{
-                      background: 'radial-gradient(circle at 30% 30%, #ff6b6b, #e74c3c)',
-                      boxShadow: '0 0 8px rgba(231, 76, 60, 0.6)',
+                      background: 'radial-gradient(circle at 30% 30%, #ff4757, #c44569)',
+                      boxShadow: '0 0 12px rgba(255, 71, 87, 0.8), inset -2px -2px 4px rgba(0,0,0,0.3), inset 2px 2px 4px rgba(255,255,255,0.3)',
+                      transformStyle: 'preserve-3d',
+                    }}
+                    animate={{
+                      rotateX: [0, 15, 0, -15, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
                     }}
                   />
-                  {/* Атом водорода 1 (белый) */}
-                  <div 
-                    className="absolute w-3 h-3 rounded-full"
+                  
+                  {/* Атом водорода 1 (белый, меньше) */}
+                  <motion.div 
+                    className="absolute w-4 h-4 rounded-full"
                     style={{
-                      background: 'radial-gradient(circle at 30% 30%, #ffffff, #ecf0f1)',
-                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                      background: 'radial-gradient(circle at 30% 30%, #ffffff, #ddd)',
+                      boxShadow: '0 0 8px rgba(255, 255, 255, 0.9), inset -1px -1px 2px rgba(0,0,0,0.2), inset 1px 1px 2px rgba(255,255,255,0.8)',
+                      top: '-12px',
+                      left: '-16px',
+                      transformStyle: 'preserve-3d',
+                    }}
+                    animate={{
+                      rotateY: [0, -30, 0, 30, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                    }}
+                  />
+                  
+                  {/* Атом водорода 2 (белый, меньше) */}
+                  <motion.div 
+                    className="absolute w-4 h-4 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, #ffffff, #ddd)',
+                      boxShadow: '0 0 8px rgba(255, 255, 255, 0.9), inset -1px -1px 2px rgba(0,0,0,0.2), inset 1px 1px 2px rgba(255,255,255,0.8)',
+                      top: '-12px',
+                      right: '-16px',
+                      transformStyle: 'preserve-3d',
+                    }}
+                    animate={{
+                      rotateY: [0, 30, 0, -30, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: 0.5,
+                    }}
+                  />
+                  
+                  {/* Химические связи */}
+                  <div 
+                    className="absolute w-4 h-0.5 bg-gradient-to-r from-white to-red-300 opacity-80 rounded-full"
+                    style={{
                       top: '-8px',
                       left: '-12px',
+                      transform: 'rotate(-25deg)',
+                      boxShadow: '0 0 3px rgba(255, 255, 255, 0.7)',
                     }}
                   />
-                  {/* Атом водорода 2 (белый) */}
                   <div 
-                    className="absolute w-3 h-3 rounded-full"
+                    className="absolute w-4 h-0.5 bg-gradient-to-l from-white to-red-300 opacity-80 rounded-full"
                     style={{
-                      background: 'radial-gradient(circle at 30% 30%, #ffffff, #ecf0f1)',
-                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
                       top: '-8px',
                       right: '-12px',
-                    }}
-                  />
-                  {/* Связи между атомами */}
-                  <div 
-                    className="absolute w-3 h-0.5 bg-white opacity-60"
-                    style={{
-                      top: '-5px',
-                      left: '-9px',
-                      transform: 'rotate(-30deg)',
-                    }}
-                  />
-                  <div 
-                    className="absolute w-3 h-0.5 bg-white opacity-60"
-                    style={{
-                      top: '-5px',
-                      right: '-9px',
-                      transform: 'rotate(30deg)',
+                      transform: 'rotate(25deg)',
+                      boxShadow: '0 0 3px rgba(255, 255, 255, 0.7)',
                     }}
                   />
                 </motion.div>
 
-                {/* Блик на капле */}
-                <div 
-                  className="absolute w-6 h-8 bg-white opacity-70 rounded-full"
-                  style={{
-                    top: '20%',
-                    left: '25%',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%)',
-                    filter: 'blur(1px)',
-                  }}
-                />
-                
-                {/* Круглые пузырьки воздуха поднимающиеся снизу вверх */}
-                {[...Array(8)].map((_, i) => (
+                {/* Пузырьки воздуха поднимающиеся */}
+                {[...Array(6)].map((_, i) => (
                   <motion.div
                     key={i}
                     className="absolute rounded-full"
                     style={{
-                      width: `${4 + Math.random() * 4}px`,
-                      height: `${4 + Math.random() * 4}px`,
-                      left: `${25 + Math.random() * 50}%`,
-                      background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4))',
-                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.6), inset 1px 1px 2px rgba(255, 255, 255, 0.8)',
+                      width: `${3 + Math.random() * 4}px`,
+                      height: `${3 + Math.random() * 4}px`,
+                      left: `${30 + Math.random() * 40}%`,
+                      background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(147, 197, 253, 0.6))',
+                      boxShadow: '0 0 8px rgba(255, 255, 255, 0.8), inset 1px 1px 3px rgba(255, 255, 255, 0.9)',
                     }}
                     animate={{
-                      y: ['100%', '-20%'],
-                      opacity: [0, 0.8, 0.8, 0],
-                      scale: [0.5, 1, 1.2, 0.8],
+                      y: ['90%', '-10%'],
+                      opacity: [0, 0.9, 0.9, 0],
+                      scale: [0.3, 1, 1.3, 0.5],
                     }}
                     transition={{
-                      duration: 3 + Math.random() * 2,
+                      duration: 4 + Math.random() * 2,
                       repeat: Infinity,
-                      delay: Math.random() * 3,
+                      delay: Math.random() * 4,
                       ease: "easeOut",
                     }}
                   />
@@ -356,13 +450,13 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
               
               {/* Отражение под каплей */}
               <motion.div 
-                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-blue-500 opacity-20 rounded-full"
+                className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-6 bg-blue-400 opacity-15 rounded-full"
                 style={{
-                  filter: 'blur(8px)',
+                  filter: 'blur(10px)',
                 }}
                 animate={{
-                  scaleX: [1, 1.1, 1],
-                  opacity: [0.2, 0.3, 0.2],
+                  scaleX: [1, 1.2, 1],
+                  opacity: [0.15, 0.25, 0.15],
                 }}
                 transition={{
                   duration: 3,
@@ -373,21 +467,6 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* VODeco заголовок (сдвинут ниже) */}
-      <motion.div
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-32 md:bottom-40 left-1/2 transform -translate-x-1/2 text-center"
-      >
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
-          VODeco
-        </h1>
-        <p className="text-base md:text-lg text-blue-200 opacity-90">
-          Управление водными ресурсами будущего
-        </p>
-      </motion.div>
     </div>
   );
 
@@ -426,45 +505,88 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative w-full h-screen overflow-hidden"
+            className="relative w-full h-screen overflow-hidden bg-black"
           >
-            {/* Тот же космический фон */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
-              {/* Упрощенная сетка звезд */}
-              {[...Array(50)].map((_, i) => (
+            {/* Тот же динамичный космический фон */}
+            <div className="absolute inset-0">
+              {/* Главный градиент космоса */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-900/50 to-indigo-900/30" />
+              
+              {/* Анимированные галактики */}
+              <motion.div
+                className="absolute inset-0"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
+              >
+                <div 
+                  className="absolute w-96 h-96 opacity-20"
+                  style={{
+                    top: '10%',
+                    left: '15%',
+                    background: 'radial-gradient(ellipse 200px 100px at center, rgba(147, 51, 234, 0.3) 0%, rgba(59, 130, 246, 0.2) 30%, transparent 70%)',
+                    filter: 'blur(2px)',
+                  }}
+                />
+                <div 
+                  className="absolute w-64 h-64 opacity-15"
+                  style={{
+                    top: '60%',
+                    right: '20%',
+                    background: 'radial-gradient(ellipse 150px 80px at center, rgba(219, 39, 119, 0.3) 0%, rgba(168, 85, 247, 0.2) 40%, transparent 70%)',
+                    filter: 'blur(3px)',
+                  }}
+                />
+              </motion.div>
+
+              {/* Звездное поле */}
+              {[...Array(200)].map((_, i) => {
+                const size = Math.random() * 2 + 0.5;
+                const brightness = Math.random() * 0.8 + 0.2;
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full bg-white"
+                    style={{
+                      width: `${size}px`,
+                      height: `${size}px`,
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      opacity: brightness,
+                    }}
+                    animate={{
+                      opacity: [brightness * 0.3, brightness, brightness * 0.3],
+                      scale: [0.8, 1.2, 0.8],
+                    }}
+                    transition={{
+                      duration: Math.random() * 4 + 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 3,
+                    }}
+                  />
+                );
+              })}
+
+              {/* Движущиеся частицы космической пыли */}
+              {[...Array(30)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-0.5 h-0.5 bg-white rounded-full"
+                  className="absolute w-1 h-1 bg-blue-200 rounded-full opacity-30"
                   style={{
                     left: `${Math.random() * 100}%`,
                     top: `${Math.random() * 100}%`,
                   }}
                   animate={{
-                    opacity: [0.4, 0.8, 0.4],
+                    x: [0, Math.random() * 200 - 100],
+                    y: [0, Math.random() * 200 - 100],
+                    opacity: [0.3, 0.7, 0.3],
                   }}
                   transition={{
-                    duration: 3,
+                    duration: Math.random() * 15 + 10,
                     repeat: Infinity,
-                    delay: Math.random() * 2,
+                    ease: "linear",
                   }}
                 />
               ))}
-              
-              {/* Простая анимация градиента */}
-              <motion.div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
-                }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
             </div>
 
             {/* Контент экрана */}
