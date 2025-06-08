@@ -22,27 +22,46 @@ export default function HexOceanWaves() {
 
     let time = 0;
     let animationId: number;
-    const cycleDuration = 60000; // 60 секунд на полный цикл (очень медленная анимация)
+    const cycleDuration = 15000; // 15 секунд на полный цикл (быстрее)
     let cycleStartTime = 0;
     let isAnimating = true;
+    let frameCount = 0;
+    const targetFPS = 30; // Увеличиваем до 30 FPS для плавности
+    const frameInterval = 1000 / targetFPS;
+    let lastFrameTime = 0;
 
     function animate(currentTime: number) {
       if (!cycleStartTime) cycleStartTime = currentTime;
       
+      // Ограничиваем частоту кадров
+      if (currentTime - lastFrameTime < frameInterval) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+      
+      lastFrameTime = currentTime;
+      frameCount++;
+      
       const elapsed = currentTime - cycleStartTime;
       const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
       
-      // Создаем плавный зацикленный прогресс (0 -> 1 -> 0)
-      time = Math.sin(cycleProgress * Math.PI * 2) * 0.5 + 0.5;
+      // Создаем очень медленный зацикленный прогресс
+      time = cycleProgress * 2 * Math.PI;
       
       if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
+      
+      // Рендерим каждый 2-й кадр для более динамичной анимации
+      if (frameCount % 2 === 0) {
+        ctx.clearRect(0, 0, width, height);
 
-      for (let row = -1; row < height / vertSpacing + 2; row++) {
-        for (let col = -1; col < width / horizSpacing + 2; col++) {
-          const cx = col * horizSpacing;
-          const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
-          drawHexagon(cx, cy);
+        // Рисуем меньше гексагонов с большим шагом
+        const step = 2;
+        for (let row = -1; row < height / vertSpacing + 2; row += step) {
+          for (let col = -1; col < width / horizSpacing + 2; col += step) {
+            const cx = col * horizSpacing;
+            const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
+            drawHexagon(cx, cy);
+          }
         }
       }
 
@@ -65,9 +84,9 @@ export default function HexOceanWaves() {
         const baseX = cx + hexSize * Math.cos(angle);
         const baseY = cy + hexSize * Math.sin(angle);
         const waveOffset = (
-          Math.sin(baseX * 0.01 + time * 30) * 18 +
-          Math.cos(baseY * 0.015 + time * 35) * 16 +
-          Math.sin((baseX + baseY) * 0.02 + time * 40) * 12
+          Math.sin(baseX * 0.01 + time * 1.5) * 28 +
+          Math.cos(baseY * 0.015 + time * 1.8) * 24 +
+          Math.sin((baseX + baseY) * 0.02 + time * 2.0) * 20
         );
         const x = baseX;
         const y = baseY + waveOffset;
@@ -87,7 +106,7 @@ export default function HexOceanWaves() {
       for (const [x, y] of points) {
         ctx.beginPath();
         ctx.arc(x, y, 2, 0, 2 * Math.PI);
-        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 150) * 0.015);
+        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 6) * 0.015);
         const r = Math.floor(0 + 120 * intensity);
         const g = Math.floor(220 + 35 * intensity);
         const b = Math.floor(255);
