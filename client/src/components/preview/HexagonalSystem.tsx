@@ -290,56 +290,56 @@ export default function HexagonalSystem({ onContinue }: HexagonalSystemProps) {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-slate-800 rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+              className="bg-slate-800 rounded-lg p-4 sm:p-6 max-w-2xl w-full max-h-[85vh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-white">{selectedHexagonData.title}</h2>
+              <div className="flex justify-between items-center mb-3 sm:mb-4">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight">{selectedHexagonData.title}</h2>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedHexagon(null)}
-                  className="text-white hover:bg-slate-700"
+                  className="text-white hover:bg-slate-700 flex-shrink-0"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </div>
 
-              <p className="text-cyan-200 mb-6">{selectedHexagonData.description}</p>
+              <p className="text-cyan-200 mb-4 sm:mb-6 text-sm sm:text-base">{selectedHexagonData.description}</p>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Функции:</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-cyan-300 mb-2">Функции:</h3>
                   <ul className="list-disc list-inside space-y-1">
                     {selectedHexagonData.details.functions.map((func, i) => (
-                      <li key={i} className="text-white">{func}</li>
+                      <li key={i} className="text-white text-sm sm:text-base leading-relaxed">{func}</li>
                     ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Участники:</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-cyan-300 mb-2">Участники:</h3>
                   <ul className="list-disc list-inside space-y-1">
                     {selectedHexagonData.details.participants.map((participant, i) => (
-                      <li key={i} className="text-white">{participant}</li>
+                      <li key={i} className="text-white text-sm sm:text-base leading-relaxed">{participant}</li>
                     ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Механизмы:</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-cyan-300 mb-2">Механизмы:</h3>
                   <ul className="list-disc list-inside space-y-1">
                     {selectedHexagonData.details.mechanisms.map((mechanism, i) => (
-                      <li key={i} className="text-white">{mechanism}</li>
+                      <li key={i} className="text-white text-sm sm:text-base leading-relaxed">{mechanism}</li>
                     ))}
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Выгоды:</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-cyan-300 mb-2">Выгоды:</h3>
                   <ul className="list-disc list-inside space-y-1">
                     {selectedHexagonData.details.benefits.map((benefit, i) => (
-                      <li key={i} className="text-white">{benefit}</li>
+                      <li key={i} className="text-white text-sm sm:text-base leading-relaxed">{benefit}</li>
                     ))}
                   </ul>
                 </div>
@@ -354,12 +354,12 @@ export default function HexagonalSystem({ onContinue }: HexagonalSystemProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30"
+        className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-30"
       >
         <Button
           onClick={onContinue}
           size="lg"
-          className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full shadow-lg"
+          className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 text-sm sm:text-base md:text-lg font-semibold rounded-full shadow-lg"
         >
           Продолжить
         </Button>
