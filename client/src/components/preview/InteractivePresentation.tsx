@@ -74,33 +74,6 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
 
     return (
       <div className="relative w-full h-screen overflow-hidden">
-        {/* Улучшенный фон с тонкой гексагональной сеткой */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-          {/* Тонкая гексагональная сетка */}
-          <div className="absolute inset-0 opacity-10">
-            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-              <defs>
-                <pattern id="hexPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                  <polygon 
-                    points="10,2 18,7 18,13 10,18 2,13 2,7" 
-                    fill="none" 
-                    stroke="rgba(59, 130, 246, 0.3)" 
-                    strokeWidth="0.5"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#hexPattern)" />
-            </svg>
-          </div>
-          
-          {/* Центральное свечение */}
-          <div 
-            className="absolute inset-0 opacity-30"
-            style={{
-              background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.3) 0%, transparent 60%)',
-            }}
-          />
-        </div>
 
         {/* Центральный глобус */}
         <motion.div
@@ -179,90 +152,9 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
     );
   };
 
-  // Экран 1: Космический фон с каплей воды
+  // Экран 1: Простой фон с каплей воды
   const CosmicIntroScreen = () => (
-    <div className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Динамичный космический фон с галактиками */}
-      <div className="absolute inset-0">
-        {/* Главный градиент космоса */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-900/50 to-indigo-900/30" />
-        
-        {/* Анимированные галактики */}
-        <motion.div
-          className="absolute inset-0"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
-        >
-          <div 
-            className="absolute w-96 h-96 opacity-20"
-            style={{
-              top: '10%',
-              left: '15%',
-              background: 'radial-gradient(ellipse 200px 100px at center, rgba(147, 51, 234, 0.3) 0%, rgba(59, 130, 246, 0.2) 30%, transparent 70%)',
-              filter: 'blur(2px)',
-            }}
-          />
-          <div 
-            className="absolute w-64 h-64 opacity-15"
-            style={{
-              top: '60%',
-              right: '20%',
-              background: 'radial-gradient(ellipse 150px 80px at center, rgba(219, 39, 119, 0.3) 0%, rgba(168, 85, 247, 0.2) 40%, transparent 70%)',
-              filter: 'blur(3px)',
-            }}
-          />
-        </motion.div>
-
-        {/* Звездное поле */}
-        {[...Array(200)].map((_, i) => {
-          const size = Math.random() * 2 + 0.5;
-          const brightness = Math.random() * 0.8 + 0.2;
-          return (
-            <motion.div
-              key={i}
-              className="absolute rounded-full bg-white"
-              style={{
-                width: `${size}px`,
-                height: `${size}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: brightness,
-              }}
-              animate={{
-                opacity: [brightness * 0.3, brightness, brightness * 0.3],
-                scale: [0.8, 1.2, 0.8],
-              }}
-              transition={{
-                duration: Math.random() * 4 + 2,
-                repeat: Infinity,
-                delay: Math.random() * 3,
-              }}
-            />
-          );
-        })}
-
-        {/* Движущиеся частицы космической пыли */}
-        {[...Array(30)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-200 rounded-full opacity-30"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              x: [0, Math.random() * 200 - 100],
-              y: [0, Math.random() * 200 - 100],
-              opacity: [0.3, 0.7, 0.3],
-            }}
-            transition={{
-              duration: Math.random() * 15 + 10,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
+    <div className="relative w-full h-screen overflow-hidden">
 
       {/* VODeco заголовок вверху по центру */}
       <motion.div
@@ -498,98 +390,15 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
           </motion.div>
         )}
 
-        {/* Экраны 3-4: с тем же космическим фоном */}
+        {/* Экраны 3-4: простой фон */}
         {(currentScreen === 2 || currentScreen === 3) && (
           <motion.div
             key={`screen-${currentScreen}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative w-full h-screen overflow-hidden bg-black"
+            className="relative w-full h-screen overflow-hidden"
           >
-            {/* Тот же динамичный космический фон */}
-            <div className="absolute inset-0">
-              {/* Главный градиент космоса */}
-              <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-900/50 to-indigo-900/30" />
-              
-              {/* Анимированные галактики */}
-              <motion.div
-                className="absolute inset-0"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
-              >
-                <div 
-                  className="absolute w-96 h-96 opacity-20"
-                  style={{
-                    top: '10%',
-                    left: '15%',
-                    background: 'radial-gradient(ellipse 200px 100px at center, rgba(147, 51, 234, 0.3) 0%, rgba(59, 130, 246, 0.2) 30%, transparent 70%)',
-                    filter: 'blur(2px)',
-                  }}
-                />
-                <div 
-                  className="absolute w-64 h-64 opacity-15"
-                  style={{
-                    top: '60%',
-                    right: '20%',
-                    background: 'radial-gradient(ellipse 150px 80px at center, rgba(219, 39, 119, 0.3) 0%, rgba(168, 85, 247, 0.2) 40%, transparent 70%)',
-                    filter: 'blur(3px)',
-                  }}
-                />
-              </motion.div>
-
-              {/* Звездное поле */}
-              {[...Array(200)].map((_, i) => {
-                const size = Math.random() * 2 + 0.5;
-                const brightness = Math.random() * 0.8 + 0.2;
-                return (
-                  <motion.div
-                    key={i}
-                    className="absolute rounded-full bg-white"
-                    style={{
-                      width: `${size}px`,
-                      height: `${size}px`,
-                      left: `${Math.random() * 100}%`,
-                      top: `${Math.random() * 100}%`,
-                      opacity: brightness,
-                    }}
-                    animate={{
-                      opacity: [brightness * 0.3, brightness, brightness * 0.3],
-                      scale: [0.8, 1.2, 0.8],
-                    }}
-                    transition={{
-                      duration: Math.random() * 4 + 2,
-                      repeat: Infinity,
-                      delay: Math.random() * 3,
-                    }}
-                  />
-                );
-              })}
-
-              {/* Движущиеся частицы космической пыли */}
-              {[...Array(30)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-1 h-1 bg-blue-200 rounded-full opacity-30"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                  }}
-                  animate={{
-                    x: [0, Math.random() * 200 - 100],
-                    y: [0, Math.random() * 200 - 100],
-                    opacity: [0.3, 0.7, 0.3],
-                  }}
-                  transition={{
-                    duration: Math.random() * 15 + 10,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Контент экрана */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center text-white z-10">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">Экран {currentScreen + 1}</h2>
