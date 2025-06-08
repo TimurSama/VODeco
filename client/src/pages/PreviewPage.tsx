@@ -224,27 +224,75 @@ export default function PreviewPage() {
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex items-center justify-center z-10"
           >
-            <div className="text-center text-white max-w-4xl px-8">
-              <motion.p 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-cyan-300 mb-4 text-lg"
+            {/* Логотипы в правом верхнем углу */}
+            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 flex space-x-3 sm:space-x-4 z-30">
+              <motion.a
+                href="https://www.un.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                className="block"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                UNITED INNOVATION CAPITAL и VODPROM представляют
-              </motion.p>
-              
+                <div 
+                  className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden"
+                  style={{
+                    background: 'rgba(6, 182, 212, 0.2)',
+                    border: '2px solid rgba(6, 182, 212, 0.4)',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.3)'
+                  }}
+                >
+                  <img 
+                    src={import.meta.env.BASE_URL + "attached_assets/image_1749416158552.png"}
+                    alt="UN SDG Logo"
+                    className="w-full h-full object-contain p-1"
+                  />
+                </div>
+              </motion.a>
+
+              <motion.a
+                href="https://unicapinvest.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+                className="block"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <div 
+                  className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden"
+                  style={{
+                    background: 'rgba(6, 182, 212, 0.2)',
+                    border: '2px solid rgba(6, 182, 212, 0.4)',
+                    backdropFilter: 'blur(8px)',
+                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.3)'
+                  }}
+                >
+                  <img 
+                    src={import.meta.env.BASE_URL + "attached_assets/image_1749416171089.png"}
+                    alt="UNICAP Logo"
+                    className="w-full h-full object-contain p-1"
+                  />
+                </div>
+              </motion.a>
+            </div>
+
+            <div className="text-center text-white max-w-4xl px-8">
               <motion.h1 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                transition={{ delay: 0.5 }}
+                className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
                 style={{
                   textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
                   filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))',
-                  border: '2px solid transparent',
-                  backgroundImage: 'linear-gradient(45deg, rgba(6, 182, 212, 0.3), rgba(37, 99, 235, 0.3))',
-                  backgroundClip: 'padding-box',
+                  padding: '16px',
                   borderRadius: '12px'
                 }}
               >
@@ -254,8 +302,8 @@ export default function PreviewPage() {
               <motion.p 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                className="text-2xl mb-8 text-gray-300"
+                transition={{ delay: 1 }}
+                className="text-xl sm:text-2xl lg:text-3xl mb-8 text-gray-300"
                 style={{
                   textShadow: '0 0 15px rgba(156, 163, 175, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
                   padding: '12px 24px',
@@ -276,9 +324,14 @@ export default function PreviewPage() {
                 <Button
                   onClick={nextScreen}
                   size="lg"
-                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 text-lg font-semibold rounded-full"
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-full"
+                  style={{
+                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                    boxShadow: '0 8px 32px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3)',
+                    border: '1px solid rgba(6, 182, 212, 0.3)'
+                  }}
                 >
-                  НАЧАТЬ <ArrowRight className="ml-2 w-5 h-5" />
+                  НАЧАТЬ ПРЕЗЕНТАЦИЮ <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </motion.div>
             </div>
