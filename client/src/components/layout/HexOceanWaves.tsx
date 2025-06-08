@@ -45,8 +45,8 @@ export default function HexOceanWaves() {
       const elapsed = currentTime - cycleStartTime;
       const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
       
-      // Создаем очень медленный зацикленный прогресс
-      time = cycleProgress * 2 * Math.PI;
+      // Создаем бесшовный круговой цикл (sin дает плавный переход от 0 к 0)
+      time = Math.sin(cycleProgress * 2 * Math.PI) * Math.PI;
       
       if (!ctx) return;
       
@@ -54,10 +54,9 @@ export default function HexOceanWaves() {
       if (frameCount % 2 === 0) {
         ctx.clearRect(0, 0, width, height);
 
-        // Рисуем меньше гексагонов с большим шагом
-        const step = 2;
-        for (let row = -1; row < height / vertSpacing + 2; row += step) {
-          for (let col = -1; col < width / horizSpacing + 2; col += step) {
+        // Восстанавливаем полную сетку гексагонов для соединений всех точек
+        for (let row = -1; row < height / vertSpacing + 2; row++) {
+          for (let col = -1; col < width / horizSpacing + 2; col++) {
             const cx = col * horizSpacing;
             const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
             drawHexagon(cx, cy);
