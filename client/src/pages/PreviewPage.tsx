@@ -246,9 +246,11 @@ export default function PreviewPage() {
                     boxShadow: '0 4px 16px rgba(6, 182, 212, 0.3)'
                   }}
                 >
-                  <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold">
-                    UN SDG
-                  </div>
+                  <img 
+                    src="/un-sdg-logo.png"
+                    alt="UN SDG Logo"
+                    className="w-full h-full object-contain p-1"
+                  />
                 </div>
               </motion.a>
 
@@ -272,9 +274,11 @@ export default function PreviewPage() {
                     boxShadow: '0 4px 16px rgba(6, 182, 212, 0.3)'
                   }}
                 >
-                  <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold">
-                    UNICAP
-                  </div>
+                  <img 
+                    src="/unicap-logo.png"
+                    alt="UNICAP Logo"
+                    className="w-full h-full object-contain p-1"
+                  />
                 </div>
               </motion.a>
             </div>
