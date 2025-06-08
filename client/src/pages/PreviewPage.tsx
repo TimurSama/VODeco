@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import EarthGlobe from "@/components/globo/EarthGlobe";
 
-type ScreenType = 'intro' | 'global-crisis' | 'ecosystem' | 'mechanisms' | 'sdg-goals' | 'roadmap' | 'cta';
+type ScreenType = 'intro' | 'global-crisis' | 'ecosystem' | 'platform' | 'mechanisms' | 'sdg-goals' | 'roadmap' | 'cta';
 
 const hexagonData = [
   {
@@ -26,11 +26,17 @@ const hexagonData = [
     title: 'DAO',
     icon: <Shield className="w-full h-full" />,
     color: 'from-cyan-500 to-blue-600',
-    description: 'Децентрализованная автономная организация для прозрачного управления водными ресурсами',
+    description: 'Ядро управления: система, где нет диктатуры одного мнения, правила создаются коллективно',
     details: {
-      problem: 'Централизация, непрозрачность, конфликт интересов в управлении водными ресурсами',
-      solution: 'DAO-управление через токены VOD, прозрачное голосование в блокчейне, коллективное принятие решений',
-      benefits: ['Справедливое распределение ресурсов', 'Учет интересов всех сторон', 'Полная прозрачность процессов']
+      philosophy: 'Справедливое Управление',
+      explanation: 'Централизованный контроль порождает коррупцию и неэффективность. VODeco передает власть в руки всех участников через Децентрализованную Автономную Организацию.',
+      mechanisms: [
+        'Создание предложений участниками с застейканными VOD',
+        'Категории: Финансирование, Технологии, Экономика, Управление',
+        'Открытое голосование в блокчейне с весом по токенам',
+        'Делегирование голосов экспертам и лидерам мнений'
+      ],
+      benefits: ['Эволюция и устойчивость на десятилетия', 'Коллективный разум вместо неэффективности', 'Прозрачность всех решений']
     }
   },
   {
@@ -38,11 +44,18 @@ const hexagonData = [
     title: 'Общество',
     icon: <Users className="w-full h-full" />,
     color: 'from-green-500 to-emerald-600',
-    description: 'Вовлечение граждан в мониторинг и защиту водных ресурсов',
+    description: 'Активные участники защиты экологии, гражданские ученые и бенефициары "зеленой" экономики',
     details: {
-      problem: 'Пассивность граждан, отсутствие контроля над качеством воды, низкая экологическая осведомленность',
-      solution: 'Народный мониторинг VOD Check, игровые механики, система достижений и вознаграждений',
-      benefits: ['Активное участие в защите экологии', 'Получение токенов за вклад', 'Повышение экологической культуры']
+      philosophy: 'Социальные и Игровые Механики',
+      explanation: 'Вы больше не пассивный наблюдатель. Вы — активный участник защиты экологии. Ваш вклад имеет значение и вознаграждается.',
+      mechanisms: [
+        'VOD Check: анализ воды с получением токенов VOD',
+        'Система достижений и бейджей за активность',
+        'Ежедневные задания: проверка качества воды, образование',
+        'Лидерборды эко-агентов по городам и странам',
+        'Уровни прогресса с увеличением веса голоса'
+      ],
+      benefits: ['Токены VOD за валидные данные', 'Социальный и экологический рейтинг', 'Влияние на локальные инициативы']
     }
   },
   {
@@ -50,11 +63,18 @@ const hexagonData = [
     title: 'Государства',
     icon: <Building2 className="w-full h-full" />,
     color: 'from-purple-500 to-indigo-600',
-    description: 'Государственно-частное партнерство для модернизации инфраструктуры',
+    description: 'Модернизация инфраструктуры без нагрузки на бюджет, цифровое управление и национальная безопасность',
     details: {
-      problem: 'Недостаток бюджетных средств для модернизации водной инфраструктуры',
-      solution: 'Модель ГЧП (PFI), привлечение частных инвестиций, цифровые двойники национальных водных систем',
-      benefits: ['Модернизация без нагрузки на бюджет', 'Полная прозрачность финансовых потоков', 'Достижение ЦУР ООН']
+      philosophy: 'Механика ГЧП и Цифрового Управления',
+      explanation: 'Государство получает модернизированную инфраструктуру без затрат бюджета через долгосрочные контракты на 15-25 лет с четкими KPI.',
+      mechanisms: [
+        'Профессиональный кабинет "Банк Воды"',
+        'Цифровой двойник страны с водными артериями в реальном времени',
+        'Национальный водный баланс по секторам и регионам',
+        'Система раннего оповещения о засухах и паводках',
+        'Трансграничный мониторинг на блокчейне'
+      ],
+      benefits: ['Полная прозрачность финансов', 'Достижение ЦУР ООН', 'Стратегическое планирование и безопасность']
     }
   },
   {
@@ -62,11 +82,18 @@ const hexagonData = [
     title: 'Бизнес',
     icon: <TrendingUp className="w-full h-full" />,
     color: 'from-orange-500 to-red-600',
-    description: 'Оптимизация водопользования и ESG-соответствие для корпораций',
+    description: 'Радикальное снижение издержек, автоматическое ESG-соответствие и новые рынки',
     details: {
-      problem: 'Высокие издержки на водопользование, сложность ESG-отчетности, неэффективное использование воды',
-      solution: 'Аудит водопользования, предиктивное обслуживание, биржа технологий, автоматическая ESG-отчетность',
-      benefits: ['Снижение издержек', 'Автоматическое соответствие экостандартам', 'Повышение инвестпривлекательности']
+      philosophy: 'Механика Оптимизации и ESG',
+      explanation: 'Профессиональный кабинет предприятия обеспечивает полную автоматизацию водопользования и соответствие экостандартам.',
+      mechanisms: [
+        'Аудит водопользования в реальном времени по этапам производства',
+        'Предиктивное обслуживание: прогноз поломок насосов и фильтров',
+        'Биржа технологий с проверенными поставщиками',
+        'Автоматическая ESG-отчетность для инвесторов',
+        'Рынок водных кредитов W-Cert за сверхнормативную экономию'
+      ],
+      benefits: ['Снижение издержек на водопользование', 'Повышение инвестиционной привлекательности', 'Открытие новых ESG-рынков']
     }
   },
   {
@@ -74,11 +101,18 @@ const hexagonData = [
     title: 'Наука',
     icon: <Lightbulb className="w-full h-full" />,
     color: 'from-yellow-500 to-amber-600',
-    description: 'Открытые данные и гранты для научных исследований',
+    description: 'Доступ к крупнейшему массиву данных о водных ресурсах планеты для прорывных открытий',
     details: {
-      problem: 'Недостаток данных для исследований, ограниченное финансирование научных проектов',
-      solution: 'Data Sandbox с анонимизированными данными, DAO-гранты для исследований, открытые результаты',
-      benefits: ['Доступ к крупнейшему массиву данных', 'Финансирование через DAO', 'Совершение прорывных открытий']
+      philosophy: 'Механика Открытых Данных и Грантов',
+      explanation: 'Профессиональный кабинет исследователя предоставляет структурированный и постоянно обновляемый массив реальных данных.',
+      mechanisms: [
+        'Data Sandbox: безопасная среда с анонимизированными данными',
+        'Тестирование климатических моделей и алгоритмов загрязнений',
+        'DAO-гранты: финансирование исследований голосованием сообщества',
+        'Открытая публикация результатов для всей экосистемы',
+        'Изучение влияния промышленных циклов на экосистемы'
+      ],
+      benefits: ['Крупнейший в истории массив водных данных', 'Финансирование через DAO', 'Совершение прорывных открытий']
     }
   },
   {
@@ -86,11 +120,18 @@ const hexagonData = [
     title: 'Объекты',
     icon: <Globe className="w-full h-full" />,
     color: 'from-teal-500 to-cyan-600',
-    description: 'Цифровизация и мониторинг водной инфраструктуры',
+    description: 'Тотальная оцифровка: создание цифрового двойника мировых водных ресурсов',
     details: {
-      problem: 'Устаревшая инфраструктура, потери до 50% воды в системах, отсутствие мониторинга',
-      solution: 'IoT-датчики, цифровые двойники сетей, предиктивный анализ утечек, автоматизированное управление',
-      benefits: ['Сохранение миллиардов кубометров воды', 'Снижение эксплуатационных затрат', 'Повышение надежности']
+      philosophy: 'Анализ (Тотальная Оцифровка)',
+      explanation: 'Мы не можем управлять тем, что не можем измерить. Основа VODeco — создание цифрового двойника мировых водных ресурсов.',
+      mechanisms: [
+        'IoT-датчики для мониторинга в реальном времени',
+        'Спутниковый мониторинг и Big Data обработка',
+        'ИИ для анализа и предиктивной аналитики',
+        'Цифровые двойники сетей с предиктивным анализом утечек',
+        'Автоматизированное управление водными системами'
+      ],
+      benefits: ['Сохранение миллиардов кубометров воды', 'Снижение эксплуатационных затрат', 'Беспрецедентная точность управления']
     }
   },
   {
@@ -98,11 +139,18 @@ const hexagonData = [
     title: 'Инвесторы',
     icon: <TrendingUp className="w-full h-full" />,
     color: 'from-pink-500 to-rose-600',
-    description: 'Токенизированные инвестиции в водную инфраструктуру',
+    description: 'Инвестиции в реальную инфраструктуру с государственной поддержкой и прогнозируемым доходом',
     details: {
-      problem: 'Высокие барьеры входа, низкая ликвидность, сложность оценки рисков в водном секторе',
-      solution: 'Токенизация активов (P-VOD, W-Bond), стейкинг, ликвидные пулы на DEX, прозрачная отчетность',
-      benefits: ['Глобальный доступ к инвестициям', 'Прогнозируемая доходность', 'ESG-соответствие портфеля']
+      philosophy: 'Механика Капитализации и Доходности',
+      explanation: 'Профессиональный кабинет инвестора обеспечивает полную прозрачность инвестиционного цикла от выбора до получения дохода.',
+      mechanisms: [
+        'Биржа проектов с документацией, бизнес-планами и IRR',
+        'Токенизация активов: P-VOD для проектов, W-Bond облигации',
+        'Мониторинг прогресса в реальном времени через датчики',
+        'Автоматическое распределение доходов через смарт-контракты',
+        'Торговля проектными токенами на вторичном рынке'
+      ],
+      benefits: ['Государственные гарантии и поддержка', 'Прогнозируемая доходность с IRR', 'ESG-соответствие портфеля']
     }
   }
 ];
@@ -126,7 +174,7 @@ export default function PreviewPage() {
   }, [currentScreen]);
 
   const nextScreen = () => {
-    const screens: ScreenType[] = ['intro', 'global-crisis', 'ecosystem', 'mechanisms', 'sdg-goals', 'roadmap', 'cta'];
+    const screens: ScreenType[] = ['intro', 'global-crisis', 'ecosystem', 'platform', 'mechanisms', 'sdg-goals', 'roadmap', 'cta'];
     const currentIndex = screens.indexOf(currentScreen);
     if (currentIndex < screens.length - 1) {
       setCurrentScreen(screens[currentIndex + 1]);
@@ -404,7 +452,164 @@ export default function PreviewPage() {
           </motion.div>
         )}
 
-        {/* Экран 3: Механизмы трансформации */}
+        {/* Экран 3: Технологическая платформа */}
+        {currentScreen === 'platform' && (
+          <motion.div
+            key="platform"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
+          >
+            <motion.h2
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 lg:mb-6 text-center leading-tight"
+            >
+              Цифровая Платформа VODeco
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg sm:text-xl lg:text-2xl text-cyan-300 mb-8 lg:mb-12 text-center max-w-4xl leading-relaxed"
+            >
+              Многоуровневая операционная система с профессиональными кабинетами и мультитокенной экономикой
+            </motion.p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-7xl w-full mb-8">
+              {/* Профессиональные кабинеты */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20"
+              >
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center">
+                  <Monitor className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
+                  Профессиональные Кабинеты
+                </h3>
+                <div className="space-y-3 lg:space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <Users className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">Граждане:</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">VOD Check, геймификация, достижения</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Building2 className="w-5 h-5 text-purple-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">Государства:</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">"Банк Воды", цифровой двойник страны</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <TrendingUp className="w-5 h-5 text-orange-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">Бизнес:</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Аудит водопользования, ESG-отчетность</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <TrendingUp className="w-5 h-5 text-pink-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">Инвесторы:</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Биржа проектов, мониторинг в реальном времени</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Lightbulb className="w-5 h-5 text-yellow-400 mt-1 flex-shrink-0" />
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">Наука:</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Data Sandbox, DAO-гранты</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Мультитокенная модель */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20"
+              >
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center">
+                  <Coins className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
+                  Мультитокенная Модель
+                </h3>
+                <div className="space-y-3 lg:space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-5 h-5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mt-1 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">VOD (Global Token):</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Стейкинг, DAO-голосования, основное средство расчетов</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-5 h-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mt-1 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">R-VOD (Regional Token):</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Региональное управление с экологическим коэффициентом</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-5 h-5 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full mt-1 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">P-VOD (Project Token):</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Токен конкретного инвестиционного проекта</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-5 h-5 bg-gradient-to-r from-orange-500 to-red-600 rounded-full mt-1 flex-shrink-0"></div>
+                    <div>
+                      <p className="text-white font-semibold text-sm sm:text-base">O-VOD (Operational Token):</p>
+                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Вознаграждение за операционную эффективность</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Финансовые инструменты */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 max-w-7xl w-full"
+            >
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center justify-center">
+                <CreditCard className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
+                Финансовые Инструменты на Блокчейне
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                <div className="text-center">
+                  <Shield className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-blue-400 mx-auto mb-2 lg:mb-3" />
+                  <p className="text-white font-semibold text-sm sm:text-base">W-Cert</p>
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водный сертификат</p>
+                </div>
+                <div className="text-center">
+                  <FileText className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-green-400 mx-auto mb-2 lg:mb-3" />
+                  <p className="text-white font-semibold text-sm sm:text-base">W-Bond</p>
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водная облигация</p>
+                </div>
+                <div className="text-center">
+                  <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-yellow-400 mx-auto mb-2 lg:mb-3" />
+                  <p className="text-white font-semibold text-sm sm:text-base">W-Future</p>
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водный фьючерс</p>
+                </div>
+                <div className="text-center">
+                  <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-purple-400 mx-auto mb-2 lg:mb-3" />
+                  <p className="text-white font-semibold text-sm sm:text-base">W-Option</p>
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водный опцион</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Экран 4: Механизмы трансформации */}
         {currentScreen === 'mechanisms' && (
           <motion.div
             key="mechanisms"
@@ -893,22 +1098,32 @@ export default function PreviewPage() {
 
               <p className="text-cyan-200 mb-6">{selectedHexagonData.description}</p>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Проблема:</h3>
-                  <p className="text-white">{selectedHexagonData.details.problem}</p>
+                  <h3 className="text-lg font-semibold text-cyan-300 mb-3">{selectedHexagonData.details.philosophy}:</h3>
+                  <p className="text-white leading-relaxed">{selectedHexagonData.details.explanation}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Решение:</h3>
-                  <p className="text-white">{selectedHexagonData.details.solution}</p>
+                  <h3 className="text-lg font-semibold text-cyan-300 mb-3">Механизмы реализации:</h3>
+                  <ul className="space-y-2">
+                    {selectedHexagonData.details.mechanisms.map((mechanism, i) => (
+                      <li key={i} className="text-white flex items-start">
+                        <span className="text-cyan-400 mr-2 mt-1">•</span>
+                        <span>{mechanism}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-cyan-300 mb-2">Выгоды:</h3>
-                  <ul className="list-disc list-inside space-y-1">
+                  <h3 className="text-lg font-semibold text-cyan-300 mb-3">Ключевые выгоды:</h3>
+                  <ul className="space-y-2">
                     {selectedHexagonData.details.benefits.map((benefit, i) => (
-                      <li key={i} className="text-white">{benefit}</li>
+                      <li key={i} className="text-white flex items-start">
+                        <span className="text-green-400 mr-2 mt-1">✓</span>
+                        <span>{benefit}</span>
+                      </li>
                     ))}
                   </ul>
                 </div>
