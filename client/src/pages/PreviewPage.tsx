@@ -14,7 +14,12 @@ import {
   Shield,
   ArrowRight,
   Play,
-  ChevronRight
+  ChevronRight,
+  MonitorSpeaker,
+  DollarSign,
+  CreditCard,
+  FileText,
+  BarChart3
 } from "lucide-react";
 import EarthGlobe from "@/components/globo/EarthGlobe";
 
@@ -486,7 +491,7 @@ export default function PreviewPage() {
                 className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20"
               >
                 <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center">
-                  <Monitor className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
+                  <MonitorSpeaker className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
                   Профессиональные Кабинеты
                 </h3>
                 <div className="space-y-3 lg:space-y-4">
@@ -536,7 +541,7 @@ export default function PreviewPage() {
                 className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20"
               >
                 <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center">
-                  <Coins className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
+                  <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
                   Мультитокенная Модель
                 </h3>
                 <div className="space-y-3 lg:space-y-4">
