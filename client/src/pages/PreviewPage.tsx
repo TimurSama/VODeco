@@ -1,29 +1,78 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import InteractivePresentation from "../components/preview/InteractivePresentation";
+import WaterDropAnimation from "@/components/preview/WaterDropAnimation";
+import EarthGlobeScene from "@/components/preview/EarthGlobeScene";
+import HexagonalSystem from "@/components/preview/HexagonalSystem";
+
+type SceneType = 'water-drop' | 'earth-globe' | 'hexagonal-system';
 
 export default function PreviewPage() {
   const [, setLocation] = useLocation();
-  const { addGuestTokens, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const [currentScene, setCurrentScene] = useState<SceneType>('water-drop');
 
-  const handleComplete = async () => {
-    if (!isAuthenticated) {
-      await addGuestTokens(200, 'presentation_complete');
+  useEffect(() => {
+    // Автоматическая смена сцен
+    const timer1 = setTimeout(() => setCurrentScene('earth-globe'), 7000); // 7 секунд на каплю
+    
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, []);
+
+  const handleContinue = () => {
+    if (currentScene === 'earth-globe') {
+      setCurrentScene('hexagonal-system');
+    } else if (currentScene === 'hexagonal-system') {
+      setLocation('/dashboard');
     }
-    setLocation('/dashboard');
   };
 
   return (
-    <div className="w-full h-screen relative overflow-hidden">
-      {/* Отключаем анимированный фон для презентации - используем простой статичный */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900" />
-      
-      <div className="relative z-10">
-        <InteractivePresentation onComplete={handleComplete} />
-      </div>
+    <div className="w-full h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-black">
+      <AnimatePresence mode="wait">
+        {currentScene === 'water-drop' && (
+          <motion.div
+            key="water-drop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0"
+          >
+            <WaterDropAnimation onComplete={() => setCurrentScene('earth-globe')} />
+          </motion.div>
+        )}
+
+        {currentScene === 'earth-globe' && (
+          <motion.div
+            key="earth-globe"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0"
+          >
+            <EarthGlobeScene onContinue={handleContinue} />
+          </motion.div>
+        )}
+
+        {currentScene === 'hexagonal-system' && (
+          <motion.div
+            key="hexagonal-system"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute inset-0"
+          >
+            <HexagonalSystem onContinue={handleContinue} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
