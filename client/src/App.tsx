@@ -117,8 +117,11 @@ function Router() {
       <Route path="/auth">
         <AuthPage />
       </Route>
-      <Route path="/">
+      <Route path="/dashboard">
         <Dashboard />
+      </Route>
+      <Route path="/">
+        <PreviewPage />
       </Route>
       <Route>
         <NotFound />
