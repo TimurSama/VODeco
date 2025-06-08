@@ -422,8 +422,25 @@ export default function PreviewPage() {
                 transition={{ delay: 0.5, duration: 1 }}
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 z-20"
               >
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center">
-                  <Globe className="w-8 h-8 sm:w-10 sm:h-10 lg:w-16 lg:h-16 text-white" />
+                <div 
+                  className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center relative"
+                  style={{
+                    boxShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.3)',
+                    border: '2px solid rgba(255, 255, 255, 0.4)',
+                    filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3))'
+                  }}
+                >
+                  <Globe className="w-8 h-8 sm:w-10 sm:h-10 lg:w-16 lg:h-16 text-white drop-shadow-lg" />
+                  
+                  {/* Rotating glow ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full border-2 border-cyan-300/30"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    style={{
+                      boxShadow: '0 0 20px rgba(6, 182, 212, 0.6)'
+                    }}
+                  />
                 </div>
               </motion.div>
 
@@ -497,6 +514,27 @@ export default function PreviewPage() {
                 );
               })}
             </div>
+
+            {/* Navigation Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.5 }}
+              className="mt-8"
+            >
+              <Button
+                onClick={nextScreen}
+                size="lg"
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3 text-lg font-semibold rounded-full shadow-2xl"
+                style={{
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                  boxShadow: '0 8px 32px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3)',
+                  border: '1px solid rgba(6, 182, 212, 0.3)'
+                }}
+              >
+                УЗНАТЬ О ПЛАТФОРМЕ <ChevronRight className="ml-2 w-5 h-5" />
+              </Button>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }}
