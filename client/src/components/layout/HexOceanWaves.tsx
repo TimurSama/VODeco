@@ -22,11 +22,11 @@ export default function HexOceanWaves() {
 
     let time = 0;
     let animationId: number;
-    const cycleDuration = 15000; // 15 секунд на полный цикл (быстрее)
+    const cycleDuration = 25000; // 25 секунд на полный цикл (медленнее)
     let cycleStartTime = 0;
     let isAnimating = true;
     let frameCount = 0;
-    const targetFPS = 30; // Увеличиваем до 30 FPS для плавности
+    const targetFPS = 24; // Уменьшаем до 24 FPS для более плавного движения
     const frameInterval = 1000 / targetFPS;
     let lastFrameTime = 0;
 
@@ -83,9 +83,9 @@ export default function HexOceanWaves() {
         const baseX = cx + hexSize * Math.cos(angle);
         const baseY = cy + hexSize * Math.sin(angle);
         const waveOffset = (
-          Math.sin(baseX * 0.01 + time * 1.5) * 28 +
-          Math.cos(baseY * 0.015 + time * 1.8) * 24 +
-          Math.sin((baseX + baseY) * 0.02 + time * 2.0) * 20
+          Math.sin(baseX * 0.01 + time * 0.8) * 22 +
+          Math.cos(baseY * 0.015 + time * 1.0) * 18 +
+          Math.sin((baseX + baseY) * 0.02 + time * 1.2) * 15
         );
         const x = baseX;
         const y = baseY + waveOffset;
@@ -105,7 +105,7 @@ export default function HexOceanWaves() {
       for (const [x, y] of points) {
         ctx.beginPath();
         ctx.arc(x, y, 2, 0, 2 * Math.PI);
-        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 6) * 0.015);
+        const intensity = 0.6 + 0.4 * Math.sin((x + y + time * 3) * 0.015);
         const r = Math.floor(0 + 120 * intensity);
         const g = Math.floor(220 + 35 * intensity);
         const b = Math.floor(255);
