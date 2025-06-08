@@ -230,13 +230,14 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
             transition={{ duration: 1.5, ease: "easeOut" }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="relative w-32 h-40 sm:w-40 sm:h-48 md:w-48 md:h-56">
-              {/* Основная капля */}
+            <div className="relative w-32 h-48 sm:w-40 sm:h-56 md:w-48 md:h-64">
+              {/* Основная капля с заострённым верхом */}
               <div 
                 className="w-full h-full relative"
                 style={{
                   background: 'linear-gradient(145deg, rgba(59, 130, 246, 0.95) 0%, rgba(147, 197, 253, 0.8) 40%, rgba(219, 234, 254, 0.6) 70%, rgba(255, 255, 255, 0.9) 90%)',
-                  borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                  borderRadius: '50% 50% 50% 50% / 80% 80% 60% 60%',
+                  clipPath: 'ellipse(50% 45% at 50% 60%)',
                   boxShadow: `
                     0 0 30px rgba(59, 130, 246, 0.5),
                     inset -5px -5px 15px rgba(0, 0, 0, 0.1),
@@ -245,38 +246,109 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
                   backdropFilter: 'blur(2px)',
                 }}
               >
+                {/* Заострённый верх капли */}
+                <div 
+                  className="absolute w-4 h-8 left-1/2 transform -translate-x-1/2 -top-2"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(147, 197, 253, 0.8) 100%)',
+                    clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)',
+                    filter: 'blur(0.5px)',
+                  }}
+                />
+
+                {/* Молекула воды H2O в центре */}
+                <motion.div
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                  animate={{
+                    rotateY: [0, 360],
+                    rotateX: [0, 15, 0, -15, 0],
+                  }}
+                  transition={{
+                    duration: 6,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                >
+                  {/* Атом кислорода (красный) */}
+                  <div 
+                    className="relative w-6 h-6 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, #ff6b6b, #e74c3c)',
+                      boxShadow: '0 0 8px rgba(231, 76, 60, 0.6)',
+                    }}
+                  />
+                  {/* Атом водорода 1 (белый) */}
+                  <div 
+                    className="absolute w-3 h-3 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, #ffffff, #ecf0f1)',
+                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                      top: '-8px',
+                      left: '-12px',
+                    }}
+                  />
+                  {/* Атом водорода 2 (белый) */}
+                  <div 
+                    className="absolute w-3 h-3 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, #ffffff, #ecf0f1)',
+                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                      top: '-8px',
+                      right: '-12px',
+                    }}
+                  />
+                  {/* Связи между атомами */}
+                  <div 
+                    className="absolute w-3 h-0.5 bg-white opacity-60"
+                    style={{
+                      top: '-5px',
+                      left: '-9px',
+                      transform: 'rotate(-30deg)',
+                    }}
+                  />
+                  <div 
+                    className="absolute w-3 h-0.5 bg-white opacity-60"
+                    style={{
+                      top: '-5px',
+                      right: '-9px',
+                      transform: 'rotate(30deg)',
+                    }}
+                  />
+                </motion.div>
+
                 {/* Блик на капле */}
                 <div 
                   className="absolute w-6 h-8 bg-white opacity-70 rounded-full"
                   style={{
-                    top: '25%',
-                    left: '30%',
+                    top: '20%',
+                    left: '25%',
                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 100%)',
                     filter: 'blur(1px)',
                   }}
                 />
                 
-                {/* Пузырьки воздуха */}
-                {[...Array(5)].map((_, i) => (
+                {/* Круглые пузырьки воздуха поднимающиеся снизу вверх */}
+                {[...Array(8)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute bg-white rounded-full"
+                    className="absolute rounded-full"
                     style={{
-                      width: `${Math.random() * 6 + 3}px`,
-                      height: `${Math.random() * 6 + 3}px`,
-                      left: `${20 + Math.random() * 60}%`,
-                      top: `${60 + Math.random() * 30}%`,
-                      opacity: 0.6,
-                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.5)',
+                      width: `${4 + Math.random() * 4}px`,
+                      height: `${4 + Math.random() * 4}px`,
+                      left: `${25 + Math.random() * 50}%`,
+                      background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.4))',
+                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.6), inset 1px 1px 2px rgba(255, 255, 255, 0.8)',
                     }}
                     animate={{
-                      y: [-10, -30],
-                      opacity: [0.6, 0.3],
+                      y: ['100%', '-20%'],
+                      opacity: [0, 0.8, 0.8, 0],
+                      scale: [0.5, 1, 1.2, 0.8],
                     }}
                     transition={{
-                      duration: 2 + Math.random() * 2,
+                      duration: 3 + Math.random() * 2,
                       repeat: Infinity,
-                      delay: Math.random() * 1,
+                      delay: Math.random() * 3,
+                      ease: "easeOut",
                     }}
                   />
                 ))}
@@ -284,7 +356,7 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
               
               {/* Отражение под каплей */}
               <motion.div 
-                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-4 bg-blue-500 opacity-20 rounded-full"
+                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-blue-500 opacity-20 rounded-full"
                 style={{
                   filter: 'blur(8px)',
                 }}
@@ -302,17 +374,17 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
         )}
       </AnimatePresence>
 
-      {/* VODeco заголовок */}
+      {/* VODeco заголовок (сдвинут ниже) */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute top-8 left-1/2 transform -translate-x-1/2 text-center"
+        className="absolute bottom-32 md:bottom-40 left-1/2 transform -translate-x-1/2 text-center"
       >
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
           VODeco
         </h1>
-        <p className="text-lg md:text-xl text-blue-200 opacity-90">
+        <p className="text-base md:text-lg text-blue-200 opacity-90">
           Управление водными ресурсами будущего
         </p>
       </motion.div>
@@ -347,8 +419,66 @@ export default function InteractivePresentation({ onComplete }: InteractivePrese
           </motion.div>
         )}
 
+        {/* Экраны 3-4: с тем же космическим фоном */}
+        {(currentScreen === 2 || currentScreen === 3) && (
+          <motion.div
+            key={`screen-${currentScreen}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative w-full h-screen overflow-hidden"
+          >
+            {/* Тот же космический фон */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
+              {/* Упрощенная сетка звезд */}
+              {[...Array(50)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-0.5 h-0.5 bg-white rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    opacity: [0.4, 0.8, 0.4],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: Math.random() * 2,
+                  }}
+                />
+              ))}
+              
+              {/* Простая анимация градиента */}
+              <motion.div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
+                }}
+                animate={{
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </div>
+
+            {/* Контент экрана */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white z-10">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Экран {currentScreen + 1}</h2>
+                <p className="text-lg md:text-xl mb-8">Здесь будет контент экрана {currentScreen + 1}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Остальные экраны */}
-        {currentScreen > 1 && (
+        {currentScreen > 3 && (
           <motion.div
             key="other"
             initial={{ opacity: 0 }}
