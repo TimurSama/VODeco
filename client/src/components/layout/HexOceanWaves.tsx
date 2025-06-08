@@ -45,13 +45,14 @@ export default function HexOceanWaves() {
       const elapsed = currentTime - cycleStartTime;
       const cycleProgress = (elapsed % cycleDuration) / cycleDuration;
       
-      // Создаем бесшовный круговой цикл (sin дает плавный переход от 0 к 0)
-      time = Math.sin(cycleProgress * 2 * Math.PI) * Math.PI;
+      // Создаем очень плавный бесшовный круговой цикл с интерполяцией
+      const smoothProgress = 0.5 * (1 - Math.cos(cycleProgress * 2 * Math.PI));
+      time = smoothProgress * Math.PI * 2;
       
       if (!ctx) return;
       
-      // Рендерим каждый 2-й кадр для более динамичной анимации
-      if (frameCount % 2 === 0) {
+      // Рендерим каждый кадр для максимальной плавности
+      if (true) {
         ctx.clearRect(0, 0, width, height);
 
         // Восстанавливаем полную сетку гексагонов для соединений всех точек
@@ -82,10 +83,12 @@ export default function HexOceanWaves() {
         const angle = Math.PI / 180 * (angle_deg * i);
         const baseX = cx + hexSize * Math.cos(angle);
         const baseY = cy + hexSize * Math.sin(angle);
+        // Добавляем сглаживание для устранения дерганых движений
+        const smoothTime = time * 0.7; // Дополнительное замедление
         const waveOffset = (
-          Math.sin(baseX * 0.01 + time * 0.8) * 22 +
-          Math.cos(baseY * 0.015 + time * 1.0) * 18 +
-          Math.sin((baseX + baseY) * 0.02 + time * 1.2) * 15
+          Math.sin(baseX * 0.008 + smoothTime * 0.6) * 20 +
+          Math.cos(baseY * 0.012 + smoothTime * 0.8) * 16 +
+          Math.sin((baseX + baseY) * 0.015 + smoothTime * 1.0) * 12
         );
         const x = baseX;
         const y = baseY + waveOffset;
