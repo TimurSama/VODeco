@@ -189,7 +189,7 @@ export default function PreviewPage() {
   const selectedHexagonData = hexagonData.find(h => h.id === selectedHexagon);
 
   return (
-    <div className="w-full min-h-screen relative overflow-hidden">
+    <div className="w-full h-screen relative overflow-hidden">
       {/* Анимированный фон с гексагонами */}
       <div className="absolute inset-0 z-0">
         {[...Array(10)].map((_, i) => (
@@ -222,7 +222,7 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-screen flex items-center justify-center z-10 pt-20"
+            className="fixed inset-0 flex items-center justify-center z-10"
           >
             {/* Логотипы в правом верхнем углу */}
             <div className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 flex space-x-3 sm:space-x-4 z-30">
@@ -283,16 +283,16 @@ export default function PreviewPage() {
               </motion.a>
             </div>
 
-            <div className="text-center text-white max-w-4xl px-8">
+            <div className="text-center text-white max-w-3xl px-6 mt-16">
               <motion.h1 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
                 style={{
                   textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
                   filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))',
-                  padding: '16px',
+                  padding: '12px',
                   borderRadius: '12px'
                 }}
               >
@@ -303,10 +303,10 @@ export default function PreviewPage() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-300"
+                className="text-base sm:text-lg lg:text-xl mb-6 text-gray-300"
                 style={{
                   textShadow: '0 0 15px rgba(156, 163, 175, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
-                  padding: '12px 24px',
+                  padding: '10px 20px',
                   border: '1px solid rgba(6, 182, 212, 0.3)',
                   borderRadius: '8px',
                   background: 'rgba(6, 182, 212, 0.1)',
@@ -319,19 +319,22 @@ export default function PreviewPage() {
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 2 }}
+                transition={{ delay: 1.5 }}
+                className="relative z-50"
               >
                 <Button
                   onClick={nextScreen}
                   size="lg"
-                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold rounded-full"
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3 text-base font-semibold rounded-full relative z-50 cursor-pointer"
                   style={{
                     textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
                     boxShadow: '0 8px 32px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3)',
-                    border: '1px solid rgba(6, 182, 212, 0.3)'
+                    border: '1px solid rgba(6, 182, 212, 0.3)',
+                    position: 'relative',
+                    zIndex: 9999
                   }}
                 >
-                  НАЧАТЬ ПРЕЗЕНТАЦИЮ <ArrowRight className="ml-2 w-5 h-5" />
+                  НАЧАТЬ ПРЕЗЕНТАЦИЮ <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </motion.div>
             </div>
@@ -345,7 +348,7 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-screen flex flex-col items-center justify-center z-10 p-4 pt-20"
+            className="fixed inset-0 flex flex-col items-center justify-center z-10 pt-16"
           >
             <div className="max-w-6xl w-full h-full flex flex-col justify-center">
               {/* Анимация капли и глобуса */}
@@ -449,7 +452,7 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-screen flex flex-col items-center justify-center z-10 p-4 pt-20"
+            className="fixed inset-0 flex flex-col items-center justify-center z-10 pt-16"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
