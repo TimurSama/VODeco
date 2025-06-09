@@ -908,134 +908,377 @@ export default function PreviewPage() {
               Многоуровневая операционная система с профессиональными кабинетами и мультитокенной экономикой
             </motion.p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 max-w-7xl w-full mb-8">
-              {/* Профессиональные кабинеты */}
+            {/* Интерактивные плитки профессиональных кабинетов */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 max-w-6xl w-full mb-8">
+              {/* Кабинет Граждан */}
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20"
               >
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center">
-                  <MonitorSpeaker className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
-                  Профессиональные Кабинеты
-                </h3>
-                <div className="space-y-3 lg:space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Users className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">Граждане:</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">VOD Check, геймификация, достижения</p>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                         style={{
+                           background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2))',
+                           border: '2px solid rgba(34, 197, 94, 0.8)',
+                           borderRadius: '16px',
+                           backdropFilter: 'blur(16px)',
+                           boxShadow: '0 0 30px rgba(34, 197, 94, 0.6), 0 8px 32px rgba(34, 197, 94, 0.2)',
+                         }}>
+                      <Users className="w-12 h-12 text-green-300 mx-auto mb-3" />
+                      <h3 className="text-white font-semibold text-lg mb-2">Граждане</h3>
+                      <p className="text-green-100 text-sm">VOD Check & Геймификация</p>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Building2 className="w-5 h-5 text-purple-400 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">Государства:</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">"Банк Воды", цифровой двойник страны</p>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl bg-slate-900 border-green-800">
+                    <DialogHeader>
+                      <DialogTitle className="text-green-400 text-xl flex items-center">
+                        <Users className="w-6 h-6 mr-2" />
+                        Кабинет Граждан
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-gray-200">
+                      <div className="bg-green-950/50 p-4 rounded-lg border border-green-800/50">
+                        <h4 className="text-green-300 font-semibold mb-2">VOD Check - Персональный Аудит:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Мониторинг личного водопотребления в реальном времени</li>
+                          <li>• Сравнение с соседями и экологическими нормами</li>
+                          <li>• Персональные рекомендации по экономии воды</li>
+                          <li>• История потребления с аналитикой и прогнозами</li>
+                        </ul>
+                      </div>
+                      <div className="bg-emerald-950/50 p-4 rounded-lg border border-emerald-800/50">
+                        <h4 className="text-emerald-300 font-semibold mb-2">Геймификация и Достижения:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Система уровней за экономию воды</li>
+                          <li>• VOD-токены за достижение экологических целей</li>
+                          <li>• Соревнования между районами и городами</li>
+                          <li>• Значки и сертификаты за экологическую активность</li>
+                          <li>• Marketplace для обмена экологических достижений</li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <TrendingUp className="w-5 h-5 text-orange-400 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">Бизнес:</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Аудит водопользования, ESG-отчетность</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <TrendingUp className="w-5 h-5 text-pink-400 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">Инвесторы:</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Биржа проектов, мониторинг в реальном времени</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <Lightbulb className="w-5 h-5 text-yellow-400 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">Наука:</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Data Sandbox, DAO-гранты</p>
-                    </div>
-                  </div>
-                </div>
+                  </DialogContent>
+                </Dialog>
               </motion.div>
 
-              {/* Мультитокенная модель */}
+              {/* Кабинет Государств */}
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
               >
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center">
-                  <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
-                  Мультитокенная Модель
-                </h3>
-                <div className="space-y-3 lg:space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-5 h-5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mt-1 flex-shrink-0"></div>
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">VOD (Global Token):</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Стейкинг, DAO-голосования, основное средство расчетов</p>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                         style={{
+                           background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2))',
+                           border: '2px solid rgba(139, 92, 246, 0.8)',
+                           borderRadius: '16px',
+                           backdropFilter: 'blur(16px)',
+                           boxShadow: '0 0 30px rgba(139, 92, 246, 0.6), 0 8px 32px rgba(139, 92, 246, 0.2)',
+                         }}>
+                      <Building2 className="w-12 h-12 text-purple-300 mx-auto mb-3" />
+                      <h3 className="text-white font-semibold text-lg mb-2">Государства</h3>
+                      <p className="text-purple-100 text-sm">Банк Воды & Цифровой Двойник</p>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-5 h-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mt-1 flex-shrink-0"></div>
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">R-VOD (Regional Token):</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Региональное управление с экологическим коэффициентом</p>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl bg-slate-900 border-purple-800">
+                    <DialogHeader>
+                      <DialogTitle className="text-purple-400 text-xl flex items-center">
+                        <Building2 className="w-6 h-6 mr-2" />
+                        Кабинет Государств
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-gray-200">
+                      <div className="bg-purple-950/50 p-4 rounded-lg border border-purple-800/50">
+                        <h4 className="text-purple-300 font-semibold mb-2">Банк Воды - Государственное Управление:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Централизованный мониторинг водных ресурсов страны</li>
+                          <li>• Автоматизированное распределение водных квот</li>
+                          <li>• Система раннего предупреждения о засухах и наводнениях</li>
+                          <li>• Межрегиональная торговля водными ресурсами</li>
+                        </ul>
+                      </div>
+                      <div className="bg-violet-950/50 p-4 rounded-lg border border-violet-800/50">
+                        <h4 className="text-violet-300 font-semibold mb-2">Цифровой Двойник Страны:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• 3D-модель всей водной инфраструктуры</li>
+                          <li>• Симуляция климатических сценариев</li>
+                          <li>• Оптимизация инвестиций в водную инфраструктуру</li>
+                          <li>• Международная отчетность по UN SDG 6</li>
+                          <li>• Прогнозирование потребности в водных ресурсах</li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-5 h-5 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full mt-1 flex-shrink-0"></div>
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">P-VOD (Project Token):</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Токен конкретного инвестиционного проекта</p>
+                  </DialogContent>
+                </Dialog>
+              </motion.div>
+
+              {/* Кабинет Бизнеса */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                         style={{
+                           background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.2))',
+                           border: '2px solid rgba(59, 130, 246, 0.8)',
+                           borderRadius: '16px',
+                           backdropFilter: 'blur(16px)',
+                           boxShadow: '0 0 30px rgba(59, 130, 246, 0.6), 0 8px 32px rgba(59, 130, 246, 0.2)',
+                         }}>
+                      <TrendingUp className="w-12 h-12 text-blue-300 mx-auto mb-3" />
+                      <h3 className="text-white font-semibold text-lg mb-2">Бизнес</h3>
+                      <p className="text-blue-100 text-sm">ESG-Аудит & Оптимизация</p>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-5 h-5 bg-gradient-to-r from-orange-500 to-red-600 rounded-full mt-1 flex-shrink-0"></div>
-                    <div>
-                      <p className="text-white font-semibold text-sm sm:text-base">O-VOD (Operational Token):</p>
-                      <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Вознаграждение за операционную эффективность</p>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl bg-slate-900 border-blue-800">
+                    <DialogHeader>
+                      <DialogTitle className="text-blue-400 text-xl flex items-center">
+                        <TrendingUp className="w-6 h-6 mr-2" />
+                        Кабинет Бизнеса
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-gray-200">
+                      <div className="bg-blue-950/50 p-4 rounded-lg border border-blue-800/50">
+                        <h4 className="text-blue-300 font-semibold mb-2">Аудит Водопользования:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Мониторинг водопотребления по этапам производства</li>
+                          <li>• Анализ эффективности водных циклов</li>
+                          <li>• Выявление потерь и оптимизация процессов</li>
+                          <li>• Сравнение с отраслевыми бенчмарками</li>
+                        </ul>
+                      </div>
+                      <div className="bg-indigo-950/50 p-4 rounded-lg border border-indigo-800/50">
+                        <h4 className="text-indigo-300 font-semibold mb-2">ESG-Отчетность и Преимущества:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Автоматическая генерация ESG-отчетов</li>
+                          <li>• Получение водных кредитов W-Cert</li>
+                          <li>• Доступ к зеленому финансированию</li>
+                          <li>• Повышение инвестиционной привлекательности</li>
+                          <li>• Биржа экологических технологий</li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </DialogContent>
+                </Dialog>
+              </motion.div>
+
+              {/* Кабинет Инвесторов */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                         style={{
+                           background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 145, 178, 0.2))',
+                           border: '2px solid rgba(6, 182, 212, 0.8)',
+                           borderRadius: '16px',
+                           backdropFilter: 'blur(16px)',
+                           boxShadow: '0 0 30px rgba(6, 182, 212, 0.6), 0 8px 32px rgba(6, 182, 212, 0.2)',
+                         }}>
+                      <DollarSign className="w-12 h-12 text-cyan-300 mx-auto mb-3" />
+                      <h3 className="text-white font-semibold text-lg mb-2">Инвесторы</h3>
+                      <p className="text-cyan-100 text-sm">Биржа Проектов & Мониторинг</p>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl bg-slate-900 border-cyan-800">
+                    <DialogHeader>
+                      <DialogTitle className="text-cyan-400 text-xl flex items-center">
+                        <DollarSign className="w-6 h-6 mr-2" />
+                        Кабинет Инвесторов
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-gray-200">
+                      <div className="bg-cyan-950/50 p-4 rounded-lg border border-cyan-800/50">
+                        <h4 className="text-cyan-300 font-semibold mb-2">Биржа Водных Проектов:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Каталог инвестиционных проектов с рейтингами</li>
+                          <li>• Автоматический дью-дилидженс через ИИ</li>
+                          <li>• Торговля P-VOD токенами проектов</li>
+                          <li>• Диверсификация портфеля по регионам</li>
+                        </ul>
+                      </div>
+                      <div className="bg-teal-950/50 p-4 rounded-lg border border-teal-800/50">
+                        <h4 className="text-teal-300 font-semibold mb-2">Мониторинг и Доходность:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Отслеживание проектов в реальном времени</li>
+                          <li>• Прогнозируемая IRR с учетом рисков</li>
+                          <li>• Автоматические выплаты через смарт-контракты</li>
+                          <li>• ESG-метрики и импакт-анализ</li>
+                          <li>• Страхование инвестиций через блокчейн</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </motion.div>
+
+              {/* Кабинет Науки */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                         style={{
+                           background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(13, 148, 136, 0.2))',
+                           border: '2px solid rgba(20, 184, 166, 0.8)',
+                           borderRadius: '16px',
+                           backdropFilter: 'blur(16px)',
+                           boxShadow: '0 0 30px rgba(20, 184, 166, 0.6), 0 8px 32px rgba(20, 184, 166, 0.2)',
+                         }}>
+                      <Lightbulb className="w-12 h-12 text-teal-300 mx-auto mb-3" />
+                      <h3 className="text-white font-semibold text-lg mb-2">Наука</h3>
+                      <p className="text-teal-100 text-sm">Data Sandbox & DAO-Гранты</p>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl bg-slate-900 border-teal-800">
+                    <DialogHeader>
+                      <DialogTitle className="text-teal-400 text-xl flex items-center">
+                        <Lightbulb className="w-6 h-6 mr-2" />
+                        Кабинет Науки
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-gray-200">
+                      <div className="bg-teal-950/50 p-4 rounded-lg border border-teal-800/50">
+                        <h4 className="text-teal-300 font-semibold mb-2">Data Sandbox - Исследовательская Среда:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Доступ к крупнейшему массиву водных данных планеты</li>
+                          <li>• Безопасная среда с анонимизированными данными</li>
+                          <li>• Инструменты машинного обучения и ИИ</li>
+                          <li>• Тестирование климатических моделей</li>
+                        </ul>
+                      </div>
+                      <div className="bg-emerald-950/50 p-4 rounded-lg border border-emerald-800/50">
+                        <h4 className="text-emerald-300 font-semibold mb-2">DAO-Гранты и Сотрудничество:</h4>
+                        <ul className="space-y-2 text-sm">
+                          <li>• Децентрализованное финансирование исследований</li>
+                          <li>• Голосование сообщества за приоритетные проекты</li>
+                          <li>• Открытая публикация результатов</li>
+                          <li>• Международная коллаборация ученых</li>
+                          <li>• Система peer-review через блокчейн</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </motion.div>
+
+              {/* Мультитокенная Модель */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+              >
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                         style={{
+                           background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2))',
+                           border: '2px solid rgba(16, 185, 129, 0.8)',
+                           borderRadius: '16px',
+                           backdropFilter: 'blur(16px)',
+                           boxShadow: '0 0 30px rgba(16, 185, 129, 0.6), 0 8px 32px rgba(16, 185, 129, 0.2)',
+                         }}>
+                      <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-lg">V</span>
+                      </div>
+                      <h3 className="text-white font-semibold text-lg mb-2">Токены</h3>
+                      <p className="text-emerald-100 text-sm">Мультитокенная Экономика</p>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl bg-slate-900 border-emerald-800">
+                    <DialogHeader>
+                      <DialogTitle className="text-emerald-400 text-xl flex items-center">
+                        <div className="w-6 h-6 mr-2 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-sm">V</span>
+                        </div>
+                        Мультитокенная Модель
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 text-gray-200">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="bg-cyan-950/50 p-4 rounded-lg border border-cyan-800/50">
+                          <h4 className="text-cyan-300 font-semibold mb-2 flex items-center">
+                            <div className="w-4 h-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full mr-2"></div>
+                            VOD (Global)
+                          </h4>
+                          <ul className="space-y-1 text-xs">
+                            <li>• Основное средство расчетов</li>
+                            <li>• Стейкинг и DAO-голосования</li>
+                            <li>• Межрегиональные транзакции</li>
+                          </ul>
+                        </div>
+                        <div className="bg-green-950/50 p-4 rounded-lg border border-green-800/50">
+                          <h4 className="text-green-300 font-semibold mb-2 flex items-center">
+                            <div className="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mr-2"></div>
+                            R-VOD (Regional)
+                          </h4>
+                          <ul className="space-y-1 text-xs">
+                            <li>• Региональное управление</li>
+                            <li>• Экологический коэффициент</li>
+                            <li>• Местные инициативы</li>
+                          </ul>
+                        </div>
+                        <div className="bg-pink-950/50 p-4 rounded-lg border border-pink-800/50">
+                          <h4 className="text-pink-300 font-semibold mb-2 flex items-center">
+                            <div className="w-4 h-4 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full mr-2"></div>
+                            P-VOD (Project)
+                          </h4>
+                          <ul className="space-y-1 text-xs">
+                            <li>• Токен конкретного проекта</li>
+                            <li>• Инвестиционные доли</li>
+                            <li>• Прибыль от реализации</li>
+                          </ul>
+                        </div>
+                        <div className="bg-orange-950/50 p-4 rounded-lg border border-orange-800/50">
+                          <h4 className="text-orange-300 font-semibold mb-2 flex items-center">
+                            <div className="w-4 h-4 bg-gradient-to-r from-orange-500 to-red-600 rounded-full mr-2"></div>
+                            O-VOD (Operational)
+                          </h4>
+                          <ul className="space-y-1 text-xs">
+                            <li>• Операционная эффективность</li>
+                            <li>• Награды за экономию</li>
+                            <li>• Поощрения пользователей</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </motion.div>
             </div>
 
-            {/* Финансовые инструменты */}
+            {/* Navigation Button */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 max-w-7xl w-full"
+              transition={{ delay: 1.0 }}
+              className="mt-8"
             >
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6 flex items-center justify-center">
-                <CreditCard className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-cyan-400 mr-3" />
-                Финансовые Инструменты на Блокчейне
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                <div className="text-center">
-                  <Shield className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-blue-400 mx-auto mb-2 lg:mb-3" />
-                  <p className="text-white font-semibold text-sm sm:text-base">W-Cert</p>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водный сертификат</p>
-                </div>
-                <div className="text-center">
-                  <FileText className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-green-400 mx-auto mb-2 lg:mb-3" />
-                  <p className="text-white font-semibold text-sm sm:text-base">W-Bond</p>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водная облигация</p>
-                </div>
-                <div className="text-center">
-                  <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-yellow-400 mx-auto mb-2 lg:mb-3" />
-                  <p className="text-white font-semibold text-sm sm:text-base">W-Future</p>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водный фьючерс</p>
-                </div>
-                <div className="text-center">
-                  <BarChart3 className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-purple-400 mx-auto mb-2 lg:mb-3" />
-                  <p className="text-white font-semibold text-sm sm:text-base">W-Option</p>
-                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">Водный опцион</p>
-                </div>
-              </div>
+              <Button
+                onClick={nextScreen}
+                size="lg"
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3 text-lg font-semibold rounded-full shadow-2xl"
+                style={{
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                  boxShadow: '0 8px 32px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3)',
+                  border: '1px solid rgba(6, 182, 212, 0.3)'
+                }}
+              >
+                УЗНАТЬ О МЕХАНИЗМАХ <ChevronRight className="ml-2 w-5 h-5" />
+              </Button>
             </motion.div>
           </motion.div>
         )}
