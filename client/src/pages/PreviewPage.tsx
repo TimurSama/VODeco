@@ -1277,7 +1277,7 @@ export default function PreviewPage() {
                   border: '1px solid rgba(6, 182, 212, 0.3)'
                 }}
               >
-                УЗНАТЬ О МЕХАНИЗМАХ <ChevronRight className="ml-2 w-5 h-5" />
+                Далее <ChevronRight className="ml-2 w-5 h-5" />
               </Button>
             </motion.div>
           </motion.div>
