@@ -1603,21 +1603,13 @@ export default function PreviewPage() {
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 lg:mb-6 text-center"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-8 text-center"
             >
               Дорожная Карта VODeco
             </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-sm sm:text-base lg:text-lg text-gray-300 text-center mb-6 max-w-4xl"
-            >
-              Космическое путешествие развития экосистемы от старта до глобального внедрения
-            </motion.p>
 
             {/* Космический маршрут */}
-            <div className="relative max-w-6xl w-full h-80 mb-6">
+            <div className="relative max-w-6xl w-full h-96 mb-6">
               {/* Пунктирная траектория */}
               <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 300">
                 <defs>
@@ -1646,94 +1638,192 @@ export default function PreviewPage() {
 
               {/* Планеты-годы */}
               {[
-                { year: '2024', title: 'Запуск MVP', desc: 'Токеномика', x: 80, y: 250, color: 'from-cyan-500 to-blue-500', glow: 'rgba(6, 182, 212, 0.8)' },
-                { year: '2025', title: 'Расширение', desc: 'Региональные партнерства', x: 300, y: 160, color: 'from-blue-500 to-purple-500', glow: 'rgba(59, 130, 246, 0.8)' },
-                { year: '2027', title: 'Интеграция', desc: 'Развитие экосистемы', x: 520, y: 240, color: 'from-purple-500 to-pink-500', glow: 'rgba(139, 92, 246, 0.8)' },
-                { year: '2030', title: 'Глобализация', desc: 'Мировая экосистема', x: 680, y: 140, color: 'from-pink-500 to-orange-500', glow: 'rgba(236, 72, 153, 0.8)' }
+                { 
+                  year: '2024', 
+                  title: 'Запуск MVP', 
+                  desc: 'Токеномика', 
+                  x: 80, 
+                  y: 250, 
+                  color: 'from-cyan-500 to-blue-500', 
+                  glow: 'rgba(6, 182, 212, 0.8)',
+                  bgColor: 'rgba(6, 182, 212, 0.2)',
+                  borderColor: 'rgba(6, 182, 212, 0.6)',
+                  details: {
+                    title: 'Запуск MVP 2024',
+                    content: [
+                      'Базовая токеномика VOD и создание первых токенов',
+                      'Запуск платформы VOD Check для мониторинга',
+                      'Пилотные проекты в Узбекистане',
+                      'Формирование сообщества ранних участников',
+                      'Интеграция IoT-датчиков для сбора данных'
+                    ]
+                  }
+                },
+                { 
+                  year: '2025', 
+                  title: 'Расширение', 
+                  desc: 'Региональные партнерства', 
+                  x: 300, 
+                  y: 160, 
+                  color: 'from-blue-500 to-purple-500', 
+                  glow: 'rgba(59, 130, 246, 0.8)',
+                  bgColor: 'rgba(59, 130, 246, 0.2)',
+                  borderColor: 'rgba(59, 130, 246, 0.6)',
+                  details: {
+                    title: 'Региональное расширение 2025',
+                    content: [
+                      'Партнерства с государствами Центральной Азии',
+                      'Листинг VOD токена на крипто-биржах',
+                      'Расширение сети IoT-мониторинга',
+                      'Запуск профессиональных кабинетов',
+                      'Первые межгосударственные водные проекты'
+                    ]
+                  }
+                },
+                { 
+                  year: '2027', 
+                  title: 'Интеграция', 
+                  desc: 'Развитие экосистемы', 
+                  x: 520, 
+                  y: 240, 
+                  color: 'from-purple-500 to-pink-500', 
+                  glow: 'rgba(139, 92, 246, 0.8)',
+                  bgColor: 'rgba(139, 92, 246, 0.2)',
+                  borderColor: 'rgba(139, 92, 246, 0.6)',
+                  details: {
+                    title: 'Развитие экосистемы 2027',
+                    content: [
+                      'Формирование полноценного "Банка Воды"',
+                      'Интеграция с международными стандартами ESG',
+                      'Запуск DAO-управления экосистемой',
+                      'Расширение на новые географические регионы',
+                      'Создание мультитокенной экономики (R-VOD, P-VOD)'
+                    ]
+                  }
+                },
+                { 
+                  year: '2030', 
+                  title: 'Глобализация', 
+                  desc: 'Мировая экосистема', 
+                  x: 680, 
+                  y: 140, 
+                  color: 'from-pink-500 to-orange-500', 
+                  glow: 'rgba(236, 72, 153, 0.8)',
+                  bgColor: 'rgba(236, 72, 153, 0.2)',
+                  borderColor: 'rgba(236, 72, 153, 0.6)',
+                  details: {
+                    title: 'Глобальная экосистема 2030',
+                    content: [
+                      'Мировой стандарт управления водными ресурсами',
+                      'Интеграция с системами ООН и международными организациями',
+                      'Подключение 75% мировых водных объектов',
+                      'Расширение на углеродные кредиты и экосистемы',
+                      'Полная автономия через DAO-управление'
+                    ]
+                  }
+                }
               ].map((planet, index) => (
-                <motion.div
-                  key={planet.year}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 + index * 0.3, type: "spring", stiffness: 300 }}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: `${(planet.x / 800) * 100}%`, top: `${(planet.y / 300) * 100}%` }}
-                >
-                  {/* Планета */}
-                  <div 
-                    className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${planet.color} rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm relative cursor-pointer transition-all duration-300 hover:scale-110`}
-                    style={{
-                      boxShadow: `0 0 30px ${planet.glow}, 0 0 60px ${planet.glow}, inset 0 0 20px rgba(255,255,255,0.2)`,
-                      border: '2px solid rgba(255,255,255,0.3)'
-                    }}
-                  >
-                    {planet.year}
-                    
-                    {/* Орбитальные кольца */}
-                    <div 
-                      className="absolute inset-0 rounded-full border-2 border-white/20 animate-spin"
-                      style={{ 
-                        width: '120%', 
-                        height: '120%',
-                        left: '-10%',
-                        top: '-10%',
-                        animationDuration: `${4 + index}s`
-                      }}
-                    />
-                    <div 
-                      className="absolute inset-0 rounded-full border border-white/10 animate-spin"
-                      style={{ 
-                        width: '140%', 
-                        height: '140%',
-                        left: '-20%',
-                        top: '-20%',
-                        animationDuration: `${6 + index}s`,
-                        animationDirection: 'reverse'
-                      }}
-                    />
-                  </div>
-                  
-                  {/* Информационная карточка */}
+                <Dialog key={planet.year}>
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2 + index * 0.3 }}
-                    className="absolute top-full mt-3 left-1/2 transform -translate-x-1/2 text-center min-w-max"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 + index * 0.3, type: "spring", stiffness: 300 }}
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                    style={{ left: `${(planet.x / 800) * 100}%`, top: `${(planet.y / 300) * 100}%` }}
                   >
-                    <div 
-                      className="bg-black/60 backdrop-blur-md rounded-lg p-2 border border-white/20"
+                    <DialogTrigger asChild>
+                      {/* Планета */}
+                      <div 
+                        className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${planet.color} rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm relative cursor-pointer transition-all duration-300 hover:scale-110`}
+                        style={{
+                          boxShadow: `0 0 30px ${planet.glow}, 0 0 60px ${planet.glow}, inset 0 0 20px rgba(255,255,255,0.2)`,
+                          border: '2px solid rgba(255,255,255,0.3)'
+                        }}
+                      >
+                        {planet.year}
+                        
+                        {/* Орбитальные кольца */}
+                        <div 
+                          className="absolute inset-0 rounded-full border-2 border-white/20 animate-spin"
+                          style={{ 
+                            width: '120%', 
+                            height: '120%',
+                            left: '-10%',
+                            top: '-10%',
+                            animationDuration: `${4 + index}s`
+                          }}
+                        />
+                        <div 
+                          className="absolute inset-0 rounded-full border border-white/10 animate-spin"
+                          style={{ 
+                            width: '140%', 
+                            height: '140%',
+                            left: '-20%',
+                            top: '-20%',
+                            animationDuration: `${6 + index}s`,
+                            animationDirection: 'reverse'
+                          }}
+                        />
+                      </div>
+                    </DialogTrigger>
+                    
+                    {/* Информационная карточка */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.2 + index * 0.3 }}
+                      className="absolute top-full mt-3 left-1/2 transform -translate-x-1/2 text-center min-w-max"
+                    >
+                      <div 
+                        className="backdrop-blur-md rounded-lg p-2 border"
+                        style={{
+                          background: `linear-gradient(135deg, ${planet.bgColor}, rgba(255,255,255,0.05))`,
+                          borderColor: planet.borderColor,
+                          boxShadow: `0 8px 32px ${planet.glow}`
+                        }}
+                      >
+                        <h3 className="text-white font-semibold text-xs mb-1">{planet.title}</h3>
+                        <p className="text-gray-300 text-xs">{planet.desc}</p>
+                      </div>
+                    </motion.div>
+
+                    {/* Popup Dialog */}
+                    <DialogContent 
+                      className="max-w-2xl border-2"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(255,255,255,0.1))',
-                        boxShadow: `0 8px 32px ${planet.glow}`
+                        background: `linear-gradient(135deg, rgba(0,0,0,0.9), ${planet.bgColor})`,
+                        borderColor: planet.borderColor,
+                        boxShadow: `0 20px 60px ${planet.glow}`
                       }}
                     >
-                      <h3 className="text-white font-semibold text-xs mb-1">{planet.title}</h3>
-                      <p className="text-gray-300 text-xs">{planet.desc}</p>
-                    </div>
+                      <DialogHeader>
+                        <DialogTitle 
+                          className="text-2xl font-bold text-white mb-4"
+                          style={{ textShadow: `0 0 20px ${planet.glow}` }}
+                        >
+                          {planet.details.title}
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        {planet.details.content.map((item, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="flex items-start space-x-3"
+                          >
+                            <div 
+                              className="w-2 h-2 rounded-full mt-2 flex-shrink-0"
+                              style={{ backgroundColor: planet.glow.replace('0.8', '1') }}
+                            />
+                            <p className="text-gray-300 leading-relaxed">{item}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </DialogContent>
                   </motion.div>
-                  
-                  {/* Звездная пыль вокруг планет */}
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 bg-white rounded-full"
-                      style={{
-                        left: `${Math.cos(i * 90 * Math.PI / 180) * 30 + 50}%`,
-                        top: `${Math.sin(i * 90 * Math.PI / 180) * 30 + 50}%`,
-                      }}
-                      animate={{
-                        opacity: [0.2, 1, 0.2],
-                        scale: [0.5, 1, 0.5]
-                      }}
-                      transition={{
-                        duration: 2,
-                        delay: index * 0.3 + i * 0.1,
-                        repeat: Infinity,
-                        repeatType: "reverse"
-                      }}
-                    />
-                  ))}
-                </motion.div>
+                </Dialog>
               ))}
             </div>
 
