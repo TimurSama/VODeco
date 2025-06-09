@@ -897,7 +897,7 @@ export default function PreviewPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 lg:mb-6 text-center leading-tight"
             >
-              Цифровая Платформа VODeco
+              Платформа DAO VODeco
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -909,7 +909,7 @@ export default function PreviewPage() {
             </motion.p>
 
             {/* Интерактивные плитки профессиональных кабинетов */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 max-w-6xl w-full mb-8">
+            <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 lg:gap-4 max-w-5xl w-full mb-6">
               {/* Кабинет Граждан */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -918,17 +918,17 @@ export default function PreviewPage() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-3 text-center"
                          style={{
                            background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2))',
                            border: '2px solid rgba(34, 197, 94, 0.8)',
-                           borderRadius: '16px',
+                           borderRadius: '12px',
                            backdropFilter: 'blur(16px)',
-                           boxShadow: '0 0 30px rgba(34, 197, 94, 0.6), 0 8px 32px rgba(34, 197, 94, 0.2)',
+                           boxShadow: '0 0 20px rgba(34, 197, 94, 0.6), 0 4px 16px rgba(34, 197, 94, 0.2)',
                          }}>
-                      <Users className="w-12 h-12 text-green-300 mx-auto mb-3" />
-                      <h3 className="text-white font-semibold text-lg mb-2">Граждане</h3>
-                      <p className="text-green-100 text-sm">VOD Check & Геймификация</p>
+                      <Users className="w-8 h-8 text-green-300 mx-auto mb-2" />
+                      <h3 className="text-white font-semibold text-sm mb-1">Граждане</h3>
+                      <p className="text-green-100 text-xs">VOD Check</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-slate-900 border-green-800">
@@ -971,17 +971,17 @@ export default function PreviewPage() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-3 text-center"
                          style={{
                            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2))',
                            border: '2px solid rgba(139, 92, 246, 0.8)',
-                           borderRadius: '16px',
+                           borderRadius: '12px',
                            backdropFilter: 'blur(16px)',
-                           boxShadow: '0 0 30px rgba(139, 92, 246, 0.6), 0 8px 32px rgba(139, 92, 246, 0.2)',
+                           boxShadow: '0 0 20px rgba(139, 92, 246, 0.6), 0 4px 16px rgba(139, 92, 246, 0.2)',
                          }}>
-                      <Building2 className="w-12 h-12 text-purple-300 mx-auto mb-3" />
-                      <h3 className="text-white font-semibold text-lg mb-2">Государства</h3>
-                      <p className="text-purple-100 text-sm">Банк Воды & Цифровой Двойник</p>
+                      <Building2 className="w-8 h-8 text-purple-300 mx-auto mb-2" />
+                      <h3 className="text-white font-semibold text-sm mb-1">Государства</h3>
+                      <p className="text-purple-100 text-xs">Банк Воды</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-slate-900 border-purple-800">
@@ -1024,17 +1024,17 @@ export default function PreviewPage() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-3 text-center"
                          style={{
                            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.2))',
                            border: '2px solid rgba(59, 130, 246, 0.8)',
-                           borderRadius: '16px',
+                           borderRadius: '12px',
                            backdropFilter: 'blur(16px)',
-                           boxShadow: '0 0 30px rgba(59, 130, 246, 0.6), 0 8px 32px rgba(59, 130, 246, 0.2)',
+                           boxShadow: '0 0 20px rgba(59, 130, 246, 0.6), 0 4px 16px rgba(59, 130, 246, 0.2)',
                          }}>
-                      <TrendingUp className="w-12 h-12 text-blue-300 mx-auto mb-3" />
-                      <h3 className="text-white font-semibold text-lg mb-2">Бизнес</h3>
-                      <p className="text-blue-100 text-sm">ESG-Аудит & Оптимизация</p>
+                      <TrendingUp className="w-8 h-8 text-blue-300 mx-auto mb-2" />
+                      <h3 className="text-white font-semibold text-sm mb-1">Бизнес</h3>
+                      <p className="text-blue-100 text-xs">ESG-Аудит</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-slate-900 border-blue-800">
@@ -1077,17 +1077,17 @@ export default function PreviewPage() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-3 text-center"
                          style={{
                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 145, 178, 0.2))',
                            border: '2px solid rgba(6, 182, 212, 0.8)',
-                           borderRadius: '16px',
+                           borderRadius: '12px',
                            backdropFilter: 'blur(16px)',
-                           boxShadow: '0 0 30px rgba(6, 182, 212, 0.6), 0 8px 32px rgba(6, 182, 212, 0.2)',
+                           boxShadow: '0 0 20px rgba(6, 182, 212, 0.6), 0 4px 16px rgba(6, 182, 212, 0.2)',
                          }}>
-                      <DollarSign className="w-12 h-12 text-cyan-300 mx-auto mb-3" />
-                      <h3 className="text-white font-semibold text-lg mb-2">Инвесторы</h3>
-                      <p className="text-cyan-100 text-sm">Биржа Проектов & Мониторинг</p>
+                      <DollarSign className="w-8 h-8 text-cyan-300 mx-auto mb-2" />
+                      <h3 className="text-white font-semibold text-sm mb-1">Инвесторы</h3>
+                      <p className="text-cyan-100 text-xs">Биржа Проектов</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-slate-900 border-cyan-800">
@@ -1130,17 +1130,17 @@ export default function PreviewPage() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-3 text-center"
                          style={{
                            background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(13, 148, 136, 0.2))',
                            border: '2px solid rgba(20, 184, 166, 0.8)',
-                           borderRadius: '16px',
+                           borderRadius: '12px',
                            backdropFilter: 'blur(16px)',
-                           boxShadow: '0 0 30px rgba(20, 184, 166, 0.6), 0 8px 32px rgba(20, 184, 166, 0.2)',
+                           boxShadow: '0 0 20px rgba(20, 184, 166, 0.6), 0 4px 16px rgba(20, 184, 166, 0.2)',
                          }}>
-                      <Lightbulb className="w-12 h-12 text-teal-300 mx-auto mb-3" />
-                      <h3 className="text-white font-semibold text-lg mb-2">Наука</h3>
-                      <p className="text-teal-100 text-sm">Data Sandbox & DAO-Гранты</p>
+                      <Lightbulb className="w-8 h-8 text-teal-300 mx-auto mb-2" />
+                      <h3 className="text-white font-semibold text-sm mb-1">Наука</h3>
+                      <p className="text-teal-100 text-xs">Data Sandbox</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-slate-900 border-teal-800">
@@ -1183,19 +1183,19 @@ export default function PreviewPage() {
               >
                 <Dialog>
                   <DialogTrigger asChild>
-                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-6 text-center"
+                    <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 p-3 text-center"
                          style={{
                            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2))',
                            border: '2px solid rgba(16, 185, 129, 0.8)',
-                           borderRadius: '16px',
+                           borderRadius: '12px',
                            backdropFilter: 'blur(16px)',
-                           boxShadow: '0 0 30px rgba(16, 185, 129, 0.6), 0 8px 32px rgba(16, 185, 129, 0.2)',
+                           boxShadow: '0 0 20px rgba(16, 185, 129, 0.6), 0 4px 16px rgba(16, 185, 129, 0.2)',
                          }}>
-                      <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">V</span>
+                      <div className="w-8 h-8 mx-auto mb-2 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-bold text-sm">V</span>
                       </div>
-                      <h3 className="text-white font-semibold text-lg mb-2">Токены</h3>
-                      <p className="text-emerald-100 text-sm">Мультитокенная Экономика</p>
+                      <h3 className="text-white font-semibold text-sm mb-1">Токены</h3>
+                      <p className="text-emerald-100 text-xs">VOD Экономика</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl bg-slate-900 border-emerald-800">
