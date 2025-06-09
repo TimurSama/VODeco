@@ -1868,23 +1868,25 @@ export default function PreviewPage() {
               <span className="text-cyan-400">Оно создается сегодня. Вместе с вами.</span>
             </motion.h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl w-full mb-6 lg:mb-8">
-              {/* Кнопка экосистемы */}
+            <div className="relative max-w-4xl w-full mb-6 lg:mb-8">
+              {/* Треугольное расположение кнопок */}
+              
+              {/* Верхняя кнопка - Экосистема */}
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ 
                   opacity: 1, 
-                  y: [0, -5, 0],
+                  y: [0, -4, 0],
                 }}
                 transition={{ 
                   opacity: { delay: 0.2 },
                   y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer mx-auto mb-8 max-w-xs"
                 onClick={() => setLocation('/auth')}
               >
                 <div 
-                  className="relative bg-gradient-to-br from-emerald-500/20 to-cyan-600/20 backdrop-blur-md rounded-2xl p-6 lg:p-8 border-2 border-emerald-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-emerald-400/60"
+                  className="relative bg-gradient-to-br from-emerald-500/20 to-cyan-600/20 backdrop-blur-md rounded-xl p-4 border-2 border-emerald-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-emerald-400/60"
                   style={{
                     boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3), 0 0 20px rgba(16, 185, 129, 0.2)',
                   }}
@@ -1895,103 +1897,99 @@ export default function PreviewPage() {
                       opacity: [0.7, 1, 0.7]
                     }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-cyan-600/10 rounded-2xl"
+                    className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-cyan-600/10 rounded-xl"
                   />
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, 360]
-                    }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Users className="w-14 h-14 lg:w-16 lg:h-16 text-emerald-400 mx-auto mb-4 lg:mb-6 relative z-10" />
-                  </motion.div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4 relative z-10">СТАТЬ ЧАСТЬЮ ЭКОСИСТЕМЫ</h3>
-                  <p className="text-emerald-100 text-sm sm:text-base leading-relaxed relative z-10">Зарегистрируйтесь, чтобы получить доступ к аналитике и стать полноправным участником VODeco.</p>
+                  <Users className="w-10 h-10 text-emerald-400 mx-auto mb-3 relative z-10" />
+                  <h3 className="text-lg font-bold text-white mb-2 relative z-10">СТАТЬ ЧАСТЬЮ ЭКОСИСТЕМЫ</h3>
+                  <p className="text-emerald-100 text-xs leading-relaxed relative z-10">Зарегистрируйтесь для доступа к аналитике</p>
                 </div>
               </motion.div>
 
-              {/* Кнопка инвестиций */}
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: [0, -8, 0],
-                }}
-                transition={{ 
-                  opacity: { delay: 0.4 },
-                  y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
-                }}
-                className="relative group cursor-pointer"
-                onClick={() => setLocation('/wallet')}
-              >
-                <div 
-                  className="relative bg-gradient-to-br from-orange-500/20 to-yellow-600/20 backdrop-blur-md rounded-2xl p-6 lg:p-8 border-2 border-orange-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-orange-400/60"
-                  style={{
-                    boxShadow: '0 8px 32px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.3)',
+              {/* Нижние две кнопки */}
+              <div className="flex justify-center gap-8">
+                {/* Левая кнопка - Инвестиции */}
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ 
+                    opacity: 1, 
+                    y: [0, -6, 0],
                   }}
+                  transition={{ 
+                    opacity: { delay: 0.4 },
+                    y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+                  }}
+                  className="relative group cursor-pointer max-w-xs"
+                  onClick={() => setLocation('/wallet')}
                 >
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      opacity: [0.6, 1, 0.6]
+                  <div 
+                    className="relative bg-gradient-to-br from-orange-500/20 to-yellow-600/20 backdrop-blur-md rounded-xl p-4 border-2 border-orange-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-orange-400/60"
+                    style={{
+                      boxShadow: '0 8px 32px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.3)',
                     }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                    className="absolute inset-0 bg-gradient-to-br from-orange-500/15 to-yellow-600/15 rounded-2xl"
-                  />
-                  <motion.div
-                    animate={{ 
-                      y: [0, -3, 0],
-                      scale: [1, 1.05, 1]
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <TrendingUp className="w-14 h-14 lg:w-16 lg:h-16 text-orange-400 mx-auto mb-4 lg:mb-6 relative z-10" />
-                  </motion.div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4 relative z-10">ИНВЕСТИРОВАТЬ В БУДУЩЕЕ</h3>
-                  <p className="text-orange-100 text-sm sm:text-base leading-relaxed relative z-10">Примите участие в Pre-Sale токена VOD. Ваши инвестиции — это чистая вода для миллионов и стабильный доход для вас.</p>
-                </div>
-              </motion.div>
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.2, 1],
+                        opacity: [0.6, 1, 0.6]
+                      }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                      className="absolute inset-0 bg-gradient-to-br from-orange-500/15 to-yellow-600/15 rounded-xl"
+                    />
+                    <motion.div
+                      animate={{ 
+                        y: [0, -2, 0],
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <TrendingUp className="w-10 h-10 text-orange-400 mx-auto mb-3 relative z-10" />
+                    </motion.div>
+                    <h3 className="text-lg font-bold text-white mb-2 relative z-10">ИНВЕСТИРОВАТЬ</h3>
+                    <p className="text-orange-100 text-xs leading-relaxed relative z-10">Pre-Sale токена VOD</p>
+                  </div>
+                </motion.div>
 
-              {/* Кнопка партнерства */}
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ 
-                  opacity: 1, 
-                  y: [0, -6, 0],
-                }}
-                transition={{ 
-                  opacity: { delay: 0.6 },
-                  y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }
-                }}
-                className="relative group cursor-pointer"
-                onClick={() => setLocation('/contact')}
-              >
-                <div 
-                  className="relative bg-gradient-to-br from-purple-500/20 to-indigo-600/20 backdrop-blur-md rounded-2xl p-6 lg:p-8 border-2 border-purple-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/60"
-                  style={{
-                    boxShadow: '0 8px 32px rgba(139, 92, 246, 0.4), 0 0 20px rgba(139, 92, 246, 0.3)',
+                {/* Правая кнопка - Партнерство */}
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ 
+                    opacity: 1, 
+                    y: [0, -5, 0],
                   }}
+                  transition={{ 
+                    opacity: { delay: 0.6 },
+                    y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                  }}
+                  className="relative group cursor-pointer max-w-xs"
+                  onClick={() => setLocation('/contact')}
                 >
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.15, 1],
-                      opacity: [0.5, 1, 0.5]
+                  <div 
+                    className="relative bg-gradient-to-br from-purple-500/20 to-indigo-600/20 backdrop-blur-md rounded-xl p-4 border-2 border-purple-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/60"
+                    style={{
+                      boxShadow: '0 8px 32px rgba(139, 92, 246, 0.4), 0 0 20px rgba(139, 92, 246, 0.3)',
                     }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-                    className="absolute inset-0 bg-gradient-to-br from-purple-500/12 to-indigo-600/12 rounded-2xl"
-                  />
-                  <motion.div
-                    animate={{ 
-                      rotateY: [0, 10, 0, -10, 0],
-                    }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <Building2 className="w-14 h-14 lg:w-16 lg:h-16 text-purple-400 mx-auto mb-4 lg:mb-6 relative z-10" />
-                  </motion.div>
-                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4 relative z-10">СТАТЬ ПАРТНЕРОМ</h3>
-                  <p className="text-purple-100 text-sm sm:text-base leading-relaxed relative z-10">Приглашаем к сотрудничеству правительства, корпорации и фонды для реализации этого исторического проекта.</p>
-                </div>
-              </motion.div>
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.15, 1],
+                        opacity: [0.5, 1, 0.5]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                      className="absolute inset-0 bg-gradient-to-br from-purple-500/12 to-indigo-600/12 rounded-xl"
+                    />
+                    <motion.div
+                      animate={{ 
+                        rotateY: [0, 8, 0, -8, 0],
+                      }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Building2 className="w-10 h-10 text-purple-400 mx-auto mb-3 relative z-10" />
+                    </motion.div>
+                    <h3 className="text-lg font-bold text-white mb-2 relative z-10">СТАТЬ ПАРТНЕРОМ</h3>
+                    <p className="text-purple-100 text-xs leading-relaxed relative z-10">Сотрудничество с корпорациями</p>
+                  </div>
+                </motion.div>
+              </div>
             </div>
 
             <motion.div
