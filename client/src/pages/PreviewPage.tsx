@@ -22,6 +22,8 @@ import {
   BarChart3
 } from "lucide-react";
 import EarthGlobe from "@/components/globo/EarthGlobe";
+import unSdgLogo from "@assets/image_1749468311324.png";
+import unicapLogo from "@assets/image_1749468323756.png";
 
 type ScreenType = 'intro' | 'global-crisis' | 'ecosystem' | 'platform' | 'mechanisms' | 'sdg-goals' | 'roadmap' | 'cta';
 
@@ -252,7 +254,7 @@ export default function PreviewPage() {
                   }}
                 >
                   <img 
-                    src="/un-sdg-logo.svg"
+                    src={unSdgLogo}
                     alt="UN SDG Logo"
                     className="w-full h-full object-contain"
                   />
@@ -281,9 +283,9 @@ export default function PreviewPage() {
                   }}
                 >
                   <img 
-                    src="/unicap-logo.png"
+                    src={unicapLogo}
                     alt="UNICAP Logo"
-                    className="w-full h-full object-contain p-1"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               </motion.a>
