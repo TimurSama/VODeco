@@ -225,7 +225,10 @@ export default function PreviewPage() {
             className="fixed inset-0 flex items-center justify-center z-10"
           >
             {/* Логотипы в правом верхнем углу */}
-            <div className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 flex space-x-3 sm:space-x-4 z-30">
+            <div 
+              className="fixed top-4 right-4 flex space-x-3 sm:space-x-4"
+              style={{ zIndex: 99999 }}
+            >
               <motion.a
                 href="https://www.un.org"
                 target="_blank"
@@ -238,12 +241,13 @@ export default function PreviewPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <div 
-                  className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden"
+                  className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg overflow-hidden"
                   style={{
-                    background: 'rgba(6, 182, 212, 0.2)',
-                    border: '2px solid rgba(6, 182, 212, 0.4)',
+                    background: 'rgba(6, 182, 212, 0.3)',
+                    border: '2px solid rgba(6, 182, 212, 0.5)',
                     backdropFilter: 'blur(8px)',
-                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.3)'
+                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.4)',
+                    zIndex: 99999
                   }}
                 >
                   <img 
