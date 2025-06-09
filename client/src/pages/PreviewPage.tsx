@@ -436,15 +436,15 @@ export default function PreviewPage() {
                       <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
                            style={{
                              clipPath: 'polygon(0 0, 90% 0, 100% 100%, 10% 100%)',
-                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
-                             border: '2px solid rgba(139, 69, 19, 0.6)',
-                             backdropFilter: 'blur(8px)',
-                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             background: 'linear-gradient(135deg, rgba(128, 0, 32, 0.3), rgba(220, 20, 60, 0.2))',
+                             border: '2px solid rgba(255, 0, 80, 0.8)',
+                             backdropFilter: 'blur(16px)',
+                             boxShadow: '0 0 30px rgba(255, 0, 80, 0.6), 0 8px 32px rgba(128, 0, 32, 0.4)',
                              padding: '12px 8px'
                            }}>
-                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Ресурсы Планеты</h3>
+                        <h3 className="text-pink-200 font-semibold mb-1 text-xs">Ресурсы Планеты</h3>
                         <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">0.007%</p>
-                        <p className="text-orange-100 text-xs">доступной воды</p>
+                        <p className="text-pink-100 text-xs">доступной воды</p>
                       </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
@@ -487,15 +487,15 @@ export default function PreviewPage() {
                       <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
                            style={{
                              clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)',
-                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
-                             border: '2px solid rgba(139, 69, 19, 0.6)',
-                             backdropFilter: 'blur(8px)',
-                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             background: 'linear-gradient(135deg, rgba(128, 0, 32, 0.3), rgba(220, 20, 60, 0.2))',
+                             border: '2px solid rgba(255, 0, 80, 0.8)',
+                             backdropFilter: 'blur(16px)',
+                             boxShadow: '0 0 30px rgba(255, 0, 80, 0.6), 0 8px 32px rgba(128, 0, 32, 0.4)',
                              padding: '12px 8px'
                            }}>
-                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Коррупция</h3>
+                        <h3 className="text-pink-200 font-semibold mb-1 text-xs">Коррупция</h3>
                         <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">35%</p>
-                        <p className="text-orange-100 text-xs">потери средств</p>
+                        <p className="text-pink-100 text-xs">потери средств</p>
                       </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
@@ -538,15 +538,15 @@ export default function PreviewPage() {
                       <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
                            style={{
                              clipPath: 'polygon(0 0, 90% 0, 100% 100%, 10% 100%)',
-                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
-                             border: '2px solid rgba(139, 69, 19, 0.6)',
-                             backdropFilter: 'blur(8px)',
-                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             background: 'linear-gradient(135deg, rgba(128, 0, 32, 0.3), rgba(220, 20, 60, 0.2))',
+                             border: '2px solid rgba(255, 0, 80, 0.8)',
+                             backdropFilter: 'blur(16px)',
+                             boxShadow: '0 0 30px rgba(255, 0, 80, 0.6), 0 8px 32px rgba(128, 0, 32, 0.4)',
                              padding: '12px 8px'
                            }}>
-                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Устаревание</h3>
+                        <h3 className="text-pink-200 font-semibold mb-1 text-xs">Устаревание</h3>
                         <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">50%</p>
-                        <p className="text-orange-100 text-xs">потери воды</p>
+                        <p className="text-pink-100 text-xs">потери воды</p>
                       </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
@@ -590,15 +590,15 @@ export default function PreviewPage() {
                       <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
                            style={{
                              clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)',
-                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
-                             border: '2px solid rgba(139, 69, 19, 0.6)',
-                             backdropFilter: 'blur(8px)',
-                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             background: 'linear-gradient(135deg, rgba(128, 0, 32, 0.3), rgba(220, 20, 60, 0.2))',
+                             border: '2px solid rgba(255, 0, 80, 0.8)',
+                             backdropFilter: 'blur(16px)',
+                             boxShadow: '0 0 30px rgba(255, 0, 80, 0.6), 0 8px 32px rgba(128, 0, 32, 0.4)',
                              padding: '12px 8px'
                            }}>
-                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Прогноз 2050</h3>
+                        <h3 className="text-pink-200 font-semibold mb-1 text-xs">Прогноз 2050</h3>
                         <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">5 млрд</p>
-                        <p className="text-orange-100 text-xs">без воды</p>
+                        <p className="text-pink-100 text-xs">без воды</p>
                       </div>
                     </DialogTrigger>
                     <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
