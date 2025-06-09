@@ -394,33 +394,33 @@ export default function PreviewPage() {
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.7 }}
-                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Экономика Воды</h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">$1 трлн</p>
-                  <p className="text-gray-300 text-xs sm:text-sm">дефицит инвестиций</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Экономика Воды</h3>
+                  <p className="text-lg sm:text-xl font-bold text-white mb-1">$1 трлн</p>
+                  <p className="text-gray-300 text-xs">дефицит инвестиций</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.9 }}
-                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Гуманитарный Кризис</h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">2.2 млрд</p>
-                  <p className="text-gray-300 text-xs sm:text-sm">без доступа к воде</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Гуманитарный Кризис</h3>
+                  <p className="text-lg sm:text-xl font-bold text-white mb-1">2.2 млрд</p>
+                  <p className="text-gray-300 text-xs">без доступа к воде</p>
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 2.1 }}
-                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Прогноз Угрозы</h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">5+ млрд</p>
-                  <p className="text-gray-300 text-xs sm:text-sm">нехватка к 2030 г.</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Прогноз Угрозы</h3>
+                  <p className="text-lg sm:text-xl font-bold text-white mb-1">5+ млрд</p>
+                  <p className="text-gray-300 text-xs">нехватка к 2030 г.</p>
                 </motion.div>
               </div>
 
@@ -449,17 +449,17 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
+            className="h-screen flex flex-col items-center justify-center z-10 p-4 pt-20"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 lg:mb-8 text-center"
+              className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 text-center"
               style={{
                 textShadow: '0 0 20px rgba(6, 182, 212, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
-                padding: '8px 16px',
+                padding: '6px 12px',
                 border: '2px solid rgba(6, 182, 212, 0.4)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 background: 'rgba(6, 182, 212, 0.1)',
                 backdropFilter: 'blur(8px)'
               }}
@@ -467,13 +467,13 @@ export default function PreviewPage() {
               Экосистема VODeco: Синергия для Будущего
             </motion.h2>
 
-            <div className="relative w-full max-w-4xl h-[300px] sm:h-[400px] lg:h-[450px]">
+            <div className="relative w-full max-w-3xl h-[250px] sm:h-[300px] lg:h-[350px]">
               {/* Центральный глобус */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 z-20"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 z-20"
               >
                 <div 
                   className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center relative"
