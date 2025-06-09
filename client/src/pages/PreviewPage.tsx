@@ -222,7 +222,7 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-center justify-center z-10"
+            className="h-screen flex items-center justify-center z-10 pt-20"
           >
             {/* Логотипы в правом верхнем углу */}
             <div className="absolute top-4 right-4 sm:top-6 sm:right-6 lg:top-8 lg:right-8 flex space-x-3 sm:space-x-4 z-30">
@@ -288,7 +288,7 @@ export default function PreviewPage() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-6xl sm:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
                 style={{
                   textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
                   filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))',
@@ -303,7 +303,7 @@ export default function PreviewPage() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="text-xl sm:text-2xl lg:text-3xl mb-8 text-gray-300"
+                className="text-lg sm:text-xl lg:text-2xl mb-6 text-gray-300"
                 style={{
                   textShadow: '0 0 15px rgba(156, 163, 175, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
                   padding: '12px 24px',
@@ -345,25 +345,25 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
+            className="h-screen flex flex-col items-center justify-center z-10 p-4 pt-20"
           >
             <div className="max-w-6xl w-full h-full flex flex-col justify-center">
               {/* Анимация капли и глобуса */}
-              <div className="text-center mb-6 lg:mb-8">
+              <div className="text-center mb-4">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ duration: 1 }}
-                  className="inline-block mb-2"
+                  className="inline-block mb-1"
                 >
-                  <Droplets className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 text-cyan-400 mx-auto mb-2" />
+                  <Droplets className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 mx-auto mb-1" />
                 </motion.div>
                 
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="text-lg sm:text-xl lg:text-2xl text-cyan-200 mb-4"
+                  className="text-base sm:text-lg text-cyan-200 mb-2"
                 >
                   H₂O. Вода — первичный признак и главный фактор жизни.
                 </motion.p>
@@ -373,21 +373,21 @@ export default function PreviewPage() {
                   animate={{ scale: 1 }}
                   transition={{ delay: 1, duration: 1 }}
                 >
-                  <Globe className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 text-blue-400 mx-auto" />
+                  <Globe className="w-10 h-10 sm:w-12 sm:h-12 text-blue-400 mx-auto" />
                 </motion.div>
               </div>
 
               {/* Статистика кризиса */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 lg:mb-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-4">
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5 }}
-                  className="bg-slate-800/80 rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-cyan-500/20"
+                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs sm:text-sm lg:text-base">Ресурс Планеты</h3>
-                  <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">&lt;1%</p>
-                  <p className="text-gray-300 text-xs sm:text-sm">пресной воды доступны</p>
+                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Ресурс Планеты</h3>
+                  <p className="text-lg sm:text-xl font-bold text-white mb-1">&lt;1%</p>
+                  <p className="text-gray-300 text-xs">пресной воды доступны</p>
                 </motion.div>
 
                 <motion.div
