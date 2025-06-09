@@ -727,12 +727,12 @@ export default function PreviewPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex flex-col items-center z-10"
-            style={{ paddingTop: '6rem', paddingBottom: '2rem', height: 'calc(100vh - 6rem)' }}
+            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-6 text-center"
+              className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4 text-center"
               style={{
                 textShadow: '0 0 20px rgba(6, 182, 212, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
                 padding: '6px 12px',
@@ -745,13 +745,13 @@ export default function PreviewPage() {
               Экосистема VODeco: Синергия для Будущего
             </motion.h2>
 
-            <div className="relative w-full max-w-3xl h-[200px] sm:h-[240px] lg:h-[280px]">
+            <div className="relative w-full max-w-4xl h-[280px] sm:h-[320px] lg:h-[360px]">
               {/* Центральный элемент экосистемы */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 z-20"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 z-20"
               >
                 <div 
                   className="w-full h-full rounded-full flex items-center justify-center relative"
@@ -779,10 +779,10 @@ export default function PreviewPage() {
                 </div>
               </motion.div>
 
-              {/* Гексагоны вокруг глобуса */}
+              {/* Гексагоны вокруг центрального элемента */}
               {hexagonData.map((hexagon, index) => {
                 const angle = (index * 360) / hexagonData.length;
-                const radius = window.innerWidth < 640 ? 120 : window.innerWidth < 1024 ? 140 : 160;
+                const radius = window.innerWidth < 640 ? 140 : window.innerWidth < 1024 ? 170 : 190;
                 const x = Math.cos((angle * Math.PI) / 180) * radius;
                 const y = Math.sin((angle * Math.PI) / 180) * radius;
 
@@ -805,7 +805,7 @@ export default function PreviewPage() {
                     {/* 3D Hexagon Container - Glass Neon Style */}
                     <div className="relative perspective-1000">
                       <div 
-                        className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-emerald-500/50"
+                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-emerald-500/50"
                         style={{ 
                           clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
                           background: index % 7 === 0 ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 145, 178, 0.2))' :
