@@ -230,10 +230,38 @@ export default function PreviewPage() {
     }
   };
 
+  const prevScreen = () => {
+    const screens: ScreenType[] = ['intro', 'global-crisis', 'ecosystem', 'platform', 'mechanisms', 'sdg-goals', 'roadmap', 'cta'];
+    const currentIndex = screens.indexOf(currentScreen);
+    if (currentIndex > 0) {
+      setCurrentScreen(screens[currentIndex - 1]);
+    }
+  };
+
   const selectedHexagonData = hexagonData.find(h => h.id === selectedHexagon);
 
   return (
     <div className="w-full h-screen relative overflow-hidden">
+      {/* Кнопка возврата в верхнем левом углу */}
+      {currentScreen !== 'intro' && (
+        <motion.button
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          onClick={prevScreen}
+          className="fixed top-20 left-4 z-50 w-12 h-12 rounded-full flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(34, 197, 94, 0.2))',
+            border: '2px solid rgba(6, 182, 212, 0.8)',
+            backdropFilter: 'blur(16px)',
+            boxShadow: '0 0 20px rgba(6, 182, 212, 0.6)',
+          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronRight className="w-6 h-6 text-white rotate-180" />
+        </motion.button>
+      )}
+
       {/* Анимированный фон с гексагонами */}
       <div className="absolute inset-0 z-0">
         {[...Array(10)].map((_, i) => (
@@ -698,13 +726,13 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10"
-            style={{ paddingTop: '5rem', paddingBottom: '1rem', height: 'calc(100vh - 5rem)' }}
+            className="absolute inset-0 flex flex-col items-center z-10"
+            style={{ paddingTop: '6rem', paddingBottom: '2rem', height: 'calc(100vh - 6rem)' }}
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 text-center"
+              className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-6 text-center"
               style={{
                 textShadow: '0 0 20px rgba(6, 182, 212, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
                 padding: '6px 12px',
@@ -717,7 +745,7 @@ export default function PreviewPage() {
               Экосистема VODeco: Синергия для Будущего
             </motion.h2>
 
-            <div className="relative w-full max-w-3xl h-[250px] sm:h-[300px] lg:h-[350px]">
+            <div className="relative w-full max-w-3xl h-[200px] sm:h-[240px] lg:h-[280px]">
               {/* Центральный элемент экосистемы */}
               <motion.div
                 initial={{ scale: 0 }}
@@ -811,32 +839,24 @@ export default function PreviewPage() {
                                                           'rgba(6, 182, 212, 0.6)'})`
                         }}
                       >
-                        {/* Icon */}
-                        <div className="absolute inset-0 flex items-center justify-center text-white">
-                          <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 drop-shadow-lg">
+                        {/* Icon and Text inside hexagon */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2">
+                          <div className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 drop-shadow-lg mb-1">
                             {hexagon.icon}
+                          </div>
+                          <div className="text-center">
+                            <div className="text-xs sm:text-xs lg:text-sm font-semibold leading-tight">
+                              {hexagon.title}
+                            </div>
+                            <div className="text-xs opacity-80 leading-tight mt-1 hidden sm:block">
+                              {hexagon.description.length > 30 ? 
+                                hexagon.description.substring(0, 30) + '...' : 
+                                hexagon.description}
+                            </div>
                           </div>
                         </div>
 
                       </div>
-                      
-                      {/* Floating Label */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.5 + index * 0.1 }}
-                        className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap"
-                      >
-                        <div 
-                          className="px-2 py-1 bg-slate-800/90 text-white text-xs sm:text-sm rounded-md border border-cyan-500/30"
-                          style={{
-                            textShadow: '0 0 8px rgba(6, 182, 212, 0.6)',
-                            backdropFilter: 'blur(8px)'
-                          }}
-                        >
-                          {hexagon.title}
-                        </div>
-                      </motion.div>
                     </div>
                   </motion.div>
                 );
