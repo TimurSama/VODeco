@@ -223,11 +223,11 @@ export default function PreviewPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex items-center justify-center z-10"
-            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
+            style={{ paddingTop: '5rem', paddingBottom: '1rem', height: 'calc(100vh - 5rem)' }}
           >
             {/* Логотипы в правом верхнем углу */}
             <div 
-              className="fixed top-4 right-4 flex space-x-3 sm:space-x-4"
+              className="fixed top-20 right-4 flex space-x-3 sm:space-x-4"
               style={{ zIndex: 99999 }}
             >
               <motion.a
@@ -252,9 +252,9 @@ export default function PreviewPage() {
                   }}
                 >
                   <img 
-                    src="/un-sdg-logo.png"
+                    src="/un-sdg-logo.svg"
                     alt="UN SDG Logo"
-                    className="w-full h-full object-contain p-1"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               </motion.a>
@@ -354,7 +354,7 @@ export default function PreviewPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10"
-            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
+            style={{ paddingTop: '5rem', paddingBottom: '1rem', height: 'calc(100vh - 5rem)' }}
           >
             <div className="max-w-5xl w-full px-4 sm:px-6 flex flex-col justify-center">
               {/* Анимация капли и глобуса */}
@@ -459,7 +459,7 @@ export default function PreviewPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="absolute inset-0 flex flex-col items-center justify-center z-10"
-            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
+            style={{ paddingTop: '5rem', paddingBottom: '1rem', height: 'calc(100vh - 5rem)' }}
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
