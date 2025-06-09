@@ -270,12 +270,13 @@ export default function PreviewPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <div 
-                  className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-lg overflow-hidden"
+                  className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg overflow-hidden"
                   style={{
-                    background: 'rgba(6, 182, 212, 0.2)',
-                    border: '2px solid rgba(6, 182, 212, 0.4)',
+                    background: 'rgba(6, 182, 212, 0.3)',
+                    border: '2px solid rgba(6, 182, 212, 0.5)',
                     backdropFilter: 'blur(8px)',
-                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.3)'
+                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.4)',
+                    zIndex: 99999
                   }}
                 >
                   <img 
