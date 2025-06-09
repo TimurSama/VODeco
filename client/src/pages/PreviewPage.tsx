@@ -172,6 +172,46 @@ export default function PreviewPage() {
   const [activeTab, setActiveTab] = useState('manage');
   const [activeSDGTab, setActiveSDGTab] = useState('sdg6');
 
+  // Функции для определения цветов гексагонов
+  const getHexagonColors = (index: number) => {
+    const colors = [
+      'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 145, 178, 0.2))', // Cyan
+      'linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2))', // Green
+      'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2))', // Emerald
+      'linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(13, 148, 136, 0.2))', // Teal
+      'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.2))', // Blue
+      'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2))', // Purple
+      'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(34, 197, 94, 0.2))', // Cyan-Green mix
+    ];
+    return colors[index % colors.length];
+  };
+
+  const getHexagonBorder = (index: number) => {
+    const borders = [
+      'rgba(6, 182, 212, 0.8)', // Cyan
+      'rgba(34, 197, 94, 0.8)', // Green
+      'rgba(16, 185, 129, 0.8)', // Emerald
+      'rgba(20, 184, 166, 0.8)', // Teal
+      'rgba(59, 130, 246, 0.8)', // Blue
+      'rgba(139, 92, 246, 0.8)', // Purple
+      'rgba(6, 182, 212, 0.8)', // Cyan
+    ];
+    return borders[index % borders.length];
+  };
+
+  const getHexagonGlow = (index: number) => {
+    const glows = [
+      'rgba(6, 182, 212, 0.6)', // Cyan
+      'rgba(34, 197, 94, 0.6)', // Green
+      'rgba(16, 185, 129, 0.6)', // Emerald
+      'rgba(20, 184, 166, 0.6)', // Teal
+      'rgba(59, 130, 246, 0.6)', // Blue
+      'rgba(139, 92, 246, 0.6)', // Purple
+      'rgba(6, 182, 212, 0.6)', // Cyan
+    ];
+    return glows[index % glows.length];
+  };
+
   // Автоматическое переключение отключено
   // useEffect(() => {
   //   if (currentScreen === 'intro') {
@@ -678,23 +718,34 @@ export default function PreviewPage() {
             </motion.h2>
 
             <div className="relative w-full max-w-3xl h-[250px] sm:h-[300px] lg:h-[350px]">
-              {/* Реальный крутящийся глобус Земли */}
+              {/* Центральный элемент экосистемы */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 z-20"
               >
-                <div className="w-full h-full relative">
-                  <EarthGlobe resources={[]} onResourceSelect={() => {}} />
+                <div 
+                  className="w-full h-full rounded-full flex items-center justify-center relative"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(34, 197, 94, 0.3))',
+                    border: '3px solid rgba(16, 185, 129, 0.8)',
+                    backdropFilter: 'blur(16px)',
+                    boxShadow: '0 0 40px rgba(16, 185, 129, 0.8), 0 0 80px rgba(6, 182, 212, 0.4)',
+                  }}
+                >
+                  <div className="text-center">
+                    <div className="text-emerald-300 text-xs font-semibold mb-1">VODeco</div>
+                    <div className="text-cyan-200 text-xs">CORE</div>
+                  </div>
                   
-                  {/* Неоновое свечение вокруг глобуса */}
+                  {/* Rotating ring */}
                   <motion.div
-                    className="absolute inset-0 rounded-full border-2 border-red-500/50"
+                    className="absolute inset-0 rounded-full border-2 border-emerald-400/50"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                     style={{
-                      boxShadow: '0 0 40px rgba(255, 0, 80, 0.8), 0 0 80px rgba(255, 0, 80, 0.4)'
+                      boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)'
                     }}
                   />
                 </div>
@@ -726,14 +777,38 @@ export default function PreviewPage() {
                     {/* 3D Hexagon Container - Glass Neon Style */}
                     <div className="relative perspective-1000">
                       <div 
-                        className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-red-500/50"
+                        className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-emerald-500/50"
                         style={{ 
                           clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
-                          background: 'linear-gradient(135deg, rgba(128, 0, 32, 0.3), rgba(220, 20, 60, 0.2))',
-                          border: '2px solid rgba(255, 0, 80, 0.8)',
+                          background: index % 7 === 0 ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 145, 178, 0.2))' :
+                                     index % 7 === 1 ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2))' :
+                                     index % 7 === 2 ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2))' :
+                                     index % 7 === 3 ? 'linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(13, 148, 136, 0.2))' :
+                                     index % 7 === 4 ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(37, 99, 235, 0.2))' :
+                                     index % 7 === 5 ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2))' :
+                                     'linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(34, 197, 94, 0.2))',
+                          border: `2px solid ${index % 7 === 0 ? 'rgba(6, 182, 212, 0.8)' :
+                                               index % 7 === 1 ? 'rgba(34, 197, 94, 0.8)' :
+                                               index % 7 === 2 ? 'rgba(16, 185, 129, 0.8)' :
+                                               index % 7 === 3 ? 'rgba(20, 184, 166, 0.8)' :
+                                               index % 7 === 4 ? 'rgba(59, 130, 246, 0.8)' :
+                                               index % 7 === 5 ? 'rgba(139, 92, 246, 0.8)' :
+                                               'rgba(6, 182, 212, 0.8)'}`,
                           backdropFilter: 'blur(16px)',
-                          boxShadow: '0 0 30px rgba(255, 0, 80, 0.6), 0 8px 32px rgba(128, 0, 32, 0.4)',
-                          filter: 'drop-shadow(0 0 15px rgba(255, 0, 80, 0.6))'
+                          boxShadow: `0 0 30px ${index % 7 === 0 ? 'rgba(6, 182, 212, 0.6)' :
+                                                 index % 7 === 1 ? 'rgba(34, 197, 94, 0.6)' :
+                                                 index % 7 === 2 ? 'rgba(16, 185, 129, 0.6)' :
+                                                 index % 7 === 3 ? 'rgba(20, 184, 166, 0.6)' :
+                                                 index % 7 === 4 ? 'rgba(59, 130, 246, 0.6)' :
+                                                 index % 7 === 5 ? 'rgba(139, 92, 246, 0.6)' :
+                                                 'rgba(6, 182, 212, 0.6)'}, 0 8px 32px rgba(6, 182, 212, 0.2)`,
+                          filter: `drop-shadow(0 0 15px ${index % 7 === 0 ? 'rgba(6, 182, 212, 0.6)' :
+                                                          index % 7 === 1 ? 'rgba(34, 197, 94, 0.6)' :
+                                                          index % 7 === 2 ? 'rgba(16, 185, 129, 0.6)' :
+                                                          index % 7 === 3 ? 'rgba(20, 184, 166, 0.6)' :
+                                                          index % 7 === 4 ? 'rgba(59, 130, 246, 0.6)' :
+                                                          index % 7 === 5 ? 'rgba(139, 92, 246, 0.6)' :
+                                                          'rgba(6, 182, 212, 0.6)'})`
                         }}
                       >
                         {/* Icon */}
