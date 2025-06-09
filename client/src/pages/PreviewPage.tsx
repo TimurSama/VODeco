@@ -222,7 +222,8 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-center justify-center z-10"
+            className="absolute inset-0 flex items-center justify-center z-10"
+            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
           >
             {/* Логотипы в правом верхнем углу */}
             <div 
@@ -288,16 +289,16 @@ export default function PreviewPage() {
               </motion.a>
             </div>
 
-            <div className="text-center text-white max-w-3xl px-6 mt-16">
+            <div className="text-center text-white max-w-4xl px-4 sm:px-6">
               <motion.h1 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
                 style={{
                   textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
                   filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))',
-                  padding: '12px',
+                  padding: '8px sm:12px',
                   borderRadius: '12px'
                 }}
               >
@@ -308,10 +309,10 @@ export default function PreviewPage() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="text-base sm:text-lg lg:text-xl mb-6 text-gray-300"
+                className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 text-gray-300"
                 style={{
                   textShadow: '0 0 15px rgba(156, 163, 175, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
-                  padding: '10px 20px',
+                  padding: '8px 16px sm:10px 20px',
                   border: '1px solid rgba(6, 182, 212, 0.3)',
                   borderRadius: '8px',
                   background: 'rgba(6, 182, 212, 0.1)',
@@ -329,8 +330,7 @@ export default function PreviewPage() {
               >
                 <Button
                   onClick={nextScreen}
-                  size="lg"
-                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-8 py-3 text-base font-semibold rounded-full relative z-50 cursor-pointer"
+                  className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold rounded-full relative z-50 cursor-pointer"
                   style={{
                     textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
                     boxShadow: '0 8px 32px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3)',
@@ -339,7 +339,7 @@ export default function PreviewPage() {
                     zIndex: 9999
                   }}
                 >
-                  НАЧАТЬ ПРЕЗЕНТАЦИЮ <ArrowRight className="ml-2 w-4 h-4" />
+                  НАЧАТЬ ПРЕЗЕНТАЦИЮ <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
               </motion.div>
             </div>
@@ -353,9 +353,10 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 flex flex-col items-center justify-center z-10 pt-16"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10"
+            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
           >
-            <div className="max-w-6xl w-full h-full flex flex-col justify-center">
+            <div className="max-w-5xl w-full px-4 sm:px-6 flex flex-col justify-center">
               {/* Анимация капли и глобуса */}
               <div className="text-center mb-4">
                 <motion.div
