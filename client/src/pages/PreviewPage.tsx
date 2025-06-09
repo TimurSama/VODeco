@@ -1598,71 +1598,163 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10 p-4 sm:p-6 lg:p-8 overflow-hidden"
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-6 lg:mb-8 text-center"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 lg:mb-6 text-center"
             >
-              Дорожная Карта
+              Дорожная Карта VODeco
             </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-sm sm:text-base lg:text-lg text-gray-300 text-center mb-6 max-w-4xl"
+            >
+              Космическое путешествие развития экосистемы от старта до глобального внедрения
+            </motion.p>
 
-            <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 lg:mb-8">
+            {/* Космический маршрут */}
+            <div className="relative max-w-6xl w-full h-80 mb-6">
+              {/* Пунктирная траектория */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 800 300">
+                <defs>
+                  <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#06b6d4" />
+                    <stop offset="25%" stopColor="#3b82f6" />
+                    <stop offset="50%" stopColor="#8b5cf6" />
+                    <stop offset="75%" stopColor="#ec4899" />
+                    <stop offset="100%" stopColor="#f59e0b" />
+                  </linearGradient>
+                </defs>
+                <motion.path
+                  d="M 80 250 Q 220 120 380 200 Q 540 280 680 140"
+                  stroke="url(#pathGradient)"
+                  strokeWidth="3"
+                  fill="none"
+                  strokeDasharray="10,5"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, delay: 0.5 }}
+                  style={{
+                    filter: 'drop-shadow(0 0 10px rgba(6, 182, 212, 0.8))'
+                  }}
+                />
+              </svg>
+
+              {/* Планеты-годы */}
               {[
-                {
-                  year: '2024',
-                  title: 'Pre-Sale & Запуск',
-                  description: 'Раунды финансирования. Пилоты в Узбекистане. Платформа VOD и VOD Check.',
-                  delay: 0
-                },
-                {
-                  year: '2025-2027',
-                  title: 'Масштабирование',
-                  description: 'Листинг VOD. Расширение в Центральную Азию. Формирование "Банка Воды".',
-                  delay: 0.2
-                },
-                {
-                  year: '2028-2030',
-                  title: 'Глобальная экспансия',
-                  description: 'Выход на мировые рынки. Интеграция с ООН. Подключение 75% объектов.',
-                  delay: 0.4
-                },
-                {
-                  year: '2030+',
-                  title: 'Экосистема Управления',
-                  description: 'Глобальный стандарт. Расширение на воздух, почву, углеродные кредиты.',
-                  delay: 0.6
-                }
-              ].map((item, index) => (
+                { year: '2024', title: 'Запуск MVP', desc: 'Токеномика', x: 80, y: 250, color: 'from-cyan-500 to-blue-500', glow: 'rgba(6, 182, 212, 0.8)' },
+                { year: '2025', title: 'Расширение', desc: 'Региональные партнерства', x: 300, y: 160, color: 'from-blue-500 to-purple-500', glow: 'rgba(59, 130, 246, 0.8)' },
+                { year: '2027', title: 'Интеграция', desc: 'Развитие экосистемы', x: 520, y: 240, color: 'from-purple-500 to-pink-500', glow: 'rgba(139, 92, 246, 0.8)' },
+                { year: '2030', title: 'Глобализация', desc: 'Мировая экосистема', x: 680, y: 140, color: 'from-pink-500 to-orange-500', glow: 'rgba(236, 72, 153, 0.8)' }
+              ].map((planet, index) => (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  key={planet.year}
+                  initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: item.delay }}
-                  className="bg-slate-800/80 rounded-lg p-4 sm:p-6 border border-cyan-500/20 flex flex-col items-center text-center"
+                  transition={{ delay: 0.8 + index * 0.3, type: "spring", stiffness: 300 }}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${(planet.x / 800) * 100}%`, top: `${(planet.y / 300) * 100}%` }}
                 >
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base mb-4">
-                    {item.year}
+                  {/* Планета */}
+                  <div 
+                    className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${planet.color} rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm relative cursor-pointer transition-all duration-300 hover:scale-110`}
+                    style={{
+                      boxShadow: `0 0 30px ${planet.glow}, 0 0 60px ${planet.glow}, inset 0 0 20px rgba(255,255,255,0.2)`,
+                      border: '2px solid rgba(255,255,255,0.3)'
+                    }}
+                  >
+                    {planet.year}
+                    
+                    {/* Орбитальные кольца */}
+                    <div 
+                      className="absolute inset-0 rounded-full border-2 border-white/20 animate-spin"
+                      style={{ 
+                        width: '120%', 
+                        height: '120%',
+                        left: '-10%',
+                        top: '-10%',
+                        animationDuration: `${4 + index}s`
+                      }}
+                    />
+                    <div 
+                      className="absolute inset-0 rounded-full border border-white/10 animate-spin"
+                      style={{ 
+                        width: '140%', 
+                        height: '140%',
+                        left: '-20%',
+                        top: '-20%',
+                        animationDuration: `${6 + index}s`,
+                        animationDirection: 'reverse'
+                      }}
+                    />
                   </div>
                   
-                  <h3 className="text-lg sm:text-xl font-bold text-cyan-300 mb-3">{item.title}</h3>
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{item.description}</p>
+                  {/* Информационная карточка */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.2 + index * 0.3 }}
+                    className="absolute top-full mt-3 left-1/2 transform -translate-x-1/2 text-center min-w-max"
+                  >
+                    <div 
+                      className="bg-black/60 backdrop-blur-md rounded-lg p-2 border border-white/20"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(0,0,0,0.7), rgba(255,255,255,0.1))',
+                        boxShadow: `0 8px 32px ${planet.glow}`
+                      }}
+                    >
+                      <h3 className="text-white font-semibold text-xs mb-1">{planet.title}</h3>
+                      <p className="text-gray-300 text-xs">{planet.desc}</p>
+                    </div>
+                  </motion.div>
+                  
+                  {/* Звездная пыль вокруг планет */}
+                  {[...Array(4)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-white rounded-full"
+                      style={{
+                        left: `${Math.cos(i * 90 * Math.PI / 180) * 30 + 50}%`,
+                        top: `${Math.sin(i * 90 * Math.PI / 180) * 30 + 50}%`,
+                      }}
+                      animate={{
+                        opacity: [0.2, 1, 0.2],
+                        scale: [0.5, 1, 0.5]
+                      }}
+                      transition={{
+                        duration: 2,
+                        delay: index * 0.3 + i * 0.1,
+                        repeat: Infinity,
+                        repeatType: "reverse"
+                      }}
+                    />
+                  ))}
                 </motion.div>
               ))}
             </div>
 
+            {/* Navigation Button */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.5 }}
+              className="mt-6"
             >
               <Button
                 onClick={nextScreen}
                 size="lg"
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full"
+                className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full shadow-2xl"
+                style={{
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
+                  boxShadow: '0 8px 32px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.3)',
+                  border: '1px solid rgba(6, 182, 212, 0.3)'
+                }}
               >
-                ПРИСОЕДИНИТЬСЯ К БУДУЩЕМУ <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                Далее <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </motion.div>
           </motion.div>
