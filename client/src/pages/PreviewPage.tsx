@@ -839,19 +839,14 @@ export default function PreviewPage() {
                                                           'rgba(6, 182, 212, 0.6)'})`
                         }}
                       >
-                        {/* Icon and Text inside hexagon */}
+                        {/* Icon and Title inside hexagon */}
                         <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2">
-                          <div className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 drop-shadow-lg mb-1">
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 drop-shadow-lg mb-1">
                             {hexagon.icon}
                           </div>
                           <div className="text-center">
-                            <div className="text-xs sm:text-xs lg:text-sm font-semibold leading-tight">
+                            <div className="text-xs sm:text-sm lg:text-base font-semibold leading-tight">
                               {hexagon.title}
-                            </div>
-                            <div className="text-xs opacity-80 leading-tight mt-1 hidden sm:block">
-                              {hexagon.description.length > 30 ? 
-                                hexagon.description.substring(0, 30) + '...' : 
-                                hexagon.description}
                             </div>
                           </div>
                         </div>
