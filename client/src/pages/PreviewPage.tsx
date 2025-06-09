@@ -1639,7 +1639,7 @@ export default function PreviewPage() {
               {/* Планеты-годы */}
               {[
                 { 
-                  year: '2024', 
+                  year: '2025', 
                   title: 'Запуск MVP', 
                   desc: 'Токеномика', 
                   x: 80, 
@@ -1649,7 +1649,7 @@ export default function PreviewPage() {
                   bgColor: 'rgba(6, 182, 212, 0.2)',
                   borderColor: 'rgba(6, 182, 212, 0.6)',
                   details: {
-                    title: 'Запуск MVP 2024',
+                    title: 'Запуск MVP 2025',
                     content: [
                       'Базовая токеномика VOD и создание первых токенов',
                       'Запуск платформы VOD Check для мониторинга',
@@ -1660,7 +1660,7 @@ export default function PreviewPage() {
                   }
                 },
                 { 
-                  year: '2025', 
+                  year: '2026', 
                   title: 'Расширение', 
                   desc: 'Региональные партнерства', 
                   x: 300, 
@@ -1670,7 +1670,7 @@ export default function PreviewPage() {
                   bgColor: 'rgba(59, 130, 246, 0.2)',
                   borderColor: 'rgba(59, 130, 246, 0.6)',
                   details: {
-                    title: 'Региональное расширение 2025',
+                    title: 'Региональное расширение 2026',
                     content: [
                       'Партнерства с государствами Центральной Азии',
                       'Листинг VOD токена на крипто-биржах',
@@ -1681,7 +1681,7 @@ export default function PreviewPage() {
                   }
                 },
                 { 
-                  year: '2027', 
+                  year: '2028', 
                   title: 'Интеграция', 
                   desc: 'Развитие экосистемы', 
                   x: 520, 
@@ -1691,7 +1691,7 @@ export default function PreviewPage() {
                   bgColor: 'rgba(139, 92, 246, 0.2)',
                   borderColor: 'rgba(139, 92, 246, 0.6)',
                   details: {
-                    title: 'Развитие экосистемы 2027',
+                    title: 'Развитие экосистемы 2028',
                     content: [
                       'Формирование полноценного "Банка Воды"',
                       'Интеграция с международными стандартами ESG',
@@ -1702,7 +1702,7 @@ export default function PreviewPage() {
                   }
                 },
                 { 
-                  year: '2030', 
+                  year: '2031', 
                   title: 'Глобализация', 
                   desc: 'Мировая экосистема', 
                   x: 680, 
@@ -1712,7 +1712,7 @@ export default function PreviewPage() {
                   bgColor: 'rgba(236, 72, 153, 0.2)',
                   borderColor: 'rgba(236, 72, 153, 0.6)',
                   details: {
-                    title: 'Глобальная экосистема 2030',
+                    title: 'Глобальная экосистема 2031',
                     content: [
                       'Мировой стандарт управления водными ресурсами',
                       'Интеграция с системами ООН и международными организациями',
@@ -1869,40 +1869,128 @@ export default function PreviewPage() {
             </motion.h2>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl w-full mb-6 lg:mb-8">
+              {/* Кнопка экосистемы */}
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
+                animate={{ 
+                  opacity: 1, 
+                  y: [0, -5, 0],
+                }}
+                transition={{ 
+                  opacity: { delay: 0.2 },
+                  y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                }}
+                className="relative group cursor-pointer"
                 onClick={() => setLocation('/auth')}
               >
-                <Users className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-cyan-400 mx-auto mb-4 lg:mb-6" />
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">СТАТЬ ЧАСТЬЮ ЭКОСИСТЕМЫ</h3>
-                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Зарегистрируйтесь, чтобы получить доступ к аналитике и стать полноправным участником VODeco.</p>
+                <div 
+                  className="relative bg-gradient-to-br from-emerald-500/20 to-cyan-600/20 backdrop-blur-md rounded-2xl p-6 lg:p-8 border-2 border-emerald-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-emerald-400/60"
+                  style={{
+                    boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3), 0 0 20px rgba(16, 185, 129, 0.2)',
+                  }}
+                >
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-cyan-600/10 rounded-2xl"
+                  />
+                  <motion.div
+                    animate={{ 
+                      rotate: [0, 360]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  >
+                    <Users className="w-14 h-14 lg:w-16 lg:h-16 text-emerald-400 mx-auto mb-4 lg:mb-6 relative z-10" />
+                  </motion.div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4 relative z-10">СТАТЬ ЧАСТЬЮ ЭКОСИСТЕМЫ</h3>
+                  <p className="text-emerald-100 text-sm sm:text-base leading-relaxed relative z-10">Зарегистрируйтесь, чтобы получить доступ к аналитике и стать полноправным участником VODeco.</p>
+                </div>
               </motion.div>
 
+              {/* Кнопка инвестиций */}
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
+                animate={{ 
+                  opacity: 1, 
+                  y: [0, -8, 0],
+                }}
+                transition={{ 
+                  opacity: { delay: 0.4 },
+                  y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+                }}
+                className="relative group cursor-pointer"
                 onClick={() => setLocation('/wallet')}
               >
-                <TrendingUp className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-cyan-400 mx-auto mb-4 lg:mb-6" />
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">ИНВЕСТИРОВАТЬ В БУДУЩЕЕ</h3>
-                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Примите участие в Pre-Sale токена VOD. Ваши инвестиции — это чистая вода для миллионов и стабильный доход для вас.</p>
+                <div 
+                  className="relative bg-gradient-to-br from-orange-500/20 to-yellow-600/20 backdrop-blur-md rounded-2xl p-6 lg:p-8 border-2 border-orange-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-orange-400/60"
+                  style={{
+                    boxShadow: '0 8px 32px rgba(249, 115, 22, 0.4), 0 0 20px rgba(249, 115, 22, 0.3)',
+                  }}
+                >
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                    className="absolute inset-0 bg-gradient-to-br from-orange-500/15 to-yellow-600/15 rounded-2xl"
+                  />
+                  <motion.div
+                    animate={{ 
+                      y: [0, -3, 0],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <TrendingUp className="w-14 h-14 lg:w-16 lg:h-16 text-orange-400 mx-auto mb-4 lg:mb-6 relative z-10" />
+                  </motion.div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4 relative z-10">ИНВЕСТИРОВАТЬ В БУДУЩЕЕ</h3>
+                  <p className="text-orange-100 text-sm sm:text-base leading-relaxed relative z-10">Примите участие в Pre-Sale токена VOD. Ваши инвестиции — это чистая вода для миллионов и стабильный доход для вас.</p>
+                </div>
               </motion.div>
 
+              {/* Кнопка партнерства */}
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="bg-slate-800/80 rounded-lg p-4 sm:p-6 lg:p-8 border border-cyan-500/20 text-center cursor-pointer hover:bg-slate-700/80 transition-colors"
+                animate={{ 
+                  opacity: 1, 
+                  y: [0, -6, 0],
+                }}
+                transition={{ 
+                  opacity: { delay: 0.6 },
+                  y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }
+                }}
+                className="relative group cursor-pointer"
                 onClick={() => setLocation('/contact')}
               >
-                <Building2 className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 text-cyan-400 mx-auto mb-4 lg:mb-6" />
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">СТАТЬ ПАРТНЕРОМ</h3>
-                <p className="text-gray-300 text-sm sm:text-base leading-relaxed">Приглашаем к сотрудничеству правительства, корпорации и фонды для реализации этого исторического проекта.</p>
+                <div 
+                  className="relative bg-gradient-to-br from-purple-500/20 to-indigo-600/20 backdrop-blur-md rounded-2xl p-6 lg:p-8 border-2 border-purple-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/60"
+                  style={{
+                    boxShadow: '0 8px 32px rgba(139, 92, 246, 0.4), 0 0 20px rgba(139, 92, 246, 0.3)',
+                  }}
+                >
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.15, 1],
+                      opacity: [0.5, 1, 0.5]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                    className="absolute inset-0 bg-gradient-to-br from-purple-500/12 to-indigo-600/12 rounded-2xl"
+                  />
+                  <motion.div
+                    animate={{ 
+                      rotateY: [0, 10, 0, -10, 0],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <Building2 className="w-14 h-14 lg:w-16 lg:h-16 text-purple-400 mx-auto mb-4 lg:mb-6 relative z-10" />
+                  </motion.div>
+                  <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4 relative z-10">СТАТЬ ПАРТНЕРОМ</h3>
+                  <p className="text-purple-100 text-sm sm:text-base leading-relaxed relative z-10">Приглашаем к сотрудничеству правительства, корпорации и фонды для реализации этого исторического проекта.</p>
+                </div>
               </motion.div>
             </div>
 
