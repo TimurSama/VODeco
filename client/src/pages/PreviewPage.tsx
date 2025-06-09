@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -245,14 +246,14 @@ export default function PreviewPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <div 
-                  className="w-12 h-14 sm:w-14 sm:h-16 lg:w-16 lg:h-20 rounded-xl overflow-hidden"
+                  className="w-16 h-18 sm:w-18 sm:h-20 lg:w-20 lg:h-24 rounded-xl overflow-hidden"
                   style={{
-                    background: 'rgba(0, 0, 0, 0.8)',
-                    border: '2px solid rgba(6, 182, 212, 0.6)',
-                    backdropFilter: 'blur(12px)',
-                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.3)',
+                    background: 'rgba(0, 0, 0, 0.85)',
+                    border: '3px solid rgba(6, 182, 212, 0.7)',
+                    backdropFilter: 'blur(16px)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 30px rgba(6, 182, 212, 0.4)',
                     zIndex: 99999,
-                    padding: '4px'
+                    padding: '6px'
                   }}
                 >
                   <img 
@@ -275,14 +276,14 @@ export default function PreviewPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <div 
-                  className="w-12 h-14 sm:w-14 sm:h-16 lg:w-16 lg:h-20 rounded-xl overflow-hidden"
+                  className="w-16 h-18 sm:w-18 sm:h-20 lg:w-20 lg:h-24 rounded-xl overflow-hidden"
                   style={{
-                    background: 'rgba(0, 0, 0, 0.8)',
-                    border: '2px solid rgba(6, 182, 212, 0.6)',
-                    backdropFilter: 'blur(12px)',
-                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.3)',
+                    background: 'rgba(0, 0, 0, 0.85)',
+                    border: '3px solid rgba(6, 182, 212, 0.7)',
+                    backdropFilter: 'blur(16px)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.7), 0 0 30px rgba(6, 182, 212, 0.4)',
                     zIndex: 99999,
-                    padding: '4px'
+                    padding: '6px'
                   }}
                 >
                   <img 
@@ -308,13 +309,13 @@ export default function PreviewPage() {
                     }}>
                   DAO
                 </h1>
-                <div className="mx-3 sm:mx-4 md:mx-6">
+                <div className="mx-4 sm:mx-6 md:mx-8">
                   <img 
                     src={vodLogo}
                     alt="VOD Logo"
-                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 object-contain"
+                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 xl:w-32 xl:h-32 object-contain"
                     style={{
-                      filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.8)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))'
+                      filter: 'drop-shadow(0 0 30px rgba(6, 182, 212, 1)) drop-shadow(0 12px 20px rgba(0, 0, 0, 0.9))'
                     }}
                   />
                 </div>
@@ -393,14 +394,25 @@ export default function PreviewPage() {
                   <Droplets className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-400 mx-auto mb-1" />
                 </motion.div>
                 
-                <motion.p
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="text-base sm:text-lg text-cyan-200 mb-2"
+                  className="mb-2"
                 >
-                  H₂O. Вода — первичный признак и главный фактор жизни.
-                </motion.p>
+                  <p className="text-base sm:text-lg text-cyan-200 inline-block"
+                     style={{
+                       textShadow: '0 0 20px rgba(103, 232, 249, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
+                       padding: '8px 16px',
+                       border: '2px solid rgba(103, 232, 249, 0.5)',
+                       borderRadius: '12px',
+                       background: 'rgba(0, 0, 0, 0.7)',
+                       backdropFilter: 'blur(12px)',
+                       boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6), 0 0 16px rgba(103, 232, 249, 0.3)'
+                     }}>
+                    H₂O. Вода — первичный признак и главный фактор жизни.
+                  </p>
+                </motion.div>
                 
                 <motion.div
                   initial={{ scale: 0 }}
@@ -411,50 +423,213 @@ export default function PreviewPage() {
                 </motion.div>
               </div>
 
-              {/* Статистика кризиса */}
+              {/* Интерактивные блоки с негативными факторами */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-4">
+                {/* Блок 1: Водные ресурсы */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.5 }}
-                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Ресурс Планеты</h3>
-                  <p className="text-lg sm:text-xl font-bold text-white mb-1">&lt;1%</p>
-                  <p className="text-gray-300 text-xs">пресной воды доступны</p>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
+                           style={{
+                             clipPath: 'polygon(0 0, 90% 0, 100% 100%, 10% 100%)',
+                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
+                             border: '2px solid rgba(139, 69, 19, 0.6)',
+                             backdropFilter: 'blur(8px)',
+                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             padding: '12px 8px'
+                           }}>
+                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Ресурсы Планеты</h3>
+                        <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">0.007%</p>
+                        <p className="text-orange-100 text-xs">доступной воды</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
+                      <DialogHeader>
+                        <DialogTitle className="text-red-400 text-xl">Водные ресурсы Земли</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 text-gray-200">
+                        <div className="bg-red-950/50 p-4 rounded-lg border border-red-800/50">
+                          <h4 className="text-red-300 font-semibold mb-2">Критические показатели:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• 71% поверхности Земли покрыто водой</li>
+                            <li>• 1,386 млрд км³ - общий объем воды на планете</li>
+                            <li>• Только 2,5% - пресная вода</li>
+                            <li>• Лишь 0,007% - доступная пресная вода</li>
+                          </ul>
+                        </div>
+                        <div className="bg-orange-950/50 p-4 rounded-lg border border-orange-800/50">
+                          <h4 className="text-orange-300 font-semibold mb-2">Негативные факторы:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• Загрязнение промышленными отходами и пластиком</li>
+                            <li>• Истощение подземных водоносных слоев</li>
+                            <li>• Изменение климата и засухи</li>
+                            <li>• Неконтролируемое использование в сельском хозяйстве</li>
+                            <li>• Отсутствие системы переработки сточных вод</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </motion.div>
 
+                {/* Блок 2: Экономика и коррупция */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.7 }}
-                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Экономика Воды</h3>
-                  <p className="text-lg sm:text-xl font-bold text-white mb-1">$1 трлн</p>
-                  <p className="text-gray-300 text-xs">дефицит инвестиций</p>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
+                           style={{
+                             clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)',
+                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
+                             border: '2px solid rgba(139, 69, 19, 0.6)',
+                             backdropFilter: 'blur(8px)',
+                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             padding: '12px 8px'
+                           }}>
+                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Коррупция</h3>
+                        <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">35%</p>
+                        <p className="text-orange-100 text-xs">потери средств</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
+                      <DialogHeader>
+                        <DialogTitle className="text-red-400 text-xl">Экономика и коррупция</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 text-gray-200">
+                        <div className="bg-red-950/50 p-4 rounded-lg border border-red-800/50">
+                          <h4 className="text-red-300 font-semibold mb-2">Экономические показатели:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• 4,600 км³ - ежегодное потребление воды</li>
+                            <li>• $900 млрд - ежегодный оборот средств</li>
+                            <li>• 6% - ежегодный рост рынка</li>
+                          </ul>
+                        </div>
+                        <div className="bg-orange-950/50 p-4 rounded-lg border border-orange-800/50">
+                          <h4 className="text-orange-300 font-semibold mb-2">Коррупционные схемы:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• 20-35% потери из-за коррупции и фальсификации данных</li>
+                            <li>• Завышенные цены на оборудование (откаты до 40%)</li>
+                            <li>• Фиктивные тендеры и подставные компании</li>
+                            <li>• Неэффективное распределение субсидий</li>
+                            <li>• Монополизация рынка через лоббирование</li>
+                            <li>• Отсутствие прозрачности в государственных закупках</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </motion.div>
 
+                {/* Блок 3: Устаревшее оборудование */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.9 }}
-                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Гуманитарный Кризис</h3>
-                  <p className="text-lg sm:text-xl font-bold text-white mb-1">2.2 млрд</p>
-                  <p className="text-gray-300 text-xs">без доступа к воде</p>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
+                           style={{
+                             clipPath: 'polygon(0 0, 90% 0, 100% 100%, 10% 100%)',
+                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
+                             border: '2px solid rgba(139, 69, 19, 0.6)',
+                             backdropFilter: 'blur(8px)',
+                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             padding: '12px 8px'
+                           }}>
+                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Устаревание</h3>
+                        <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">50%</p>
+                        <p className="text-orange-100 text-xs">потери воды</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
+                      <DialogHeader>
+                        <DialogTitle className="text-red-400 text-xl">Устаревшее оборудование</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 text-gray-200">
+                        <div className="bg-red-950/50 p-4 rounded-lg border border-red-800/50">
+                          <h4 className="text-red-300 font-semibold mb-2">Критическое состояние:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• 30-50% потери воды из-за устаревшего оборудования</li>
+                            <li>• $1 трлн - ежегодный дефицит инвестиций в инфраструктуру</li>
+                            <li>• 40% населения в условиях водного стресса</li>
+                          </ul>
+                        </div>
+                        <div className="bg-orange-950/50 p-4 rounded-lg border border-orange-800/50">
+                          <h4 className="text-orange-300 font-semibold mb-2">Проблемы инфраструктуры:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• Водопроводные системы возрастом 50-100 лет</li>
+                            <li>• Изношенные очистные сооружения и фильтры</li>
+                            <li>• Устаревшие системы транспортировки воды</li>
+                            <li>• Отсутствие цифрового мониторинга потребления</li>
+                            <li>• Неэффективные насосные станции</li>
+                            <li>• Коррозия трубопроводов и утечки</li>
+                            <li>• Недостаток современных технологий очистки</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </motion.div>
 
+                {/* Блок 4: Прогнозы катастрофы */}
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 2.1 }}
-                  className="bg-slate-800/80 rounded-lg p-2 sm:p-3 text-center border border-cyan-500/20"
                 >
-                  <h3 className="text-cyan-300 font-semibold mb-1 text-xs">Прогноз Угрозы</h3>
-                  <p className="text-lg sm:text-xl font-bold text-white mb-1">5+ млрд</p>
-                  <p className="text-gray-300 text-xs">нехватка к 2030 г.</p>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 text-center"
+                           style={{
+                             clipPath: 'polygon(10% 0, 100% 0, 90% 100%, 0% 100%)',
+                             background: 'linear-gradient(135deg, rgba(139, 69, 19, 0.8), rgba(160, 82, 45, 0.9))',
+                             border: '2px solid rgba(139, 69, 19, 0.6)',
+                             backdropFilter: 'blur(8px)',
+                             boxShadow: '0 6px 20px rgba(139, 69, 19, 0.4)',
+                             padding: '12px 8px'
+                           }}>
+                        <h3 className="text-orange-200 font-semibold mb-1 text-xs">Прогноз 2050</h3>
+                        <p className="text-red-300 text-lg sm:text-xl font-bold mb-1">5 млрд</p>
+                        <p className="text-orange-100 text-xs">без воды</p>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl bg-slate-900 border-red-800">
+                      <DialogHeader>
+                        <DialogTitle className="text-red-400 text-xl">Катастрофические прогнозы</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 text-gray-200">
+                        <div className="bg-red-950/50 p-4 rounded-lg border border-red-800/50">
+                          <h4 className="text-red-300 font-semibold mb-2">Временные рамки катастрофы:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• К 2030: 40% рост невозвратного загрязнения</li>
+                            <li>• К 2040: 700 млн климатических мигрантов</li>
+                            <li>• К 2050: 52% населения в водно-дефицитных регионах</li>
+                          </ul>
+                        </div>
+                        <div className="bg-orange-950/50 p-4 rounded-lg border border-orange-800/50">
+                          <h4 className="text-orange-300 font-semibold mb-2">Негативные факторы:</h4>
+                          <ul className="space-y-2 text-sm">
+                            <li>• Неконтролируемое потребление сельским хозяйством (70% всей воды)</li>
+                            <li>• Расточительное использование в быту развитых стран</li>
+                            <li>• Отсутствие глобальной системы мониторинга</li>
+                            <li>• Политическая нестабильность в водно-дефицитных регионах</li>
+                            <li>• Недостаток международного сотрудничества</li>
+                            <li>• Игнорирование экологических последствий</li>
+                            <li>• Отсутствие прозрачного контроля и менеджмента</li>
+                            <li>• Недостаток инновационных технологий переработки</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </motion.div>
               </div>
 
