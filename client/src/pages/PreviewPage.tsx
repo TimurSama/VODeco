@@ -678,30 +678,23 @@ export default function PreviewPage() {
             </motion.h2>
 
             <div className="relative w-full max-w-3xl h-[250px] sm:h-[300px] lg:h-[350px]">
-              {/* Центральный глобус */}
+              {/* Реальный крутящийся глобус Земли */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 z-20"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 z-20"
               >
-                <div 
-                  className="w-full h-full rounded-full bg-gradient-to-br from-blue-400 to-cyan-600 flex items-center justify-center relative"
-                  style={{
-                    boxShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.4), inset 0 2px 8px rgba(255, 255, 255, 0.3)',
-                    border: '2px solid rgba(255, 255, 255, 0.4)',
-                    filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3))'
-                  }}
-                >
-                  <Globe className="w-8 h-8 sm:w-10 sm:h-10 lg:w-16 lg:h-16 text-white drop-shadow-lg" />
+                <div className="w-full h-full relative">
+                  <EarthGlobe resources={[]} onResourceSelect={() => {}} />
                   
-                  {/* Rotating glow ring */}
+                  {/* Неоновое свечение вокруг глобуса */}
                   <motion.div
-                    className="absolute inset-0 rounded-full border-2 border-cyan-300/30"
+                    className="absolute inset-0 rounded-full border-2 border-red-500/50"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
                     style={{
-                      boxShadow: '0 0 20px rgba(6, 182, 212, 0.6)'
+                      boxShadow: '0 0 40px rgba(255, 0, 80, 0.8), 0 0 80px rgba(255, 0, 80, 0.4)'
                     }}
                   />
                 </div>
@@ -730,15 +723,17 @@ export default function PreviewPage() {
                     whileHover={{ scale: 1.15, rotateY: 15 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    {/* 3D Hexagon Container */}
+                    {/* 3D Hexagon Container - Glass Neon Style */}
                     <div className="relative perspective-1000">
                       <div 
-                        className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gradient-to-br ${hexagon.color} transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-cyan-500/50`}
+                        className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 transform-gpu transition-all duration-300 group-hover:shadow-2xl group-hover:shadow-red-500/50"
                         style={{ 
                           clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
-                          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.2)',
-                          border: '2px solid rgba(255, 255, 255, 0.3)',
-                          filter: 'drop-shadow(0 0 15px rgba(6, 182, 212, 0.4))'
+                          background: 'linear-gradient(135deg, rgba(128, 0, 32, 0.3), rgba(220, 20, 60, 0.2))',
+                          border: '2px solid rgba(255, 0, 80, 0.8)',
+                          backdropFilter: 'blur(16px)',
+                          boxShadow: '0 0 30px rgba(255, 0, 80, 0.6), 0 8px 32px rgba(128, 0, 32, 0.4)',
+                          filter: 'drop-shadow(0 0 15px rgba(255, 0, 80, 0.6))'
                         }}
                       >
                         {/* Icon */}
@@ -747,12 +742,7 @@ export default function PreviewPage() {
                             {hexagon.icon}
                           </div>
                         </div>
-                        
-                        {/* Glow effect */}
-                        <div 
-                          className={`absolute inset-0 bg-gradient-to-br ${hexagon.color} opacity-50 blur-sm group-hover:opacity-75 transition-opacity duration-300`}
-                          style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)' }}
-                        />
+
                       </div>
                       
                       {/* Floating Label */}
@@ -799,20 +789,7 @@ export default function PreviewPage() {
               </Button>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-              className="mt-6 lg:mt-8"
-            >
-              <Button
-                onClick={nextScreen}
-                size="lg"
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base lg:text-lg font-semibold rounded-full"
-              >
-                СМОТРЕТЬ РЕШЕНИЯ В ДЕЙСТВИИ <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-              </Button>
-            </motion.div>
+
           </motion.div>
         )}
 
