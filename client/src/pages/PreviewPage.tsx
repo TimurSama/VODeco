@@ -24,6 +24,7 @@ import {
 import EarthGlobe from "@/components/globo/EarthGlobe";
 import unSdgLogo from "@assets/image_1749468311324.png";
 import unicapLogo from "@assets/image_1749468323756.png";
+import vodLogo from "@assets/image_1749468457591.png";
 
 type ScreenType = 'intro' | 'global-crisis' | 'ecosystem' | 'platform' | 'mechanisms' | 'sdg-goals' | 'roadmap' | 'cta';
 
@@ -244,13 +245,14 @@ export default function PreviewPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <div 
-                  className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg overflow-hidden"
+                  className="w-12 h-14 sm:w-14 sm:h-16 lg:w-16 lg:h-20 rounded-xl overflow-hidden"
                   style={{
-                    background: 'rgba(6, 182, 212, 0.3)',
-                    border: '2px solid rgba(6, 182, 212, 0.5)',
-                    backdropFilter: 'blur(8px)',
-                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.4)',
-                    zIndex: 99999
+                    background: 'rgba(0, 0, 0, 0.8)',
+                    border: '2px solid rgba(6, 182, 212, 0.6)',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.3)',
+                    zIndex: 99999,
+                    padding: '4px'
                   }}
                 >
                   <img 
@@ -273,13 +275,14 @@ export default function PreviewPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <div 
-                  className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg overflow-hidden"
+                  className="w-12 h-14 sm:w-14 sm:h-16 lg:w-16 lg:h-20 rounded-xl overflow-hidden"
                   style={{
-                    background: 'rgba(6, 182, 212, 0.3)',
-                    border: '2px solid rgba(6, 182, 212, 0.5)',
-                    backdropFilter: 'blur(8px)',
-                    boxShadow: '0 4px 16px rgba(6, 182, 212, 0.4)',
-                    zIndex: 99999
+                    background: 'rgba(0, 0, 0, 0.8)',
+                    border: '2px solid rgba(6, 182, 212, 0.6)',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(6, 182, 212, 0.3)',
+                    zIndex: 99999,
+                    padding: '4px'
                   }}
                 >
                   <img 
@@ -292,37 +295,57 @@ export default function PreviewPage() {
             </div>
 
             <div className="text-center text-white max-w-4xl px-4 sm:px-6">
-              <motion.h1 
+              <motion.div 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
-                style={{
-                  textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
-                  filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))',
-                  padding: '8px sm:12px',
-                  borderRadius: '12px'
-                }}
+                className="flex items-center justify-center mb-3 sm:mb-4"
               >
-                VODeco
-              </motion.h1>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                    style={{
+                      textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
+                      filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))'
+                    }}>
+                  DAO
+                </h1>
+                <div className="mx-3 sm:mx-4 md:mx-6">
+                  <img 
+                    src={vodLogo}
+                    alt="VOD Logo"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 object-contain"
+                    style={{
+                      filter: 'drop-shadow(0 0 20px rgba(6, 182, 212, 0.8)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))'
+                    }}
+                  />
+                </div>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent"
+                    style={{
+                      textShadow: '0 0 30px rgba(6, 182, 212, 0.8), 0 0 60px rgba(6, 182, 212, 0.6)',
+                      filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.9))'
+                    }}>
+                  ECO
+                </h1>
+              </motion.div>
               
-              <motion.p 
+              <motion.div 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-6 text-gray-300"
-                style={{
-                  textShadow: '0 0 15px rgba(156, 163, 175, 0.8), 0 4px 8px rgba(0, 0, 0, 0.6)',
-                  padding: '8px 16px sm:10px 20px',
-                  border: '1px solid rgba(6, 182, 212, 0.3)',
-                  borderRadius: '8px',
-                  background: 'rgba(6, 182, 212, 0.1)',
-                  backdropFilter: 'blur(10px)'
-                }}
+                className="mb-4 sm:mb-6"
               >
-                Цифровая экосистема для управления будущим водных ресурсов планеты
-              </motion.p>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-gray-200 font-medium inline-block"
+                   style={{
+                     textShadow: '0 0 20px rgba(156, 163, 175, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)',
+                     padding: '12px 24px sm:16px 32px',
+                     border: '2px solid rgba(6, 182, 212, 0.5)',
+                     borderRadius: '16px',
+                     background: 'rgba(0, 0, 0, 0.7)',
+                     backdropFilter: 'blur(16px)',
+                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6), 0 0 24px rgba(6, 182, 212, 0.3)'
+                   }}>
+                  Цифровая экосистема для управления будущим водных ресурсов планеты
+                </p>
+              </motion.div>
               
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
