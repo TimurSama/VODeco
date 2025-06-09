@@ -458,7 +458,8 @@ export default function PreviewPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 flex flex-col items-center justify-center z-10 pt-16"
+            className="absolute inset-0 flex flex-col items-center justify-center z-10"
+            style={{ paddingTop: '4rem', paddingBottom: '2rem', height: 'calc(100vh - 4rem)' }}
           >
             <motion.h2
               initial={{ opacity: 0, y: -20 }}
