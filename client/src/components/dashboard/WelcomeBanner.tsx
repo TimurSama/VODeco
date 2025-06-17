@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
-import { Globe, Vote } from 'lucide-react';
+import { Globe, Vote, Play } from 'lucide-react';
 
 const WelcomeBanner: React.FC = () => {
   const { t } = useTranslation();

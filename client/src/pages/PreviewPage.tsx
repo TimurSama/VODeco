@@ -1973,7 +1973,7 @@ export default function PreviewPage() {
                   y: { duration: 3, repeat: Infinity, ease: "easeInOut" }
                 }}
                 className="relative group cursor-pointer mx-auto mb-8 max-w-xs"
-                onClick={() => setLocation('/auth')}
+                onClick={() => setLocation('/')}
               >
                 <div 
                   className="relative bg-gradient-to-br from-emerald-500/20 to-cyan-600/20 backdrop-blur-md rounded-xl p-4 border-2 border-emerald-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-emerald-400/60"
@@ -2009,7 +2009,7 @@ export default function PreviewPage() {
                     y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
                   }}
                   className="relative group cursor-pointer max-w-xs"
-                  onClick={() => setLocation('/wallet')}
+                  onClick={() => setLocation('/')}
                 >
                   <div 
                     className="relative bg-gradient-to-br from-orange-500/20 to-yellow-600/20 backdrop-blur-md rounded-xl p-4 border-2 border-orange-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-orange-400/60"
@@ -2051,7 +2051,7 @@ export default function PreviewPage() {
                     y: { duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }
                   }}
                   className="relative group cursor-pointer max-w-xs"
-                  onClick={() => setLocation('/contact')}
+                  onClick={() => setLocation('/')}
                 >
                   <div 
                     className="relative bg-gradient-to-br from-purple-500/20 to-indigo-600/20 backdrop-blur-md rounded-xl p-4 border-2 border-purple-500/30 text-center transition-all duration-300 group-hover:scale-105 group-hover:border-purple-400/60"

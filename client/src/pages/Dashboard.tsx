@@ -131,36 +131,36 @@ const Dashboard: React.FC = () => {
         <WelcomeBanner />
         
         {/* Карусель новостей */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
+        <Card className="mb-4 sm:mb-6 lg:mb-8">
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg lg:text-xl">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
               {t('dashboard.news.title', 'Последние новости')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-3 sm:px-6">
             <Carousel className="w-full">
-              <CarouselContent>
+              <CarouselContent className="-ml-2 sm:-ml-4">
                 {newsItems.map((news) => (
-                  <CarouselItem key={news.id} className="md:basis-1/2 lg:basis-1/3">
+                  <CarouselItem key={news.id} className="pl-2 sm:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                     <Card className="h-full">
-                      <CardContent className="p-4">
+                      <CardContent className="p-3 sm:p-4">
                         <div className="flex justify-between items-start mb-2">
                           <Badge variant={
                             news.category === 'investment' ? 'default' :
                             news.category === 'ecology' ? 'destructive' :
                             news.category === 'technology' ? 'secondary' :
                             'outline'
-                          }>
-                            {news.category === 'investment' ? 'Инвестиции' :
+                          } className="text-xs">
+                            {news.category === 'investment' ? 'Инвест.' :
                              news.category === 'ecology' ? 'Экология' :
-                             news.category === 'technology' ? 'Технологии' :
-                             'Управление'}
+                             news.category === 'technology' ? 'Техно.' :
+                             'Управл.'}
                           </Badge>
                           <span className="text-xs text-muted-foreground">{news.date}</span>
                         </div>
-                        <h4 className="font-semibold mb-2 line-clamp-2">{news.title}</h4>
-                        <p className="text-sm text-muted-foreground line-clamp-3">{news.description}</p>
+                        <h4 className="font-semibold mb-2 line-clamp-2 text-sm sm:text-base">{news.title}</h4>
+                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3">{news.description}</p>
                       </CardContent>
                     </Card>
                   </CarouselItem>
@@ -173,7 +173,7 @@ const Dashboard: React.FC = () => {
         </Card>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6 lg:mb-8">
           <StatsCard 
             title={t('dashboard.stats.waterResources', 'Водные ресурсы')} 
             value={resources.length.toString()} 

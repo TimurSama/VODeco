@@ -157,11 +157,11 @@ function App() {
       <AuthProvider>
         <TooltipProvider>
           <BackgroundProvider>
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col overflow-x-hidden">
               <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
               <div className="flex flex-grow relative mt-16">
                 <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-                <main className="flex-grow pt-4 px-2">
+                <main className="flex-grow pt-2 sm:pt-4 px-1 sm:px-2 w-full max-w-full overflow-x-hidden">
                   <Router />
                 </main>
               </div>
