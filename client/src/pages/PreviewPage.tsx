@@ -746,34 +746,124 @@ export default function PreviewPage() {
             </motion.h2>
 
             <div className="relative w-full max-w-4xl h-[280px] sm:h-[320px] lg:h-[360px]">
-              {/* Центральный элемент экосистемы */}
+              {/* Центральная планета Земля с блокчейн сеткой */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, duration: 1 }}
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 z-20"
               >
-                <div 
-                  className="w-full h-full rounded-full flex items-center justify-center relative"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.4), rgba(34, 197, 94, 0.3))',
-                    border: '3px solid rgba(16, 185, 129, 0.8)',
-                    backdropFilter: 'blur(16px)',
-                    boxShadow: '0 0 40px rgba(16, 185, 129, 0.8), 0 0 80px rgba(6, 182, 212, 0.4)',
-                  }}
-                >
-                  <div className="text-center">
-                    <div className="text-emerald-300 text-xs font-semibold mb-1">VODeco</div>
-                    <div className="text-cyan-200 text-xs">CORE</div>
+                <div className="relative w-full h-full">
+                  {/* Планета Земля */}
+                  <div 
+                    className="w-full h-full rounded-full relative overflow-hidden"
+                    style={{
+                      background: 'radial-gradient(circle at 30% 30%, #4A90E2 0%, #2E5CE8 30%, #1E4B8C 60%, #0F2A44 100%)',
+                      boxShadow: '0 0 40px rgba(16, 185, 129, 0.8), 0 0 80px rgba(6, 182, 212, 0.4), inset 0 0 20px rgba(255,255,255,0.1)',
+                      border: '2px solid rgba(16, 185, 129, 0.6)',
+                    }}
+                  >
+                    {/* Континенты (упрощенные) */}
+                    <div className="absolute inset-0">
+                      {/* Африка */}
+                      <div 
+                        className="absolute"
+                        style={{
+                          width: '20%',
+                          height: '40%',
+                          background: 'rgba(34, 197, 94, 0.8)',
+                          borderRadius: '20px 10px 30px 20px',
+                          left: '48%',
+                          top: '30%',
+                        }}
+                      />
+                      {/* Европа */}
+                      <div 
+                        className="absolute"
+                        style={{
+                          width: '15%',
+                          height: '20%',
+                          background: 'rgba(34, 197, 94, 0.7)',
+                          borderRadius: '15px',
+                          left: '45%',
+                          top: '20%',
+                        }}
+                      />
+                      {/* Азия */}
+                      <div 
+                        className="absolute"
+                        style={{
+                          width: '25%',
+                          height: '35%',
+                          background: 'rgba(34, 197, 94, 0.8)',
+                          borderRadius: '20px 40px 20px 30px',
+                          left: '60%',
+                          top: '15%',
+                        }}
+                      />
+                    </div>
+
+                    {/* Гексагональная блокчейн сетка */}
+                    <div className="absolute inset-0">
+                      {[...Array(12)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute"
+                          style={{
+                            width: '8px',
+                            height: '9px',
+                            clipPath: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+                            border: '1px solid rgba(6, 182, 212, 0.8)',
+                            left: `${15 + (i % 4) * 20}%`,
+                            top: `${20 + Math.floor(i / 4) * 20}%`,
+                          }}
+                          animate={{
+                            opacity: [0.3, 1, 0.3],
+                            scale: [0.8, 1, 0.8]
+                          }}
+                          transition={{
+                            duration: 3,
+                            delay: i * 0.2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Центральный логотип */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center z-10">
+                        <div className="text-emerald-300 text-xs font-semibold mb-1 drop-shadow-lg">VODeco</div>
+                        <div className="text-cyan-200 text-xs drop-shadow-lg">CORE</div>
+                      </div>
+                    </div>
                   </div>
                   
-                  {/* Rotating ring */}
+                  {/* Вращающееся кольцо орбиты */}
                   <motion.div
                     className="absolute inset-0 rounded-full border-2 border-emerald-400/50"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                     style={{
-                      boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)'
+                      boxShadow: '0 0 20px rgba(16, 185, 129, 0.6)',
+                      width: '110%',
+                      height: '110%',
+                      left: '-5%',
+                      top: '-5%'
+                    }}
+                  />
+
+                  {/* Дополнительные орбитальные линии */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full border border-cyan-400/30"
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                    style={{
+                      width: '130%',
+                      height: '130%',
+                      left: '-15%',
+                      top: '-15%'
                     }}
                   />
                 </div>
@@ -858,12 +948,12 @@ export default function PreviewPage() {
               })}
             </div>
 
-            {/* Navigation Button */}
+            {/* Navigation Button - перемещена ниже для избежания пересечений */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.5 }}
-              className="mt-8"
+              className="mt-16 mb-8"
             >
               <Button
                 onClick={nextScreen}
