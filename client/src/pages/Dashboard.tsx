@@ -125,8 +125,8 @@ const Dashboard: React.FC = () => {
   const criticalCount = resources.filter(r => r.status === ResourceStatus.CRITICAL).length;
 
   return (
-    <section id="dashboard" className="py-8 px-4">
-      <div className="container mx-auto">
+    <section id="dashboard" className="py-2 sm:py-4 lg:py-8 px-2 sm:px-4">
+      <div className="container mx-auto max-w-7xl">
         {/* Welcome Banner */}
         <WelcomeBanner />
         
@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
             value={resources.length.toString()} 
             change={criticalCount > 0 ? `${criticalCount} критических` : 'Все в норме'} 
             icon="water_drop" 
-            color={criticalCount > 0 ? 'destructive' : 'primary'} 
+            color={criticalCount > 0 ? 'accent' : 'primary'} 
           />
           
           <StatsCard 
@@ -208,7 +208,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Глобус с боковой панелью справа */}
-        <div className="relative min-h-[600px] bg-transparent">
+        <div className="relative min-h-[400px] sm:min-h-[500px] lg:min-h-[600px] bg-transparent">
           {/* Глобус на прозрачном фоне */}
           <div className="absolute inset-0 bg-transparent">
             {isLoading ? (
@@ -235,8 +235,8 @@ const Dashboard: React.FC = () => {
             )}
           </div>
 
-          {/* Тонкая вертикальная боковая панель справа */}
-          <div className="absolute top-4 right-4 w-48 space-y-2 z-20">
+          {/* Адаптивная боковая панель */}
+          <div className="absolute top-2 right-2 w-32 sm:w-40 lg:w-48 space-y-2 z-20">
             {/* Тонкая вертикальная панель фильтров */}
             <Card className="bg-background/80 backdrop-blur-sm border-border/50">
               <CardHeader className="pb-2">
@@ -683,7 +683,7 @@ const Dashboard: React.FC = () => {
                       <div>
                         <p className="text-sm text-muted-foreground">Последнее обновление</p>
                         <p className="text-xl font-bold">
-                          {new Date(selectedResource.lastUpdated).toLocaleDateString('ru-RU')}
+                          {new Date().toLocaleDateString('ru-RU')}
                         </p>
                       </div>
                     </div>

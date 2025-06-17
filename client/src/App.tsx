@@ -72,9 +72,6 @@ function Router() {
       <Route path="/profile">
         <ProfilePage />
       </Route>
-      <Route path="/preview">
-        <PreviewPage />
-      </Route>
       <Route path="/dao">
         <DAOPage />
       </Route>
@@ -121,6 +118,9 @@ function Router() {
         <Dashboard />
       </Route>
       <Route path="/">
+        <Dashboard />
+      </Route>
+      <Route path="/preview">
         <PreviewPage />
       </Route>
       <Route>
