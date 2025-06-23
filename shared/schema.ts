@@ -40,7 +40,7 @@ export const users = pgTable("users", {
   telegramId: text("telegram_id").unique(),
   // Метаданные
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow()imestamp("updated_at").defaultNow()
+  updatedAt: timestamp("updated_at").defaultNow()
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
