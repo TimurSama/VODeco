@@ -1,145 +1,386 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { formatTokenAmount } from '@/lib/utils';
 import { useWallet } from '@/context/WalletContext';
-import { RefreshCw, ArrowUp, ArrowDown, Globe, Droplet, Mountain } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/hooks/use-auth';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  RefreshCw, 
+  ArrowUp, 
+  ArrowDown, 
+  Globe, 
+  Droplet, 
+  Mountain,
+  TrendingUp,
+  TrendingDown,
+  Eye,
+  EyeOff,
+  Plus,
+  Minus
+} from 'lucide-react';
 
-interface TokenBalanceProps {
-  onRefresh?: () => void;
+interface TokenData {
+  symbol: string;
+  name: string;
+  balance: number;
+  staked: number;
+  earned: number;
+  price: number;
+  change24h: number;
+  icon: React.ReactNode;
+  color: string;
 }
 
-// Subtoken data with explicit type definitions
-const subtokenIcons: Record<string, React.ReactNode> = {
-  'VOD_Uzbekistan': <Globe className="h-4 w-4 text-primary" />,
-  'VOD_Aral': <Droplet className="h-4 w-4 text-accent" />,
-  'VOD_Ural': <Mountain className="h-4 w-4 text-primary" />
-};
+interface Props {
+  onRefresh: () => void;
+}
 
-const subtokenColors: Record<string, string> = {
-  'VOD_Uzbekistan': 'from-primary/60 to-primary',
-  'VOD_Aral': 'from-accent/60 to-accent',
-  'VOD_Ural': 'from-primary/80 to-primary'
-};
+export default function TokenBalance({ onRefresh }: Props) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showBalance, setShowBalance] = useState(true);
+  const [tokens, setTokens] = useState<TokenData[]>([
+    {
+      symbol: 'VOD',
+      name: 'VODeco',
+      balance: 1250.50,
+      staked: 500.00,
+      earned: 45.32,
+      price: 1.50,
+      change24h: 12.5,
+      icon: <Globe className="h-5 w-5" />,
+      color: 'blue'
+    },
+    {
+      symbol: 'VOD_UZ',
+      name: 'VOD Uzbekistan',
+      balance: 432.18,
+      staked: 200.00,
+      earned: 18.75,
+      price: 1.42,
+      change24h: 8.3,
+      icon: <Mountain className="h-5 w-5" />,
+      color: 'green'
+    },
+    {
+      symbol: 'H2O',
+      name: 'Water Token',
+      balance: 678.92,
+      staked: 1000.00,
+      earned: 62.15,
+      price: 0.98,
+      change24h: -2.1,
+      icon: <Droplet className="h-5 w-5" />,
+      color: 'cyan'
+    }
+  ]);
 
-const TokenBalance: React.FC<TokenBalanceProps> = ({ onRefresh }) => {
-  const { vodBalance, vodValue, subTokenBalances } = useWallet();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    if (onRefresh) onRefresh();
+  const [portfolio, setPortfolio] = useState({
+    totalValue: 0,
+    totalChange24h: 0,
+    totalStaked: 0,
+    totalEarned: 0
+  });
+
+  useEffect(() => {
+    calculatePortfolio();
+  }, [tokens]);
+
+  useEffect(() => {
+    if (user) {
+      loadUserTokens();
+    }
+  }, [user]);
+
+  const calculatePortfolio = () => {
+    const totalValue = tokens.reduce((sum, token) => sum + (token.balance * token.price), 0);
+    const totalStaked = tokens.reduce((sum, token) => sum + (token.staked * token.price), 0);
+    const totalEarned = tokens.reduce((sum, token) => sum + (token.earned * token.price), 0);
     
-    // Simulate refresh completion
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1500);
+    // Расчет общего изменения за 24ч (взвешенное по стоимости)
+    const totalChange24h = tokens.reduce((sum, token) => {
+      const tokenValue = token.balance * token.price;
+      const weightedChange = (tokenValue / totalValue) * token.change24h;
+      return sum + weightedChange;
+    }, 0);
+
+    setPortfolio({
+      totalValue,
+      totalChange24h: isNaN(totalChange24h) ? 0 : totalChange24h,
+      totalStaked,
+      totalEarned
+    });
   };
-  
-  // Calculate total subtoken balance
-  const totalSubtokenBalance = Object.values(subTokenBalances).reduce((acc, val) => acc + val, 0);
+
+  const loadUserTokens = async () => {
+    try {
+      setIsLoading(true);
+      
+      // Загружаем токены пользователя с сервера
+      const response = await fetch('/api/user/tokens', {
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const userTokens = await response.json();
+        
+        // Обновляем состояние токенов данными пользователя
+        setTokens(prev => prev.map(token => {
+          const userToken = userTokens.find((ut: any) => ut.tokenSymbol === token.symbol);
+          if (userToken) {
+            return {
+              ...token,
+              balance: userToken.balance || 0,
+              staked: userToken.staked || 0,
+              earned: userToken.earned || 0
+            };
+          }
+          return token;
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading user tokens:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveTokenData = async (tokenSymbol: string, balance: number, staked: number, earned: number) => {
+    try {
+      const response = await fetch('/api/user/tokens/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          tokenSymbol,
+          balance,
+          staked,
+          earned
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save token data');
+      }
+
+      toast({
+        title: "Данные сохранены",
+        description: `Информация о ${tokenSymbol} токенах обновлена`
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка сохранения",
+        description: "Не удалось сохранить данные о токенах",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    await loadUserTokens();
+    onRefresh();
+    
+    toast({
+      title: "Балансы обновлены",
+      description: "Актуальная информация о токенах загружена"
+    });
+  };
+
+  const updateTokenBalance = (tokenSymbol: string, newBalance: number) => {
+    setTokens(prev => prev.map(token => {
+      if (token.symbol === tokenSymbol) {
+        const updatedToken = { ...token, balance: newBalance };
+        // Сохраняем в базу данных
+        saveTokenData(tokenSymbol, newBalance, token.staked, token.earned);
+        return updatedToken;
+      }
+      return token;
+    }));
+  };
 
   return (
-    <div className="glassmorphism-dark rounded-xl p-6 space-y-6 relative overflow-hidden">
-      {/* Header with refresh button */}
-      <div className="flex justify-between items-center">
-        <h3 className="font-medium text-lg text-white">Token Assets</h3>
-        <button 
-          className={`text-primary hover:text-accent transition-all flex items-center text-sm rounded-full px-3 py-1.5 bg-background/30 hover:bg-background/50 ${isRefreshing ? 'opacity-50 pointer-events-none' : ''}`}
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-        >
-          <RefreshCw className={`h-4 w-4 mr-1.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-          {isRefreshing ? 'Refreshing...' : 'Refresh'}
-        </button>
-      </div>
-      
-      {/* Main Token Card with pulsating effect */}
-      <div className="p-5 bg-gradient-to-br from-background/70 to-background/30 rounded-xl border border-primary/20 shadow-sm shadow-primary/10 relative overflow-hidden group">
-        {/* Pulsating background effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 z-0 pulse-animation"></div>
-        
-        <div className="flex items-center justify-between relative z-10">
-          <div className="flex items-center">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-accent flex items-center justify-center mr-4 shadow-md shadow-primary/20">
-              <span className="font-bold text-background text-sm">VOD</span>
+    <div className="space-y-6">
+      {/* Общий баланс портфеля */}
+      <Card className="border border-primary/20 bg-card/80 backdrop-blur-sm">
+        <CardHeader className="pb-3">
+          <div className="flex justify-between items-center">
+            <CardTitle className="text-lg">Портфель</CardTitle>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowBalance(!showBalance)}
+                className="text-foreground/60 hover:text-foreground"
+              >
+                {showBalance ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className="text-foreground/60 hover:text-foreground"
+              >
+                <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              </Button>
             </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
             <div>
-              <h4 className="font-medium text-white text-lg">VOD Token</h4>
-              <div className="flex items-center text-white/60 text-xs">
-                <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary mr-2">Main</span>
-                Governance Token
+              <div className="text-3xl font-bold">
+                {showBalance ? `$${portfolio.totalValue.toFixed(2)}` : '••••••'}
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                {portfolio.totalChange24h >= 0 ? (
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                ) : (
+                  <TrendingDown className="h-4 w-4 text-red-500" />
+                )}
+                <span className={`text-sm font-medium ${
+                  portfolio.totalChange24h >= 0 ? 'text-green-500' : 'text-red-500'
+                }`}>
+                  {portfolio.totalChange24h >= 0 ? '+' : ''}{portfolio.totalChange24h.toFixed(2)}%
+                </span>
+                <span className="text-foreground/60 text-sm">за 24ч</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-primary/10">
+              <div className="text-center">
+                <div className="text-sm text-foreground/60">В стейкинге</div>
+                <div className="font-medium">
+                  {showBalance ? `$${portfolio.totalStaked.toFixed(2)}` : '••••'}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-foreground/60">Заработано</div>
+                <div className="font-medium text-green-500">
+                  {showBalance ? `$${portfolio.totalEarned.toFixed(2)}` : '••••'}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm text-foreground/60">Всего токенов</div>
+                <div className="font-medium">{tokens.length}</div>
               </div>
             </div>
           </div>
-          <div className="text-right">
-            <p className="font-bold text-2xl text-white group-hover:text-primary transition-colors">
-              {formatTokenAmount(vodBalance)}
-              <span className="inline-flex items-center text-sm text-green-400 ml-2">
-                <ArrowUp className="h-3 w-3 mr-0.5" /> 2.3%
-              </span>
-            </p>
-            <p className="text-primary/80 text-sm">≈ ${formatTokenAmount(vodValue)} USD</p>
-          </div>
-        </div>
-      </div>
-      
-      {/* Subtokens Section */}
-      <div>
-        <div className="flex justify-between items-center mb-4">
-          <h4 className="font-medium text-sm text-white/70">Regional Subtokens</h4>
-          <span className="text-xs text-white/40">{Object.keys(subTokenBalances).length} tokens</span>
-        </div>
-        
-        <div className="space-y-4">
-          {Object.entries(subTokenBalances).map(([tokenName, balance]) => (
-            <div 
-              key={tokenName}
-              className="p-3 bg-background/20 rounded-lg border border-primary/10 hover:border-primary/30 transition-all flex items-center justify-between group"
-            >
-              <div className="flex items-center">
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${subtokenColors[tokenName]} flex items-center justify-center mr-3 shadow-inner shadow-background/30`}>
-                  {subtokenIcons[tokenName]}
+        </CardContent>
+      </Card>
+
+      {/* Список токенов */}
+      <div className="space-y-4">
+        {tokens.map((token) => (
+          <Card key={token.symbol} className="border border-primary/20 bg-card/80 backdrop-blur-sm">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`p-3 rounded-full bg-${token.color}-500/10`}>
+                    <div className={`text-${token.color}-500`}>
+                      {token.icon}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-medium">{token.name}</h3>
+                    <p className="text-sm text-foreground/60">{token.symbol}</p>
+                  </div>
                 </div>
-                <div>
-                  <h5 className="font-medium text-white text-sm group-hover:text-primary transition-colors">{tokenName}</h5>
-                  <div className="flex items-center mt-1">
-                    <Progress 
-                      value={(balance / totalSubtokenBalance) * 100} 
-                      className={`h-1.5 w-20 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:${subtokenColors[tokenName]}`} 
-                    />
-                    <span className="text-white/40 text-xs ml-2">
-                      {totalSubtokenBalance > 0 
-                        ? `${((balance / totalSubtokenBalance) * 100).toFixed(1)}%` 
-                        : '0%'}
-                    </span>
+
+                <div className="text-right">
+                  <div className="font-medium">
+                    {showBalance ? formatTokenAmount(token.balance) : '••••••'}
+                  </div>
+                  <div className="text-sm text-foreground/60">
+                    {showBalance ? `$${(token.balance * token.price).toFixed(2)}` : '••••'}
                   </div>
                 </div>
               </div>
-              <div className="text-right">
-                <p className="font-bold text-white group-hover:text-primary transition-colors">
-                  {formatTokenAmount(balance)}
-                </p>
-                {/* Randomized price movement for demo */}
-                <div className={`flex items-center justify-end text-xs ${Math.random() > 0.5 ? 'text-green-400' : 'text-red-400'}`}>
-                  {Math.random() > 0.5 ? (
-                    <>
-                      <ArrowUp className="h-3 w-3 mr-0.5" /> 
-                      {(Math.random() * 5).toFixed(1)}%
-                    </>
-                  ) : (
-                    <>
-                      <ArrowDown className="h-3 w-3 mr-0.5" /> 
-                      {(Math.random() * 5).toFixed(1)}%
-                    </>
-                  )}
+
+              {/* Детальная информация */}
+              <div className="mt-4 pt-4 border-t border-primary/10">
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="text-foreground/60">Цена</div>
+                    <div className="font-medium">${token.price.toFixed(3)}</div>
+                    <div className={`text-xs ${
+                      token.change24h >= 0 ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {token.change24h >= 0 ? '+' : ''}{token.change24h.toFixed(1)}%
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-foreground/60">В стейкинге</div>
+                    <div className="font-medium">
+                      {showBalance ? formatTokenAmount(token.staked) : '••••'}
+                    </div>
+                    <div className="text-xs text-foreground/60">
+                      {showBalance ? `$${(token.staked * token.price).toFixed(2)}` : '••••'}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-foreground/60">Заработано</div>
+                    <div className="font-medium text-green-500">
+                      {showBalance ? `+${formatTokenAmount(token.earned)}` : '••••'}
+                    </div>
+                    <div className="text-xs text-foreground/60">
+                      {showBalance ? `$${(token.earned * token.price).toFixed(2)}` : '••••'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Прогресс-бар стейкинга */}
+                {token.staked > 0 && (
+                  <div className="mt-3">
+                    <div className="flex justify-between text-xs text-foreground/60 mb-1">
+                      <span>Прогресс стейкинга</span>
+                      <span>{((token.earned / token.staked) * 100).toFixed(1)}% доходность</span>
+                    </div>
+                    <Progress 
+                      value={Math.min((token.earned / token.staked) * 100, 100)} 
+                      className="h-2"
+                    />
+                  </div>
+                )}
+
+                {/* Быстрые действия */}
+                <div className="flex gap-2 mt-4">
+                  <Button variant="outline" size="sm" className="flex-1 gap-2">
+                    <ArrowUp className="h-3 w-3" />
+                    Отправить
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 gap-2">
+                    <ArrowDown className="h-3 w-3" />
+                    Получить
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 gap-2">
+                    <Plus className="h-3 w-3" />
+                    Стейкинг
+                  </Button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
+      {/* Кнопка добавления токена */}
+      <Card className="border border-dashed border-primary/30 bg-card/40 backdrop-blur-sm">
+        <CardContent className="pt-6">
+          <Button variant="ghost" className="w-full h-20 flex-col gap-2 text-foreground/60 hover:text-foreground">
+            <Plus className="h-6 w-6" />
+            <span>Добавить токен</span>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default TokenBalance;
+}

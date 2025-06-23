@@ -1058,9 +1058,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
-  return httpServer;
-}
   // === Token Calculation and Purchase API ===
 
   // Calculate token rewards
@@ -1397,3 +1394,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Internal server error" });
     }
   });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
