@@ -23,7 +23,8 @@ import {
   Users,
   Target,
   Award,
-  Calendar
+  Calendar,
+  Building2
 } from "lucide-react";
 
 export default function TokenHubPage() {

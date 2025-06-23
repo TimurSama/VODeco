@@ -114,6 +114,15 @@ function Router() {
       <Route path="/admin">
         <AdminPanelPage />
       </Route>
+      <Route path="/vod-check">
+        <VODCheckPage />
+      </Route>
+      <Route path="/pevm-modules">
+        <PEVMModulesPage />
+      </Route>
+      <Route path="/ai-components">
+        <AIComponentsPage />
+      </Route>
       <Route path="/auth">
         <AuthPage />
       </Route>

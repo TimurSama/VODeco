@@ -209,5 +209,40 @@
       "explore": "Исследовать",
       "joinDao": "Присоединиться к DAO"
     }
+  },
+  "admin": {
+    "vodCheck": "VOD Check",
+    "pevmModules": "Модули ПЭВМ",
+    "aiComponents": "ИИ Компоненты"
+  },
+  "common": {
+    "dashboard": "Панель управления",
+    "account": "Аккаунт",
+    "wallet": "Кошелек",
+    "messages": "Сообщения",
+    "contacts": "Контакты",
+    "groups": "Группы",
+    "profile": "Профиль",
+    "preview": "Превью",
+    "dao": "DAO",
+    "missions": "Миссии",
+    "tokenHub": "ТокенХаб",
+    "globo": "Глобо",
+    "bank": "Банк",
+    "cabinets": "Системы",
+    "settings": "Настройки",
+    "support": "Поддержка",
+    "docs": "Документы",
+    "admin": "Администрирование",
+    "menu": "Меню",
+    "close": "Закрыть",
+    "search": "Поиск",
+    "notifications": "Уведомления",
+    "login": "Войти",
+    "logout": "Выйти",
+    "register": "Регистрация",
+    "vodCheck": "VOD Check",
+    "pevmModules": "Модули ПЭВМ",
+    "aiComponents": "ИИ Компоненты"
   }
 }
