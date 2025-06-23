@@ -32,6 +32,9 @@ import GovernmentCabinetPage from "@/pages/GovernmentCabinetPage";
 import OperatorCabinetPage from "@/pages/OperatorCabinetPage";
 import DocsPage from "@/pages/DocsPage";
 import AdminPanelPage from "@/pages/AdminPanelPage";
+import VODCheckPage from './pages/VODCheckPage';
+import PEVMModulesPage from './pages/PEVMModulesPage';
+import AIComponentsPage from './pages/AIComponentsPage';
 
 // Мобильные страницы
 import MobileMessagesPage from "@/pages/MobileMessagesPage";

@@ -291,82 +291,186 @@ export default function TokenHubPage() {
           </Card>
         </TabsContent>
 
-        {/* Exchange Tab */}
+        {/* Exchange Tab - Биржа объектов */}
         <TabsContent value="exchange" className="mt-6">
-          <Card className="border-primary/20 bg-card/80 backdrop-blur-sm max-w-md mx-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-primary">
-                <ArrowUpDown className="h-5 w-5" />
-                Обмен токенов
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm text-foreground/80 mb-2 block">Отдаете</label>
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="0.00" 
-                    value={exchangeAmount}
-                    onChange={(e) => setExchangeAmount(e.target.value)}
-                    className="flex-1"
-                  />
-                  <select 
-                    value={fromToken}
-                    onChange={(e) => setFromToken(e.target.value)}
-                    className="px-3 py-2 bg-background border border-input rounded-md"
-                  >
-                    <option value="VOD">VOD</option>
-                    <option value="H2O">H2O</option>
-                    <option value="VOD_Uzbekistan">VOD_Uzbekistan</option>
-                    <option value="VOD_Aral">VOD_Aral</option>
-                  </select>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Обмен токенов */}
+            <Card className="border-primary/20 bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-primary">
+                  <ArrowUpDown className="h-5 w-5" />
+                  Обмен токенов
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm text-foreground/80 mb-2 block">Отдаете</label>
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="0.00" 
+                      value={exchangeAmount}
+                      onChange={(e) => setExchangeAmount(e.target.value)}
+                      className="flex-1"
+                    />
+                    <select 
+                      value={fromToken}
+                      onChange={(e) => setFromToken(e.target.value)}
+                      className="px-3 py-2 bg-background border border-input rounded-md"
+                    >
+                      <option value="VOD">VOD</option>
+                      <option value="H2O">H2O</option>
+                      <option value="VOD_Uzbekistan">VOD_Uzbekistan</option>
+                      <option value="VOD_Aral">VOD_Aral</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex justify-center">
-                <Button variant="outline" size="sm" className="rounded-full">
-                  <ArrowUpDown className="h-4 w-4" />
+                
+                <div className="flex justify-center">
+                  <Button variant="outline" size="sm" className="rounded-full">
+                    <ArrowUpDown className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div>
+                  <label className="text-sm text-foreground/80 mb-2 block">Получаете</label>
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="0.00" 
+                      value={exchangeAmount ? (parseFloat(exchangeAmount) * 0.95).toFixed(4) : ''}
+                      readOnly
+                      className="flex-1"
+                    />
+                    <select 
+                      value={toToken}
+                      onChange={(e) => setToToken(e.target.value)}
+                      className="px-3 py-2 bg-background border border-input rounded-md"
+                    >
+                      <option value="VOD_Uzbekistan">VOD_Uzbekistan</option>
+                      <option value="VOD">VOD</option>
+                      <option value="H2O">H2O</option>
+                      <option value="VOD_Aral">VOD_Aral</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="p-3 bg-secondary/10 rounded-lg border border-secondary/20">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-foreground/60">Курс обмена:</span>
+                    <span className="text-foreground">1 {fromToken} = 0.95 {toToken}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-foreground/60">Комиссия:</span>
+                    <span className="text-foreground">0.3%</span>
+                  </div>
+                </div>
+                
+                <Button className="w-full" disabled={!exchangeAmount}>
+                  Обменять токены
                 </Button>
-              </div>
-              
-              <div>
-                <label className="text-sm text-foreground/80 mb-2 block">Получаете</label>
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="0.00" 
-                    value={exchangeAmount ? (parseFloat(exchangeAmount) * 0.95).toFixed(4) : ''}
-                    readOnly
-                    className="flex-1"
-                  />
-                  <select 
-                    value={toToken}
-                    onChange={(e) => setToToken(e.target.value)}
-                    className="px-3 py-2 bg-background border border-input rounded-md"
-                  >
-                    <option value="VOD_Uzbekistan">VOD_Uzbekistan</option>
-                    <option value="VOD">VOD</option>
-                    <option value="H2O">H2O</option>
-                    <option value="VOD_Aral">VOD_Aral</option>
-                  </select>
+              </CardContent>
+            </Card>
+
+            {/* Биржа водных объектов */}
+            <Card className="border-primary/20 bg-card/80 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-primary">
+                  <Building2 className="h-5 w-5" />
+                  Биржа водных объектов
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="p-3 bg-background/30 rounded-lg border border-primary/10">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-medium">Водоочистные сооружения Ташкента</h4>
+                      <Badge variant="outline" className="bg-green-500/10 text-green-500">Доступно</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-foreground/60">Цена доли:</span>
+                        <span className="font-semibold ml-2">25,000 VOD</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">IRR:</span>
+                        <span className="font-semibold ml-2 text-green-500">18.5%</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">Доступно:</span>
+                        <span className="font-semibold ml-2">12/100 долей</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">Дивиденды:</span>
+                        <span className="font-semibold ml-2">Ежемесячно</span>
+                      </div>
+                    </div>
+                    <Button size="sm" className="w-full mt-3">Купить долю</Button>
+                  </div>
+
+                  <div className="p-3 bg-background/30 rounded-lg border border-primary/10">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-medium">Система очистки Алматы</h4>
+                      <Badge variant="outline" className="bg-blue-500/10 text-blue-500">Популярно</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-foreground/60">Цена доли:</span>
+                        <span className="font-semibold ml-2">35,000 VOD</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">IRR:</span>
+                        <span className="font-semibold ml-2 text-green-500">22.1%</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">Доступно:</span>
+                        <span className="font-semibold ml-2">5/50 долей</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">Дивиденды:</span>
+                        <span className="font-semibold ml-2">Ежемесячно</span>
+                      </div>
+                    </div>
+                    <Button size="sm" className="w-full mt-3">Купить долю</Button>
+                  </div>
+
+                  <div className="p-3 bg-background/30 rounded-lg border border-primary/10">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-medium">Модуль ПЭВМ "Аналитика"</h4>
+                      <Badge variant="outline" className="bg-purple-500/10 text-purple-500">Новинка</Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-foreground/60">Цена доли:</span>
+                        <span className="font-semibold ml-2">5,000 VOD</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">IRR:</span>
+                        <span className="font-semibold ml-2 text-green-500">28.4%</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">Доступно:</span>
+                        <span className="font-semibold ml-2">25/100 долей</span>
+                      </div>
+                      <div>
+                        <span className="text-foreground/60">Стадия:</span>
+                        <span className="font-semibold ml-2">Разработка</span>
+                      </div>
+                    </div>
+                    <Button size="sm" className="w-full mt-3">Купить долю</Button>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="p-3 bg-secondary/10 rounded-lg border border-secondary/20">
-                <div className="flex justify-between text-sm">
-                  <span className="text-foreground/60">Курс обмена:</span>
-                  <span className="text-foreground">1 {fromToken} = 0.95 {toToken}</span>
+
+                <div className="p-3 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-lg border border-cyan-500/20">
+                  <h4 className="font-semibold mb-2">Преимущества биржи объектов</h4>
+                  <ul className="text-xs space-y-1">
+                    <li>• Прозрачность через блокчейн</li>
+                    <li>• Автоматические выплаты дивидендов</li>
+                    <li>• Ликвидность инвестиций</li>
+                    <li>• Диверсификация рисков</li>
+                  </ul>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-foreground/60">Комиссия:</span>
-                  <span className="text-foreground">0.3%</span>
-                </div>
-              </div>
-              
-              <Button className="w-full" disabled={!exchangeAmount}>
-                Обменять токены
-              </Button>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Staking Tab */}

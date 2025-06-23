@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { 
   User, Wallet, MessageSquare, Users, UserCircle, Database, 
   Globe, BadgeDollarSign, Settings, LayoutDashboard, Eye, HardDrive, Bookmark, MessagesSquare,
-  FolderKanban, LifeBuoy, FileText, ShieldAlert
+  FolderKanban, LifeBuoy, FileText, ShieldAlert, Smartphone, Brain
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
