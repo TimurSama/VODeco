@@ -24,8 +24,10 @@ import {
   Target,
   Award,
   Calendar,
-  Building2
+  Building2,
+  Calculator
 } from "lucide-react";
+import TokenCalculator from "@/components/tokens/TokenCalculator";
 
 export default function TokenHubPage() {
   const [selectedToken, setSelectedToken] = useState('VOD');
@@ -198,7 +200,7 @@ export default function TokenHubPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="tokens" className="w-full">
-        <TabsList className="w-full bg-background/20 p-1 grid grid-cols-4">
+        <TabsList className="w-full bg-background/20 p-1 grid grid-cols-5">
           <TabsTrigger value="tokens" className="flex items-center data-[state=active]:bg-primary/20">
             <Coins className="w-4 h-4 mr-2" />
             Токены
@@ -210,6 +212,10 @@ export default function TokenHubPage() {
           <TabsTrigger value="staking" className="flex items-center data-[state=active]:bg-primary/20">
             <BarChart3 className="w-4 h-4 mr-2" />
             Стейкинг
+          </TabsTrigger>
+          <TabsTrigger value="calculator" className="flex items-center data-[state=active]:bg-primary/20">
+            <Calculator className="w-4 h-4 mr-2" />
+            Калькулятор
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center data-[state=active]:bg-primary/20">
             <Activity className="w-4 h-4 mr-2" />
@@ -510,6 +516,11 @@ export default function TokenHubPage() {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Calculator Tab */}
+        <TabsContent value="calculator" className="mt-6">
+          <TokenCalculator userBalance={vodBalance || 0} userStakingPower={12500} />
         </TabsContent>
 
         {/* Analytics Tab */}

@@ -1061,3 +1061,339 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   return httpServer;
 }
+  // === Token Calculation and Purchase API ===
+
+  // Calculate token rewards
+  app.post("/api/tokens/calculate-reward", async (req, res) => {
+    try {
+      const { rewardType, params } = req.body;
+      
+      let calculation = null;
+      
+      switch (rewardType) {
+        case 'registration':
+          calculation = {
+            baseAmount: 500,
+            bonusMultiplier: params.isEarlyAdopter ? 1.5 : 1,
+            referralBonus: params.hasReferral ? 200 : 0,
+            finalAmount: (500 + (params.hasReferral ? 200 : 0)) * (params.isEarlyAdopter ? 1.5 : 1)
+          };
+          break;
+        case 'voting':
+          const baseVotingReward = 50;
+          const streakMultiplier = 1 + (params.streak * 0.1);
+          const predictionBonus = params.correctPrediction ? 100 : 0;
+          calculation = {
+            baseAmount: baseVotingReward + predictionBonus,
+            bonusMultiplier: streakMultiplier,
+            finalAmount: Math.round((baseVotingReward + predictionBonus) * streakMultiplier)
+          };
+          break;
+        case 'mission':
+          const missionRewards = { exploration: 25, dataCollection: 75, stakingMission: 150, communityAction: 100 };
+          const baseReward = missionRewards[params.missionType] || 50;
+          calculation = {
+            baseAmount: baseReward,
+            bonusMultiplier: params.difficulty || 1,
+            finalAmount: baseReward * (params.difficulty || 1)
+          };
+          break;
+        default:
+          return res.status(400).json({ message: "Invalid reward type" });
+      }
+      
+      return res.json(calculation);
+    } catch (error) {
+      console.error("Error calculating token reward:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Calculate staking returns
+  app.post("/api/tokens/calculate-staking", async (req, res) => {
+    try {
+      const { amount, apy, lockPeriod } = req.body;
+      
+      if (!amount || !apy || lockPeriod === undefined) {
+        return res.status(400).json({ message: "Missing required parameters" });
+      }
+
+      const dailyRate = apy / 365 / 100;
+      const dailyReturn = amount * dailyRate;
+      const monthlyReturn = amount * (apy / 12 / 100);
+      const totalReturn = amount * (Math.pow(1 + dailyRate, lockPeriod) - 1);
+      const finalAmount = amount + totalReturn;
+
+      const calculation = {
+        amount,
+        apy,
+        lockPeriod,
+        dailyReturn,
+        monthlyReturn,
+        totalReturn,
+        finalAmount
+      };
+      
+      return res.json(calculation);
+    } catch (error) {
+      console.error("Error calculating staking:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get token prices
+  app.get("/api/tokens/prices", async (_req, res) => {
+    try {
+      // В реальном приложении эти данные будут браться из внешних API или базы данных
+      const prices = {
+        VOD: { 
+          price: 1.50, 
+          change24h: 12.5,
+          volume24h: 125000,
+          marketCap: 2500000
+        },
+        VOD_Uzbekistan: { 
+          price: 1.42, 
+          change24h: 8.3,
+          volume24h: 89000,
+          marketCap: 1800000
+        },
+        VOD_Aral: { 
+          price: 1.65, 
+          change24h: 15.7,
+          volume24h: 65000,
+          marketCap: 1200000
+        },
+        VOD_Ural: { 
+          price: 1.17, 
+          change24h: -2.1,
+          volume24h: 42000,
+          marketCap: 950000
+        },
+        H2O: { 
+          price: 0.98, 
+          change24h: -2.1,
+          volume24h: 78000,
+          marketCap: 1600000
+        }
+      };
+      
+      return res.json(prices);
+    } catch (error) {
+      console.error("Error getting token prices:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get exchange rates
+  app.get("/api/tokens/exchange-rates", async (_req, res) => {
+    try {
+      const exchangeRates = {
+        'VOD': {
+          'VOD_Uzbekistan': 0.95,
+          'VOD_Aral': 0.91,
+          'VOD_Ural': 1.28,
+          'H2O': 1.53
+        },
+        'VOD_Uzbekistan': {
+          'VOD': 1.05,
+          'VOD_Aral': 0.96,
+          'VOD_Ural': 1.35,
+          'H2O': 1.61
+        },
+        'H2O': {
+          'VOD': 0.65,
+          'VOD_Uzbekistan': 0.62,
+          'VOD_Aral': 0.59,
+          'VOD_Ural': 0.84
+        }
+      };
+      
+      return res.json(exchangeRates);
+    } catch (error) {
+      console.error("Error getting exchange rates:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Purchase tokens
+  app.post("/api/tokens/purchase", isAuthenticated, async (req, res) => {
+    try {
+      const { tokenType, amount, paymentMethod, paymentDetails } = req.body;
+      const userId = req.user!.id;
+      
+      if (!tokenType || !amount || amount <= 0) {
+        return res.status(400).json({ message: "Invalid purchase parameters" });
+      }
+
+      // Валидация минимальной покупки
+      const minPurchase = 50;
+      if (amount < minPurchase) {
+        return res.status(400).json({ message: `Минимальная покупка: ${minPurchase} токенов` });
+      }
+
+      // Получаем текущую цену
+      const prices = {
+        VOD: 1.50,
+        VOD_Uzbekistan: 1.42,
+        VOD_Aral: 1.65,
+        VOD_Ural: 1.17,
+        H2O: 0.98
+      };
+      
+      const pricePerToken = prices[tokenType] || 1.25;
+      const totalCost = amount * pricePerToken;
+      const fee = totalCost * 0.025; // 2.5% комиссия
+      const finalCost = totalCost + fee;
+
+      // В реальном приложении здесь была бы интеграция с платежной системой
+      const transaction = {
+        id: Date.now(),
+        userId,
+        tokenType,
+        amount,
+        pricePerToken,
+        totalCost,
+        fee,
+        finalCost,
+        paymentMethod,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      // Обновляем баланс пользователя (имитация)
+      await storage.updateUserToken(userId, tokenType, amount, 0, 0);
+
+      // Логируем активность
+      await storage.createUserActivity({
+        userId,
+        activityType: 'token_purchase',
+        tokensEarned: amount,
+        details: JSON.stringify({ tokenType, finalCost, paymentMethod })
+      });
+
+      return res.json({
+        transaction,
+        message: 'Покупка токенов успешно обработана',
+        newBalance: amount
+      });
+    } catch (error) {
+      console.error("Error processing token purchase:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Start staking
+  app.post("/api/tokens/stake", isAuthenticated, async (req, res) => {
+    try {
+      const { tokenSymbol, amount, stakingOptionId, apy, lockPeriod } = req.body;
+      const userId = req.user!.id;
+      
+      if (!tokenSymbol || !amount || amount <= 0 || !stakingOptionId) {
+        return res.status(400).json({ message: "Invalid staking parameters" });
+      }
+
+      // Проверяем баланс пользователя
+      const userTokens = await storage.getUserTokens(userId);
+      const userToken = userTokens.find(token => token.tokenSymbol === tokenSymbol);
+      
+      if (!userToken || userToken.balance < amount) {
+        return res.status(400).json({ message: "Недостаточно токенов для стейкинга" });
+      }
+
+      // Создаем запись стейкинга
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + lockPeriod);
+
+      const staking = await storage.createUserStaking({
+        userId,
+        tokenSymbol,
+        amount,
+        apy: apy || 12.0,
+        lockPeriod,
+        endDate,
+        status: 'active',
+        rewardsEarned: 0
+      });
+
+      // Обновляем баланс пользователя (переводим в стейкинг)
+      await storage.updateUserToken(userId, tokenSymbol, -amount, amount, 0);
+
+      // Логируем активность
+      await storage.createUserActivity({
+        userId,
+        activityType: 'staking_start',
+        tokensEarned: 0,
+        details: JSON.stringify({ tokenSymbol, amount, apy, lockPeriod })
+      });
+
+      return res.json({
+        staking,
+        message: 'Стейкинг успешно активирован',
+        stakingId: staking.id
+      });
+    } catch (error) {
+      console.error("Error starting staking:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Exchange tokens
+  app.post("/api/tokens/exchange", isAuthenticated, async (req, res) => {
+    try {
+      const { fromToken, toToken, amount } = req.body;
+      const userId = req.user!.id;
+      
+      if (!fromToken || !toToken || !amount || amount <= 0) {
+        return res.status(400).json({ message: "Invalid exchange parameters" });
+      }
+
+      // Получаем курс обмена
+      const exchangeRates = {
+        'VOD': { 'VOD_Uzbekistan': 0.95, 'H2O': 1.53 },
+        'VOD_Uzbekistan': { 'VOD': 1.05, 'H2O': 1.61 },
+        'H2O': { 'VOD': 0.65, 'VOD_Uzbekistan': 0.62 }
+      };
+
+      const rate = exchangeRates[fromToken]?.[toToken];
+      if (!rate) {
+        return res.status(400).json({ message: "Unsupported exchange pair" });
+      }
+
+      const fee = 0.003; // 0.3% комиссия
+      const exchangedAmount = amount * rate * (1 - fee);
+
+      // Проверяем баланс
+      const userTokens = await storage.getUserTokens(userId);
+      const fromTokenBalance = userTokens.find(token => token.tokenSymbol === fromToken);
+      
+      if (!fromTokenBalance || fromTokenBalance.balance < amount) {
+        return res.status(400).json({ message: "Недостаточно токенов для обмена" });
+      }
+
+      // Обновляем балансы
+      await storage.updateUserToken(userId, fromToken, -amount, 0, 0);
+      await storage.updateUserToken(userId, toToken, exchangedAmount, 0, 0);
+
+      // Логируем активность
+      await storage.createUserActivity({
+        userId,
+        activityType: 'token_exchange',
+        tokensEarned: 0,
+        details: JSON.stringify({ fromToken, toToken, amount, exchangedAmount, rate, fee })
+      });
+
+      return res.json({
+        fromToken,
+        toToken,
+        amount,
+        exchangedAmount,
+        rate,
+        fee: amount * rate * fee,
+        message: 'Обмен токенов выполнен успешно'
+      });
+    } catch (error) {
+      console.error("Error exchanging tokens:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
