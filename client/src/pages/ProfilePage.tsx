@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import { 
   UserCircle, 
   Mail, 
@@ -49,6 +50,7 @@ interface UserProfile {
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
   const { toast } = useToast();
+  const [_, setLocation] = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<UserProfile>({
     firstName: user?.firstName || '',
@@ -65,12 +67,12 @@ export default function ProfilePage() {
   });
 
   const [stats, setStats] = useState({
-    projectsCompleted: 12,
-    tokensEarned: 2450,
-    daoVotes: 34,
-    stakingAmount: 1500,
-    trustScore: 85,
-    communityRank: 'Advanced'
+    projectsCompleted: user ? 12 : 0,
+    tokensEarned: user ? 2450 : 0,
+    daoVotes: user ? 34 : 0,
+    stakingAmount: user ? 1500 : 0,
+    trustScore: user ? 85 : 0,
+    communityRank: user ? 'Advanced' : 'Новичок'
   });
 
   useEffect(() => {
@@ -143,9 +145,11 @@ export default function ProfilePage() {
               <div className="flex justify-between items-start">
                 <div>
                   <h1 className="text-3xl font-bold text-primary">
-                    {profile.firstName} {profile.lastName}
+                    {user ? `${profile.firstName} ${profile.lastName}` : 'Гость'}
                   </h1>
-                  <p className="text-foreground/60 text-lg">{profile.specialization || 'Участник VODeco'}</p>
+                  <p className="text-foreground/60 text-lg">
+                    {user ? (profile.specialization || 'Участник VODeco') : 'Незарегистрированный пользователь'}
+                  </p>
                 </div>
                 
                 <Button
@@ -184,6 +188,23 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
+      {/* Уведомление для незарегистрированных пользователей */}
+      {!user && (
+        <Card className="border border-yellow-500/20 bg-yellow-500/5 backdrop-blur-sm">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <h3 className="text-lg font-medium text-yellow-600">Демонстрационный режим</h3>
+              <p className="text-foreground/60">
+                Вы видите пример профиля. Зарегистрируйтесь, чтобы создать свой профиль и получить доступ ко всем функциям.
+              </p>
+              <Button onClick={() => setLocation("/auth")} className="bg-primary hover:bg-primary/90">
+                Зарегистрироваться
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Детальная информация */}
       <Tabs defaultValue="personal" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
@@ -210,7 +231,8 @@ export default function ProfilePage() {
                     id="firstName"
                     value={profile.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    disabled={!isEditing}
+                    disabled={!isEditing || !user}
+                    placeholder={!user ? "Введите имя" : ""}
                   />
                 </div>
                 <div className="space-y-2">
@@ -219,7 +241,8 @@ export default function ProfilePage() {
                     id="lastName"
                     value={profile.lastName}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    disabled={!isEditing}
+                    disabled={!isEditing || !user}
+                    placeholder={!user ? "Введите фамилию" : ""}
                   />
                 </div>
                 <div className="space-y-2">
@@ -229,7 +252,8 @@ export default function ProfilePage() {
                     type="email"
                     value={profile.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    disabled={!isEditing}
+                    disabled={!isEditing || !user}
+                    placeholder={!user ? "example@email.com" : ""}
                   />
                 </div>
                 <div className="space-y-2">

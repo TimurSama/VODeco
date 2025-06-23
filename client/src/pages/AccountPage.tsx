@@ -57,49 +57,44 @@ export default function AccountPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [userStats, setUserStats] = useState<UserStats>({
-    totalTokensEarned: 2450,
-    totalStaked: 1500,
-    activeStakings: 3,
-    completedMissions: 12,
-    daoVotes: 34,
-    trustScore: 85,
-    level: 5,
-    experiencePoints: 2100,
-    nextLevelXP: 2500
+    totalTokensEarned: user ? 2450 : 0,
+    totalStaked: user ? 1500 : 0,
+    activeStakings: user ? 3 : 0,
+    completedMissions: user ? 12 : 0,
+    daoVotes: user ? 34 : 0,
+    trustScore: user ? 85 : 0,
+    level: user ? 5 : 1,
+    experiencePoints: user ? 2100 : 0,
+    nextLevelXP: user ? 2500 : 100
   });
 
-  const [recentActivities, setRecentActivities] = useState<UserActivity[]>([
-    {
-      id: 1,
-      type: 'voting',
-      description: 'Участие в голосовании "Водоочистка Алматы"',
-      timestamp: '2024-01-15T14:30:00Z',
-      tokensEarned: 50,
-      status: 'completed'
-    },
-    {
-      id: 2,
-      type: 'staking',
-      description: 'Стейкинг 500 VOD токенов на 60 дней',
-      timestamp: '2024-01-14T10:15:00Z',
-      status: 'completed'
-    },
-    {
-      id: 3,
-      type: 'mission',
-      description: 'Завершение миссии сбора данных',
-      timestamp: '2024-01-12T16:45:00Z',
-      tokensEarned: 75,
-      status: 'completed'
-    },
-    {
-      id: 4,
-      type: 'purchase',
-      description: 'Покупка 200 VOD токенов',
-      timestamp: '2024-01-10T09:20:00Z',
-      status: 'completed'
-    }
-  ]);
+  const [recentActivities, setRecentActivities] = useState<UserActivity[]>(
+    user ? [
+      {
+        id: 1,
+        type: 'voting',
+        description: 'Участие в голосовании "Водоочистка Алматы"',
+        timestamp: '2024-01-15T14:30:00Z',
+        tokensEarned: 50,
+        status: 'completed'
+      },
+      {
+        id: 2,
+        type: 'staking',
+        description: 'Стейкинг 500 VOD токенов на 60 дней',
+        timestamp: '2024-01-14T10:15:00Z',
+        status: 'completed'
+      },
+      {
+        id: 3,
+        type: 'mission',
+        description: 'Завершение миссии сбора данных',
+        timestamp: '2024-01-12T16:45:00Z',
+        tokensEarned: 75,
+        status: 'completed'
+      }
+    ] : []
+  );
 
   const levelProgress = (userStats.experiencePoints / userStats.nextLevelXP) * 100;
 
@@ -173,6 +168,26 @@ export default function AccountPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Уведомление для незарегистрированных пользователей */}
+      {!user && (
+        <Card className="border border-blue-500/20 bg-blue-500/5 backdrop-blur-sm">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <h3 className="text-lg font-medium text-blue-600">Демонстрация функций аккаунта</h3>
+              <p className="text-foreground/60">
+                Здесь вы можете увидеть все доступные функции. После регистрации у вас будет персональный кошелек, история активности и настройки.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <div className="p-2 bg-primary/10 rounded">🎯 Личная статистика</div>
+                <div className="p-2 bg-primary/10 rounded">💰 Управление токенами</div>
+                <div className="p-2 bg-primary/10 rounded">📊 История активности</div>
+                <div className="p-2 bg-primary/10 rounded">⚙️ Персональные настройки</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Основные вкладки */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -363,7 +378,16 @@ export default function AccountPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentActivities.map((activity) => (
+                {recentActivities.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Activity className="h-12 w-12 text-foreground/20 mx-auto mb-4" />
+                    <p className="text-foreground/60">История активности появится после регистрации</p>
+                    <p className="text-sm text-foreground/40 mt-2">
+                      Здесь будут отображаться: голосования, стейкинг, миссии, покупки токенов
+                    </p>
+                  </div>
+                ) : (
+                  recentActivities.map((activity) => (
                   <div 
                     key={activity.id}
                     className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg border border-primary/10"
@@ -390,7 +414,8 @@ export default function AccountPage() {
 
                     <ChevronRight className="h-4 w-4 text-foreground/40" />
                   </div>
-                ))}
+                  ))
+                )}
               </div>
 
               <div className="mt-6 text-center">

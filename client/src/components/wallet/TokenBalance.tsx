@@ -48,9 +48,9 @@ export default function TokenBalance({ onRefresh }: Props) {
     {
       symbol: 'VOD',
       name: 'VODeco',
-      balance: 1250.50,
-      staked: 500.00,
-      earned: 45.32,
+      balance: user ? 1250.50 : 0,
+      staked: user ? 500.00 : 0,
+      earned: user ? 45.32 : 0,
       price: 1.50,
       change24h: 12.5,
       icon: <Globe className="h-5 w-5" />,
@@ -59,9 +59,9 @@ export default function TokenBalance({ onRefresh }: Props) {
     {
       symbol: 'VOD_UZ',
       name: 'VOD Uzbekistan',
-      balance: 432.18,
-      staked: 200.00,
-      earned: 18.75,
+      balance: user ? 432.18 : 0,
+      staked: user ? 200.00 : 0,
+      earned: user ? 18.75 : 0,
       price: 1.42,
       change24h: 8.3,
       icon: <Mountain className="h-5 w-5" />,
@@ -70,9 +70,9 @@ export default function TokenBalance({ onRefresh }: Props) {
     {
       symbol: 'H2O',
       name: 'Water Token',
-      balance: 678.92,
-      staked: 1000.00,
-      earned: 62.15,
+      balance: user ? 678.92 : 0,
+      staked: user ? 1000.00 : 0,
+      earned: user ? 62.15 : 0,
       price: 0.98,
       change24h: -2.1,
       icon: <Droplet className="h-5 w-5" />,
@@ -208,6 +208,26 @@ export default function TokenBalance({ onRefresh }: Props) {
 
   return (
     <div className="space-y-6">
+      {/* Уведомление для незарегистрированных пользователей */}
+      {!user && (
+        <Card className="border border-primary/20 bg-primary/5 backdrop-blur-sm">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-3">
+              <h4 className="font-medium text-primary">Демонстрационный кошелек</h4>
+              <p className="text-sm text-foreground/60">
+                Показаны доступные токены и функции. После регистрации у вас будет персональный кошелек с реальными балансами.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 text-xs">
+                <Badge variant="outline">Покупка токенов</Badge>
+                <Badge variant="outline">Стейкинг</Badge>
+                <Badge variant="outline">Обмен</Badge>
+                <Badge variant="outline">История транзакций</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Общий баланс портфеля */}
       <Card className="border border-primary/20 bg-card/80 backdrop-blur-sm">
         <CardHeader className="pb-3">
