@@ -23,7 +23,7 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey().notNull(),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
-  password: text("password").notNull(),
+  password: text("password").default(""), // Может быть пустым для OAuth пользователей
   firstName: text("first_name"),
   lastName: text("last_name"),
   profileImageUrl: text("profile_image_url"),
@@ -32,10 +32,15 @@ export const users = pgTable("users", {
   role: text("role").default("participant"),
   joined: timestamp("joined").defaultNow(),
   votingPower: integer("voting_power").default(10),
+  isActive: boolean("is_active").default(true),
+  isVerified: boolean("is_verified").default(false),
+  lastLogin: timestamp("last_login"),
+  // OAuth поля
   googleId: text("google_id").unique(),
   telegramId: text("telegram_id").unique(),
+  // Метаданные
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow()
+  updatedAt: timestamp("updated_at").defaultNow()imestamp("updated_at").defaultNow()
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

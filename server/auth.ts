@@ -10,6 +10,25 @@ import { UserInterface, loginSchema, registerSchema } from "@shared/auth-schema"
 import { ZodError } from "zod";
 import connectPg from "connect-pg-simple";
 
+// Функция для логирования событий безопасности
+async function logSecurityEvent(userId: number | null, action: string, success: boolean, req: Request, details?: any) {
+  try {
+    const ip = req.ip || req.connection.remoteAddress || 'unknown';
+    const userAgent = req.get('User-Agent') || 'unknown';
+    
+    await storage.createSecurityLog({
+      userId,
+      action,
+      ipAddress: ip,
+      userAgent,
+      success,
+      details: details ? JSON.stringify(details) : null
+    });
+  } catch (error) {
+    console.error("Error logging security event:", error);
+  }
+}
+
 declare global {
   namespace Express {
     // Расширяем User для совместимости со всеми стратегиями аутентификации
@@ -129,12 +148,22 @@ export function setupAuth(app: Express) {
         password: hashedPassword,
         role: "participant",
         joined: new Date(),
-        votingPower: 0
+        votingPower: 100, // Начальная сила голоса
+        isActive: true,
+        isVerified: false,
+        lastLogin: new Date()
       });
+
+      // Даем приветственные токены
+      await storage.updateUserToken(user.id, 'VOD', 500, 0, 0); // Бонус за регистрацию
+
+      // Логируем успешную регистрацию
+      await logSecurityEvent(user.id, 'register', true, req, { method: 'email' });
 
       // Аутентифицируем пользователя после регистрации
       req.login(adaptUserForPassport(user), (err) => {
         if (err) {
+          logSecurityEvent(user.id, 'login_after_register', false, req, { error: err.message });
           return res.status(500).json({ message: "Ошибка входа после регистрации" });
         }
         // Возвращаем данные пользователя без пароля
@@ -155,18 +184,26 @@ export function setupAuth(app: Express) {
     try {
       const credentials = loginSchema.parse(req.body);
       
-      passport.authenticate("local", (err: Error, user: UserInterface) => {
+      passport.authenticate("local", async (err: Error, user: UserInterface) => {
         if (err) {
           return res.status(500).json({ message: "Ошибка входа" });
         }
         if (!user) {
           return res.status(401).json({ message: "Неверное имя пользователя или пароль" });
         }
+
+        // Проверяем активность аккаунта
+        if (!user.isActive) {
+          return res.status(403).json({ message: "Аккаунт заблокирован" });
+        }
         
-        req.login(user, (loginErr) => {
+        req.login(user, async (loginErr) => {
           if (loginErr) {
             return res.status(500).json({ message: "Ошибка входа в систему" });
           }
+
+          // Обновляем время последнего входа
+          await storage.updateUserLastLogin(user.id);
           
           // Возвращаем данные пользователя без пароля
           const { password, ...userWithoutPassword } = user;

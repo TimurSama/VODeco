@@ -33,19 +33,36 @@ export function setupTelegramAuth(app: Express) {
 
       // Если пользователь не найден, создаем нового
       if (!user) {
-        // Генерируем уникальное имя пользователя, если не предоставлено
-        const generatedUsername = username || `telegram_${id}`;
+        // Генерируем уникальное имя пользователя
+        let generatedUsername = username || `telegram_${id}`;
+        let counter = 1;
+        while (await storage.getUserByUsername(generatedUsername)) {
+          generatedUsername = `${username || `telegram_${id}`}_${counter}`;
+          counter++;
+        }
         
         // Создаем нового пользователя
         user = await storage.createUser({
           username: generatedUsername,
           email: `${generatedUsername}@telegram.placeholder`, // Placeholder email
-          password: "", // Пустой пароль, так как аутентификация через Telegram
+          password: "", // Пустой пароль для OAuth
           firstName: first_name || null,
           lastName: last_name || null,
           profileImageUrl: photo_url || null,
-          telegramId: id.toString()
+          telegramId: id.toString(),
+          role: "participant",
+          joined: new Date(),
+          votingPower: 100,
+          isActive: true,
+          isVerified: true, // Telegram аккаунты считаем верифицированными
+          lastLogin: new Date()
         });
+
+        // Даем приветственные токены
+        await storage.updateUserToken(user.id, 'VOD', 750, 0, 0); // Бонус за OAuth регистрацию
+      } else {
+        // Обновляем время последнего входа
+        await storage.updateUserLastLogin(user.id);
       }
 
       // Вход пользователя с использованием адаптера для правильной типизации

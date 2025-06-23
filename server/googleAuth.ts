@@ -42,22 +42,43 @@ export function setupGoogleAuth(app: Express) {
           // Обновляем существующего пользователя, добавляя Google ID
           user = await storage.updateUserGoogleId(Number(existingUser.id), profile.id);
         } else {
+          // Генерируем уникальное имя пользователя
+          let username = profile.displayName || email.split('@')[0];
+          let counter = 1;
+          while (await storage.getUserByUsername(username)) {
+            username = `${profile.displayName || email.split('@')[0]}_${counter}`;
+            counter++;
+          }
+
           // Создаем нового пользователя
           user = await storage.createUser({
-            username: profile.displayName || email.split('@')[0],
+            username,
             email,
-            password: "", // Пустой пароль, так как авторизация через Google
+            password: "", // Пустой пароль для OAuth
             firstName: profile.name?.givenName || null,
             lastName: profile.name?.familyName || null,
             profileImageUrl: profile.photos?.[0]?.value || null,
-            googleId: profile.id
+            googleId: profile.id,
+            role: "participant",
+            joined: new Date(),
+            votingPower: 100,
+            isActive: true,
+            isVerified: true, // Google аккаунты считаем верифицированными
+            lastLogin: new Date()
           });
+
+          // Даем приветственные токены
+          await storage.updateUserToken(user.id, 'VOD', 750, 0, 0); // Бонус за OAuth регистрацию
         }
+      } else {
+        // Обновляем время последнего входа
+        await storage.updateUserLastLogin(user.id);
       }
 
       // Используем утилиту для адаптации пользователя к требованиям Passport
       return done(null, adaptUserForPassport(user));
     } catch (error) {
+      console.error("Google OAuth error:", error);
       return done(error, false);
     }
   }));

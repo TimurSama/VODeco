@@ -160,6 +160,20 @@ export class MemStorage implements IStorage {
     );
   }
 
+  async updateUserLastLogin(userId: number): Promise<void> {
+    const [updatedUser] = await db.update(users)
+      .set({ 
+        lastLogin: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    
+    if (updatedUser) {
+      this.users.set(userId, updatedUser);
+    }
+  }
+
   async updateUserGoogleId(userId: number, googleId: string): Promise<User> {
     const user = await this.getUser(userId);
     if (!user) {
