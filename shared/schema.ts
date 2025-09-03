@@ -513,3 +513,184 @@ export const insertInvestmentObjectSchema = createInsertSchema(investmentObjects
 
 export type InsertInvestmentObject = z.infer<typeof insertInvestmentObjectSchema>;
 export type InvestmentObject = typeof investmentObjectsTable.$inferSelect;
+
+// Схемы для управления ролями и кабинетами
+export const cabinetPermissionsSchema = z.object({
+  id: z.string(),
+  cabinetType: z.enum(['citizen', 'government', 'infrastructure', 'investor', 'scientific', 'operator']),
+  permissions: z.array(z.string()),
+  features: z.array(z.string()),
+  accessLevel: z.enum(['basic', 'premium', 'enterprise']),
+});
+
+export const userCabinetAccessSchema = z.object({
+  id: z.string(),
+  userId: z.number(),
+  cabinetType: z.enum(['citizen', 'government', 'infrastructure', 'investor', 'scientific', 'operator']),
+  accessLevel: z.enum(['basic', 'premium', 'enterprise']),
+  grantedAt: z.date(),
+  expiresAt: z.date().optional(),
+  isActive: z.boolean(),
+});
+
+// Схемы для проектов и инициатив
+export const projectSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  category: z.enum(['water_quality', 'infrastructure', 'research', 'education', 'conservation']),
+  status: z.enum(['draft', 'active', 'completed', 'cancelled']),
+  priority: z.enum(['low', 'medium', 'high', 'critical']),
+  location: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+    address: z.string().optional(),
+    region: z.string().optional(),
+  }),
+  budget: z.object({
+    requested: z.number(),
+    allocated: z.number(),
+    spent: z.number(),
+    currency: z.string().default('USD'),
+  }),
+  timeline: z.object({
+    startDate: z.date(),
+    endDate: z.date(),
+    milestones: z.array(z.object({
+      id: z.string(),
+      title: z.string(),
+      description: z.string(),
+      dueDate: z.date(),
+      isCompleted: z.boolean(),
+    })),
+  }),
+  participants: z.array(z.object({
+    userId: z.number(),
+    role: z.string(),
+    joinedAt: z.date(),
+  })),
+  tags: z.array(z.string()),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+// Схемы для мониторинга качества воды
+export const waterQualityReportSchema = z.object({
+  id: z.string(),
+  userId: z.number(),
+  location: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+    address: z.string().optional(),
+  }),
+  parameters: z.object({
+    pH: z.number().min(0).max(14).optional(),
+    temperature: z.number().optional(),
+    dissolvedOxygen: z.number().optional(),
+    turbidity: z.number().optional(),
+    conductivity: z.number().optional(),
+    totalDissolvedSolids: z.number().optional(),
+    nitrate: z.number().optional(),
+    phosphate: z.number().optional(),
+    bacteria: z.number().optional(),
+  }),
+  qualityRating: z.enum(['excellent', 'good', 'fair', 'poor', 'critical']),
+  notes: z.string().optional(),
+  images: z.array(z.string()).optional(), // base64 encoded images
+  timestamp: z.date(),
+  isVerified: z.boolean().default(false),
+  verifiedBy: z.number().optional(),
+  verifiedAt: z.date().optional(),
+});
+
+// Схемы для DAO управления
+export const proposalSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string(),
+  category: z.enum(['governance', 'funding', 'policy', 'project', 'emergency']),
+  status: z.enum(['draft', 'active', 'voting', 'passed', 'rejected', 'executed']),
+  authorId: z.number(),
+  budget: z.object({
+    requested: z.number(),
+    currency: z.string().default('USD'),
+  }).optional(),
+  votingPeriod: z.object({
+    startDate: z.date(),
+    endDate: z.date(),
+  }),
+  votingOptions: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+  })),
+  votes: z.array(z.object({
+    userId: z.number(),
+    optionId: z.string(),
+    votingPower: z.number(),
+    timestamp: z.date(),
+  })),
+  quorum: z.number(),
+  minVotingPower: z.number(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+// Схемы для достижений и геймификации
+export const achievementSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  icon: z.string(),
+  category: z.enum(['exploration', 'contribution', 'leadership', 'expertise', 'community']),
+  requirements: z.array(z.object({
+    type: z.enum(['water_reports', 'projects', 'votes', 'tokens', 'time']),
+    value: z.number(),
+    description: z.string(),
+  })),
+  rewards: z.object({
+    tokens: z.number(),
+    reputation: z.number(),
+    badge: z.string().optional(),
+  }),
+  rarity: z.enum(['common', 'rare', 'epic', 'legendary']),
+  isActive: z.boolean().default(true),
+  createdAt: z.date(),
+});
+
+// Схемы для уведомлений
+export const notificationSchema = z.object({
+  id: z.string(),
+  userId: z.number(),
+  type: z.enum(['info', 'success', 'warning', 'error', 'achievement', 'proposal', 'project']),
+  title: z.string(),
+  message: z.string(),
+  data: z.record(z.any()).optional(),
+  isRead: z.boolean().default(false),
+  isArchived: z.boolean().default(false),
+  createdAt: z.date(),
+  readAt: z.date().optional(),
+});
+
+// Схемы для аналитики и отчетов
+export const analyticsEventSchema = z.object({
+  id: z.string(),
+  userId: z.number().optional(),
+  sessionId: z.string(),
+  event: z.string(),
+  category: z.enum(['user_action', 'system_event', 'error', 'performance']),
+  properties: z.record(z.any()),
+  timestamp: z.date(),
+  userAgent: z.string().optional(),
+  ipAddress: z.string().optional(),
+});
+
+// Экспорт типов
+export type CabinetPermissions = z.infer<typeof cabinetPermissionsSchema>;
+export type UserCabinetAccess = z.infer<typeof userCabinetAccessSchema>;
+export type Project = z.infer<typeof projectSchema>;
+export type WaterQualityReport = z.infer<typeof waterQualityReportSchema>;
+export type Proposal = z.infer<typeof proposalSchema>;
+export type Achievement = z.infer<typeof achievementSchema>;
+export type Notification = z.infer<typeof notificationSchema>;
+export type AnalyticsEvent = z.infer<typeof analyticsEventSchema>;

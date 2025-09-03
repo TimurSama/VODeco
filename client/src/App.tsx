@@ -35,11 +35,12 @@ import AdminPanelPage from "@/pages/AdminPanelPage";
 import VODCheckPage from './pages/VODCheckPage';
 import PEVMModulesPage from './pages/PEVMModulesPage';
 import AIComponentsPage from './pages/AIComponentsPage';
+import LandingPage from "@/pages/LandingPage";
+import PresentationPage from "@/pages/PresentationPage";
 
 // Мобильные страницы
 import MobileMessagesPage from "@/pages/MobileMessagesPage";
 import MobileContactsPage from "@/pages/MobileContactsPage";
-import "./mobile.css"; // Импортируем мобильные стили
 
 // Импортируем наш hook для определения мобильного устройства
 import { useMobileDetect } from "@/hooks/use-mobile-detect";
@@ -126,15 +127,18 @@ function Router() {
       <Route path="/auth">
         <AuthPage />
       </Route>
-      <Route path="/dashboard">
-        <Dashboard />
-      </Route>
-      <Route path="/">
-        <Dashboard />
-      </Route>
-      <Route path="/preview">
-        <PreviewPage />
-      </Route>
+              <Route path="/">
+          <Dashboard />
+        </Route>
+        <Route path="/landing">
+          <LandingPage />
+        </Route>
+        <Route path="/preview">
+          <PreviewPage />
+        </Route>
+        <Route path="/presentation">
+          <PresentationPage />
+        </Route>
       <Route>
         <NotFound />
       </Route>

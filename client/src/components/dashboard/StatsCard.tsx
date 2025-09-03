@@ -1,5 +1,6 @@
 import React from 'react';
 import { DropletIcon, Vote, UsersRound, Coins } from 'lucide-react';
+import GlassPanel from '@/components/ui/GlassPanel';
 
 interface StatsCardProps {
   title: string;
@@ -39,7 +40,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ title, value, change, icon, color
   };
   
   return (
-    <div className="border border-primary/10 bg-card/80 backdrop-blur-sm rounded-xl p-5 hover:shadow-md hover:shadow-primary/5 transition-all">
+    <GlassPanel variant="subtle" padding="md" className="hover:shadow-xl hover:shadow-cyan-500/15 transition-all">
       <div className="flex items-center mb-3">
         <div className={`w-10 h-10 hexagon ${getIconBgClass()} flex items-center justify-center mr-3`}>
           <span className={getIconTextClass()}>
@@ -55,7 +56,7 @@ const StatsCard: React.FC<StatsCardProps> = ({ title, value, change, icon, color
           <span>{change}</span>
         </div>
       )}
-    </div>
+    </GlassPanel>
   );
 };
 

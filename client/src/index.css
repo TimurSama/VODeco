@@ -2,6 +2,140 @@
 @tailwind components;
 @tailwind utilities;
 
+/* VODeco фирменный фон */
+.vodeco-bg {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0c4a6e 50%, #0369a1 75%, #0ea5e9 100%);
+  background-size: 400% 400%;
+  animation: vodeco-gradient 20s ease infinite;
+}
+
+@keyframes vodeco-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Водные волны */
+.water-waves {
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(3, 105, 161, 0.05) 0%, transparent 50%);
+}
+
+/* Стеклянный эффект */
+.glass-effect {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(34, 211, 238, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Анимация пульсации */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* Гексагональная сетка */
+.hex-grid {
+  background-image: 
+    linear-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Переменные CSS для цветов VODeco */
+:root {
+  --vodeco-primary: #06b6d4;
+  --vodeco-secondary: #0ea5e9;
+  --vodeco-accent: #22d3ee;
+  --vodeco-dark: #0f172a;
+  --vodeco-darker: #020617;
+  --vodeco-light: #e0f2fe;
+  --vodeco-glass: rgba(30, 41, 59, 0.4);
+  --vodeco-border: rgba(34, 211, 238, 0.2);
+}
+
+/* Базовые стили для всех страниц */
+body {
+  background: var(--vodeco-darker);
+  color: #e2e8f0;
+}
+
+/* Стили для карточек */
+.vodeco-card {
+  @apply glass-effect rounded-xl transition-all duration-300;
+}
+
+.vodeco-card:hover {
+  @apply shadow-2xl shadow-cyan-500/20 border-cyan-400/40;
+}
+
+/* Стили для кнопок */
+.vodeco-btn-primary {
+  @apply bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 shadow-lg shadow-cyan-500/25;
+}
+
+.vodeco-btn-secondary {
+  @apply bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white font-medium px-6 py-3 rounded-lg transition-all duration-300;
+}
+
+/* Стили для заголовков */
+.vodeco-title {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent font-bold;
+}
+
+.vodeco-subtitle {
+  @apply text-cyan-100 font-medium;
+}
+
+/* Стили для текста */
+.vodeco-text {
+  @apply text-slate-200 leading-relaxed;
+}
+
+/* Стили для иконок */
+.vodeco-icon {
+  @apply text-cyan-400;
+}
+
+/* Анимации появления */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .vodeco-card {
+    @apply rounded-lg;
+  }
+}
+
 /* Радиальный градиент для анимации */
 .bg-gradient-radial {
   background-image: radial-gradient(var(--tw-gradient-stops));

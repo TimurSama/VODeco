@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import MobileHeader from '@/components/layout/MobileHeader';
-import "../mobile.css";
+// import "../mobile.css";
 
 // Типы сообщений
 type MessageType = 'incoming' | 'outgoing' | 'system' | 'ai-assistant';

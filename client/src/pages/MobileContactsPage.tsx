@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import MobileHeader from '@/components/layout/MobileHeader';
-import "../mobile.css";
+// import "../mobile.css";
 
 // Типы контактов
 type ContactRole = 

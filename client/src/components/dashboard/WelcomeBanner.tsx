@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import { Globe, Vote, Play } from 'lucide-react';
+import GlassPanel from '@/components/ui/GlassPanel';
 
 const WelcomeBanner: React.FC = () => {
   const { t } = useTranslation();
   return (
-    <div className="border border-primary/10 bg-card/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 lg:mb-8 relative overflow-hidden">
-      <div className="absolute -right-20 -bottom-20 w-64 h-64 rounded-full bg-primary/5 animate-pulse-slow"></div>
+    <GlassPanel variant="elevated" padding="lg" className="mb-4 sm:mb-6 lg:mb-8 relative overflow-hidden">
+      <div className="absolute -right-20 -bottom-20 w-64 h-64 rounded-full bg-cyan-500/10 animate-pulse-slow"></div>
       <div className="relative z-10">
         <h1 className="font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-3 tracking-tight">
           {t('dashboard.welcome.title', 'Добро пожаловать в')} <span className="text-primary">VODECO</span>
@@ -37,7 +38,7 @@ const WelcomeBanner: React.FC = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </GlassPanel>
   );
 };
 

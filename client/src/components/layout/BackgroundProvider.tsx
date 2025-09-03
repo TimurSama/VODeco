@@ -11,7 +11,7 @@ interface BackgroundProviderProps {
  */
 export default function BackgroundProvider({ children }: BackgroundProviderProps) {
   return (
-    <div className="relative min-h-screen bg-[#000b1e]">
+    <div className="relative min-h-screen vodeco-bg water-waves">
       {/* Анимированный фон с океанскими волнами */}
       <HexOceanWaves />
       

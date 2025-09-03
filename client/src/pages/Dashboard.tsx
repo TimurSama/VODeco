@@ -9,6 +9,7 @@ import WelcomeBanner from '@/components/dashboard/WelcomeBanner';
 import ObjectsList from '@/components/dashboard/ObjectsList';
 import EarthGlobe from '@/components/globo/EarthGlobe';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import GlassPanel from '@/components/ui/GlassPanel';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
