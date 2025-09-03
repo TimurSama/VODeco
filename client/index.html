@@ -63,6 +63,9 @@
         // Remove redirect parameter and navigate
         const newUrl = window.location.pathname + redirect + window.location.search.replace(/[?&]redirect=[^&]*/, '');
         window.history.replaceState({}, '', newUrl);
+        
+        // Also trigger a custom event for the router
+        window.dispatchEvent(new CustomEvent('redirect', { detail: redirect }));
       }
     </script>
     <script type="module" src="/src/main.tsx"></script>

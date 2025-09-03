@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   root: path.resolve(__dirname, "client"),
-  base: '/',
+  base: '/VODeco/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client/src"),
@@ -24,7 +24,7 @@ export default defineConfig({
   },
   build: {
     target: 'es2015',
-    outDir: 'dist/client',
+    outDir: 'dist',
     rollupOptions: {
       output: {
         manualChunks: {

@@ -7,8 +7,20 @@
     <script>
         // GitHub Pages SPA fallback
         const path = window.location.pathname;
-        if (path !== '/' && !path.includes('.')) {
-            window.location.href = '/?redirect=' + encodeURIComponent(path);
+        const basePath = '/VODeco';
+        
+        // Remove base path if present
+        let cleanPath = path;
+        if (path.startsWith(basePath)) {
+            cleanPath = path.substring(basePath.length);
+        }
+        
+        if (cleanPath !== '/' && !cleanPath.includes('.')) {
+            // Redirect to main page with path parameter
+            window.location.href = basePath + '/?redirect=' + encodeURIComponent(cleanPath);
+        } else {
+            // Just redirect to main page
+            window.location.href = basePath + '/';
         }
     </script>
 </head>
