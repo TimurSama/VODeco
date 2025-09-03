@@ -132,3 +132,4 @@ const InfoModal: React.FC<InfoModalProps> = ({
 };
 
 export default InfoModal;
+
