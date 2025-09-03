@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   root: path.resolve(__dirname, "client"),
-  base: process.env.NODE_ENV === 'production' ? '/VODeco/' : '/',
+  base: '/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client/src"),

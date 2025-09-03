@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VODeco - Страница не найдена</title>
+    <script>
+        // GitHub Pages SPA fallback
+        const path = window.location.pathname;
+        if (path !== '/' && !path.includes('.')) {
+            window.location.href = '/?redirect=' + encodeURIComponent(path);
+        }
+    </script>
+</head>
+<body>
+    <div id="root">
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
+            <div style="text-align: center;">
+                <h1>404 - Страница не найдена</h1>
+                <p>Перенаправление на главную страницу...</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
