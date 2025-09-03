@@ -242,7 +242,7 @@ const PreviewPage: React.FC = () => {
           <Link href="/">
             <div className="flex items-center cursor-pointer">
               <span className="font-bold text-2xl tracking-wider bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">VODECO</span>
-            </div>
+      </div>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-8">
@@ -275,29 +275,29 @@ const PreviewPage: React.FC = () => {
                 Начать
               </Button>
             </Link>
-          </div>
-        </div>
+                </div>
+            </div>
       </header>
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 pt-20">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 to-cyan-900/50"></div>
         <div className="relative z-10 text-center max-w-6xl mx-auto">
-          <motion.div
+              <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               Полный Обзор VODeco
-            </h1>
+                </h1>
             <p className="text-xl md:text-2xl mb-8 text-cyan-100 max-w-4xl mx-auto">
               Изучите экосистему будущего управления водными ресурсами
             </p>
             <p className="text-lg md:text-xl mb-12 text-blue-200 max-w-3xl mx-auto">
               От концепции до реализации — все, что нужно знать о революционной платформе
-            </p>
-          </motion.div>
+                </p>
+              </motion.div>
         </div>
       </section>
 
@@ -325,7 +325,7 @@ const PreviewPage: React.FC = () => {
               })}
             </nav>
           </GlassPanel>
-        </div>
+            </div>
       </section>
 
       {/* Content Sections */}
@@ -335,10 +335,10 @@ const PreviewPage: React.FC = () => {
           {/* Overview Section */}
           <AnimatePresence mode="wait">
             {activeSection === 'overview' && (
-              <motion.div
+                <motion.div
                 key="overview"
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.5 }}
               >
@@ -355,33 +355,33 @@ const PreviewPage: React.FC = () => {
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {ecosystemFeatures.map((feature, index) => (
-                    <motion.div
+                <motion.div
                       key={index}
                       initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
                       <GlassPanel variant="default" padding="lg" className="text-center h-full">
                         <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${feature.color} flex items-center justify-center text-white`}>
                           {feature.icon}
-                        </div>
+                      </div>
                         <h3 className="text-xl font-bold mb-3 text-cyan-300">{feature.title}</h3>
                         <p className="text-blue-200">{feature.description}</p>
                       </GlassPanel>
-                    </motion.div>
+                </motion.div>
                   ))}
-                </div>
-              </motion.div>
+                      </div>
+                </motion.div>
             )}
           </AnimatePresence>
 
           {/* Ecosystem Section */}
           <AnimatePresence mode="wait">
             {activeSection === 'ecosystem' && (
-              <motion.div
+                <motion.div
                 key="ecosystem"
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.5 }}
               >
@@ -392,15 +392,15 @@ const PreviewPage: React.FC = () => {
                   <p className="text-xl text-blue-200 max-w-4xl mx-auto mb-6">
                     Интегрированная платформа, объединяющая все заинтересованные стороны в единую сеть
                   </p>
-                  <Button
+                <Button
                     variant="outline"
-                    size="lg"
+                  size="lg"
                     onClick={() => openModal('ecosystem')}
                     className="border-green-400 text-green-400 hover:bg-green-400 hover:text-white"
-                  >
+                >
                     <Info className="mr-2 h-5 w-5" />
                     Узнать больше об экосистеме
-                  </Button>
+                </Button>
                 </GlassPanel>
 
                 <div className="grid lg:grid-cols-2 gap-12">
@@ -419,7 +419,7 @@ const PreviewPage: React.FC = () => {
                           <div>
                             <div className="font-semibold text-white">{participant.name}</div>
                             <div className="text-sm text-blue-200">{participant.role}</div>
-                          </div>
+                    </div>
                         </div>
                       ))}
                     </div>
@@ -439,10 +439,10 @@ const PreviewPage: React.FC = () => {
                           <div>
                             <div className="font-semibold text-white">{component.name}</div>
                             <div className="text-sm text-blue-200">{component.desc}</div>
-                          </div>
-                        </div>
-                      ))}
+                      </div>
                     </div>
+                      ))}
+                  </div>
                   </GlassPanel>
                 </div>
               </motion.div>
@@ -452,10 +452,10 @@ const PreviewPage: React.FC = () => {
           {/* Technology Section */}
           <AnimatePresence mode="wait">
             {activeSection === 'technology' && (
-              <motion.div
+                  <motion.div
                 key="technology"
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.5 }}
               >
@@ -466,42 +466,42 @@ const PreviewPage: React.FC = () => {
                   <p className="text-xl text-blue-200 max-w-4xl mx-auto mb-6">
                     Современные технологии для решения глобальных экологических задач
                   </p>
-                  <Button
+              <Button
                     variant="outline"
-                    size="lg"
+                size="lg"
                     onClick={() => openModal('technology')}
                     className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white"
                   >
                     <Info className="mr-2 h-5 w-5" />
                     Узнать больше о технологиях
-                  </Button>
+              </Button>
                 </GlassPanel>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {technologyStack.map((tech, index) => (
-                    <motion.div
+          <motion.div
                       key={index}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
                       <GlassPanel variant="default" padding="lg" className="h-full">
                         <div className="flex items-center space-x-3 mb-4">
                           <div className="text-purple-400">{tech.icon}</div>
                           <h3 className="text-xl font-bold text-white">{tech.category}</h3>
-                        </div>
+                    </div>
                         <div className="space-y-2">
                           {tech.technologies.map((technology, techIndex) => (
                             <div key={techIndex} className="flex items-center space-x-2">
                               <CheckCircle className="w-4 h-4 text-green-400" />
                               <span className="text-blue-200">{technology}</span>
-                            </div>
+                      </div>
                           ))}
-                        </div>
+                      </div>
                       </GlassPanel>
-                    </motion.div>
+              </motion.div>
                   ))}
-                </div>
+                    </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -527,17 +527,17 @@ const PreviewPage: React.FC = () => {
 
                 <div className="grid lg:grid-cols-2 gap-8">
                   {benefits.map((benefit, index) => (
-                    <motion.div
+              <motion.div
                       key={index}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
                       <GlassPanel variant="default" padding="lg" className="h-full">
                         <div className="flex items-center space-x-3 mb-4">
                           <div className={`${benefit.color}`}>{benefit.icon}</div>
                           <h3 className="text-xl font-bold text-white">{benefit.for}</h3>
-                        </div>
+                    </div>
                         <ul className="space-y-2 mb-4">
                           {benefit.items.map((item, itemIndex) => (
                             <li key={itemIndex} className="flex items-start space-x-2">
@@ -570,7 +570,7 @@ const PreviewPage: React.FC = () => {
                             </Button>
                           )}
                           {benefit.for === 'Для бизнеса' && (
-                            <Button
+              <Button
                               variant="outline"
                               size="sm"
                               onClick={() => openModal('platform')}
@@ -578,7 +578,7 @@ const PreviewPage: React.FC = () => {
                             >
                               <Info className="mr-2 h-4 w-4" />
                               О платформе
-                            </Button>
+              </Button>
                           )}
                           {benefit.for === 'Для государств' && (
                             <Button
@@ -592,7 +592,7 @@ const PreviewPage: React.FC = () => {
                             </Button>
                           )}
                           {benefit.for === 'Для инвесторов' && (
-                            <Button
+                <Button
                               variant="outline"
                               size="sm"
                               onClick={() => openModal('tokenomics')}
@@ -600,21 +600,21 @@ const PreviewPage: React.FC = () => {
                             >
                               <Info className="mr-2 h-4 w-4" />
                               Токеномика
-                            </Button>
+                </Button>
                           )}
                         </div>
                       </GlassPanel>
                     </motion.div>
-                  ))}
-                </div>
+              ))}
+            </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Roadmap Section */}
-          <AnimatePresence mode="wait">
+              <AnimatePresence mode="wait">
             {activeSection === 'roadmap' && (
-              <motion.div
+                  <motion.div
                 key="roadmap"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -632,10 +632,10 @@ const PreviewPage: React.FC = () => {
 
                 <div className="space-y-8">
                   {roadmap.map((phase, index) => (
-                    <motion.div
+                  <motion.div
                       key={index}
                       initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                      animate={{ opacity: 1, x: 0 }}
+                    animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
                       <GlassPanel 
@@ -648,10 +648,10 @@ const PreviewPage: React.FC = () => {
                         }`}
                       >
                         <div className="flex items-start justify-between mb-4">
-                          <div>
+                    <div>
                             <h3 className="text-2xl font-bold text-white mb-2">{phase.phase}</h3>
                             <p className="text-cyan-300 font-medium">{phase.period}</p>
-                          </div>
+                    </div>
                           <Badge 
                             variant={
                               phase.status === 'completed' ? 'default' :
@@ -668,27 +668,27 @@ const PreviewPage: React.FC = () => {
                              phase.status === 'current' ? 'В процессе' :
                              'Планируется'}
                           </Badge>
-                        </div>
+                    </div>
                         <div className="grid md:grid-cols-2 gap-4">
                           {phase.features.map((feature, featureIndex) => (
                             <div key={featureIndex} className="flex items-center space-x-2">
                               <CheckCircle className="w-4 h-4 text-green-400" />
                               <span className="text-blue-200">{feature}</span>
-                            </div>
+                    </div>
                           ))}
-                        </div>
+                    </div>
                       </GlassPanel>
-                    </motion.div>
+                  </motion.div>
                   ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
           {/* Partners Section */}
           <AnimatePresence mode="wait">
             {activeSection === 'partners' && (
-              <motion.div
+            <motion.div
                 key="partners"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -717,11 +717,11 @@ const PreviewPage: React.FC = () => {
                         <h3 className="text-xl font-bold mb-2 text-white">{partner.name}</h3>
                         <p className="text-blue-200">{partner.description}</p>
                       </GlassPanel>
-                    </motion.div>
+            </motion.div>
                   ))}
                 </div>
-              </motion.div>
-            )}
+          </motion.div>
+        )}
           </AnimatePresence>
         </div>
       </div>
@@ -769,8 +769,8 @@ const PreviewPage: React.FC = () => {
                 <strong>VODeco</strong> — это глобальная экосистема водных ресурсов, построенная на принципах 
                 децентрализованного управления, прозрачности и технологического прогресса.
               </p>
-            </div>
-            <div>
+                    </div>
+                    <div>
               <h3 className="text-xl font-bold text-blue-400 mb-4">Ключевые принципы:</h3>
               <ul className="space-y-3 text-blue-200">
                 <li className="flex items-start space-x-2">
@@ -786,14 +786,14 @@ const PreviewPage: React.FC = () => {
                   <span>Общее будущее для всех заинтересованных сторон</span>
                 </li>
               </ul>
-            </div>
-            <div>
+                    </div>
+                    <div>
               <h3 className="text-xl font-bold text-blue-400 mb-4">Миссия:</h3>
               <p className="text-blue-200">
                 Создать инфраструктуру будущего, где управление водой становится таким же технологичным, 
                 прозрачным и совместным, как интернет — для информации.
               </p>
-            </div>
+                    </div>
           </div>
         }
       />
@@ -811,9 +811,9 @@ const PreviewPage: React.FC = () => {
                 <strong>Экосистема VODeco</strong> — это интегрированная платформа, объединяющая все 
                 заинтересованные стороны в единую сеть для эффективного управления водными ресурсами.
               </p>
-            </div>
+                    </div>
             <div className="grid md:grid-cols-2 gap-6">
-              <div>
+                    <div>
                 <h3 className="text-xl font-bold text-green-400 mb-4">Участники:</h3>
                 <ul className="space-y-3 text-blue-200">
                   <li className="flex items-start space-x-2">
@@ -837,8 +837,8 @@ const PreviewPage: React.FC = () => {
                     <span><strong>Инвесторы:</strong> Финансирование проектов</span>
                   </li>
                 </ul>
-              </div>
-              <div>
+                    </div>
+                    <div>
                 <h3 className="text-xl font-bold text-green-400 mb-4">Компоненты:</h3>
                 <ul className="space-y-3 text-blue-200">
                   <li className="flex items-start space-x-2">
@@ -858,7 +858,7 @@ const PreviewPage: React.FC = () => {
                     <span><strong>Аналитические Панели:</strong> Инсайты и отчеты</span>
                   </li>
                 </ul>
-              </div>
+                    </div>
             </div>
           </div>
         }
@@ -877,42 +877,42 @@ const PreviewPage: React.FC = () => {
                 <strong>Технологический стек VODeco</strong> включает современные технологии для решения 
                 глобальных экологических задач и обеспечения надежности платформы.
               </p>
-            </div>
+                    </div>
             <div className="grid md:grid-cols-2 gap-6">
-              <div>
+                    <div>
                 <h3 className="text-xl font-bold text-purple-400 mb-4">Frontend:</h3>
                 <ul className="space-y-2 text-blue-200">
                   <li>• React + TypeScript</li>
                   <li>• Tailwind CSS</li>
                   <li>• Framer Motion</li>
                 </ul>
-              </div>
-              <div>
+                    </div>
+                    <div>
                 <h3 className="text-xl font-bold text-purple-400 mb-4">Backend:</h3>
                 <ul className="space-y-2 text-blue-200">
                   <li>• Node.js + Express</li>
                   <li>• TypeScript</li>
                   <li>• PostgreSQL</li>
                 </ul>
-              </div>
-              <div>
+                    </div>
+                    <div>
                 <h3 className="text-xl font-bold text-purple-400 mb-4">Blockchain:</h3>
                 <ul className="space-y-2 text-blue-200">
                   <li>• Ethereum</li>
                   <li>• Smart Contracts</li>
                   <li>• Web3.js</li>
                 </ul>
-              </div>
-              <div>
+                    </div>
+                    <div>
                 <h3 className="text-xl font-bold text-purple-400 mb-4">IoT & Data:</h3>
                 <ul className="space-y-2 text-blue-200">
                   <li>• MQTT</li>
                   <li>• InfluxDB</li>
                   <li>• Machine Learning</li>
                 </ul>
-              </div>
+                    </div>
+                    </div>
             </div>
-          </div>
                  }
        />
 
@@ -1022,7 +1022,7 @@ const PreviewPage: React.FC = () => {
                  <strong>Платформа VOD</strong> предоставляет участникам и пользователям сектора водных ресурсов 
                  доступ к единой цифровой среде с набором ключевых сервисов.
                </p>
-             </div>
+                      </div>
              <div className="grid md:grid-cols-2 gap-6">
                <div>
                  <h3 className="text-xl font-bold text-cyan-400 mb-4">Для широкой аудитории:</h3>
@@ -1068,7 +1068,7 @@ const PreviewPage: React.FC = () => {
                      <span><strong>Роль "экологического майнера"</strong> — внесение и валидирование данных</span>
                    </li>
                  </ul>
-               </div>
+                      </div>
                <div>
                  <h3 className="text-xl font-bold text-cyan-400 mb-4">Для профессиональной аудитории:</h3>
                  <ul className="space-y-3 text-blue-200">
@@ -1105,9 +1105,9 @@ const PreviewPage: React.FC = () => {
                      <span><strong>Партнёрство в цифровой трансформации</strong> — участие в пилотных проектах</span>
                    </li>
                  </ul>
-               </div>
-             </div>
-           </div>
+            </div>
+                </div>
+                  </div>
          }
        />
 
@@ -1124,7 +1124,7 @@ const PreviewPage: React.FC = () => {
                  <strong>Токен VOD</strong> — это проектная валюта, обеспеченная активами проекта и водными ресурсами, 
                  являющаяся основой экономики платформы.
                </p>
-             </div>
+                  </div>
              <div className="grid md:grid-cols-2 gap-6">
                <div>
                  <h3 className="text-xl font-bold text-yellow-400 mb-4">Функции токена VOD:</h3>
@@ -1154,7 +1154,7 @@ const PreviewPage: React.FC = () => {
                      <span><strong>Ликвидность</strong> — торговля на криптобиржах</span>
                    </li>
                  </ul>
-               </div>
+              </div>
                <div>
                  <h3 className="text-xl font-bold text-yellow-400 mb-4">Модель монетизации:</h3>
                  <ul className="space-y-3 text-blue-200">
@@ -1183,8 +1183,8 @@ const PreviewPage: React.FC = () => {
                      <span><strong>Доход от стейкинга</strong> — процент от прибыли проектов</span>
                    </li>
                  </ul>
-               </div>
-             </div>
+            </div>
+              </div>
              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
                <p className="text-green-300 font-medium">
                  <strong>Экономическая модель:</strong> Токен VOD обеспечивает устойчивую экономику платформы, 
@@ -1202,7 +1202,7 @@ const PreviewPage: React.FC = () => {
          type="info"
          size="xl"
          content={
-           <div className="space-y-6">
+              <div className="space-y-6">
              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
                <p className="text-blue-200">
                  <strong>Стратегические партнёрства VOD</strong> — это ключевой элемент успеха платформы, 
@@ -1210,7 +1210,7 @@ const PreviewPage: React.FC = () => {
                </p>
              </div>
              <div className="grid md:grid-cols-2 gap-6">
-               <div>
+                <div>
                  <h3 className="text-xl font-bold text-green-400 mb-4">Международные организации:</h3>
                  <ul className="space-y-3 text-blue-400">
                    <li className="flex items-start space-x-2">
@@ -1234,14 +1234,14 @@ const PreviewPage: React.FC = () => {
                      <span><strong>UNESCO</strong> — научные исследования и образование</span>
                    </li>
                  </ul>
-               </div>
-               <div>
+                </div>
+                <div>
                  <h3 className="text-xl font-bold text-green-400 mb-4">Правительства и ведомства:</h3>
                  <ul className="space-y-3 text-blue-400">
                    <li className="flex items-start space-x-2">
                      <span className="text-green-400 mt-1">•</span>
                      <span><strong>Министерства экологии</strong> — экологическая политика и стандарты</span>
-                   </li>
+                      </li>
                    <li className="flex items-start space-x-2">
                      <span className="text-green-400 mt-2">•</span>
                      <span><strong>Водные ведомства</strong> — регулирование водопользования</span>
@@ -1258,15 +1258,15 @@ const PreviewPage: React.FC = () => {
                      <span className="text-green-400 mt-1">•</span>
                      <span><strong>Местные администрации</strong> — муниципальные проекты</span>
                    </li>
-                 </ul>
-               </div>
-               <div>
+                  </ul>
+                </div>
+                <div>
                  <h3 className="text-xl font-bold text-green-400 mb-4">Технологические компании:</h3>
                  <ul className="space-y-3 text-blue-400">
                    <li className="flex items-start space-x-2">
                      <span className="text-green-400 mt-1">•</span>
                      <span><strong>IoT-провайдеры</strong> — датчики и системы мониторинга</span>
-                   </li>
+                      </li>
                    <li className="flex items-start space-x-2">
                      <span className="text-green-400 mt-1">•</span>
                      <span><strong>Облачные платформы</strong> — инфраструктура и масштабирование</span>
@@ -1283,8 +1283,8 @@ const PreviewPage: React.FC = () => {
                      <span className="text-green-400 mt-1">•</span>
                      <span><strong>Аналитические платформы</strong> — BI-инструменты и дашборды</span>
                    </li>
-                 </ul>
-               </div>
+                  </ul>
+                </div>
                <div>
                  <h3 className="text-xl font-bold text-green-400 mb-4">Академические партнёрства:</h3>
                  <ul className="space-y-3 text-blue-400">
@@ -1305,8 +1305,8 @@ const PreviewPage: React.FC = () => {
                      <span><strong>Международные консорциумы</strong> — совместные проекты</span>
                    </li>
                  </ul>
-               </div>
-             </div>
+              </div>
+    </div>
              <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
                <p className="text-blue-300 font-medium">
                  <strong>Результат партнёрств:</strong> Стратегические партнёрства обеспечивают VOD доступ к 
