@@ -3,6 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { Menu } from 'lucide-react';
 import { AuthStatus } from '@/components/ui/AuthStatus';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
+import { PerformanceToggle } from '@/components/ui/PerformanceToggle';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -30,8 +31,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           </div>
         </Link>
         
-        {/* Right side: Language and Auth */}
+        {/* Right side: Performance, Language and Auth */}
         <div className="flex items-center space-x-2">
+          <PerformanceToggle />
           <LanguageSwitcher />
           <AuthStatus />
         </div>

@@ -7,6 +7,8 @@ export function usePerformance() {
   const [isLowEndDevice, setIsLowEndDevice] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [batteryLevel, setBatteryLevel] = useState(1);
+  const [connectionType, setConnectionType] = useState('4g');
 
   useEffect(() => {
     // Проверяем настройки пользователя для уменьшенной анимации
@@ -38,8 +40,24 @@ export function usePerformance() {
       // Проверяем размер экрана (маленькие экраны часто означают слабые устройства)
       const screenSize = window.screen.width * window.screen.height;
       
-      // Определяем слабое устройство
-      const isLowEnd = cores <= 2 || memory <= 2 || screenSize < 1000000;
+      // Проверяем тип соединения
+      const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+      if (connection) {
+        setConnectionType(connection.effectiveType || '4g');
+      }
+
+      // Проверяем уровень батареи (если доступно)
+      if ('getBattery' in navigator) {
+        (navigator as any).getBattery().then((battery: any) => {
+          setBatteryLevel(battery.level);
+        });
+      }
+      
+      // Более строгие критерии для определения слабого устройства
+      const isLowEnd = cores <= 2 || memory <= 2 || screenSize < 1000000 || 
+                      connection?.effectiveType === 'slow-2g' || 
+                      connection?.effectiveType === '2g' ||
+                      connection?.effectiveType === '3g';
       setIsLowEndDevice(isLowEnd);
     };
 
@@ -58,10 +76,20 @@ export function usePerformance() {
     };
   }, []);
 
+  // Более строгие условия для анимации
+  const shouldAnimate = !prefersReducedMotion && 
+                       !isLowEndDevice && 
+                       isVisible && 
+                       batteryLevel > 0.2 && 
+                       connectionType !== 'slow-2g' && 
+                       connectionType !== '2g';
+
   return {
     isLowEndDevice,
     prefersReducedMotion,
     isVisible,
-    shouldAnimate: !prefersReducedMotion && !isLowEndDevice && isVisible
+    batteryLevel,
+    connectionType,
+    shouldAnimate
   };
 }

@@ -9,6 +9,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "./components/layout/Sidebar";
 import BackgroundProvider from "@/components/layout/BackgroundProvider";
+import { PerformanceIndicator } from "@/components/layout/PerformanceManager";
 import AuthPage from "@/pages/auth-page";
 import { AuthProvider } from "@/hooks/useAuth.tsx";
 import Dashboard from "@/pages/Dashboard";
@@ -183,6 +184,7 @@ function App() {
               </div>
               {/* Footer перемещен в отдельные компоненты SupportPageWithFooter и SettingsPageWithFooter */}
             </div>
+            <PerformanceIndicator />
           </BackgroundProvider>
           <Toaster />
         </TooltipProvider>

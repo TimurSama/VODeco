@@ -2,24 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import HexOceanWaves from './HexOceanWaves';
 import StaticBackground from './StaticBackground';
-import { usePerformance } from '@/hooks/use-performance';
+import { PerformanceManager, usePerformanceContext } from './PerformanceManager';
 
 interface BackgroundProviderProps {
   children: React.ReactNode;
 }
 
 /**
- * Оптимизированный компонент фона с интеллектуальным управлением анимацией
+ * Внутренний компонент фона
  */
-export default function BackgroundProvider({ children }: BackgroundProviderProps) {
+function BackgroundContent({ children }: { children: React.ReactNode }) {
   const [showAnimation, setShowAnimation] = useState(false);
-  const { shouldAnimate, isVisible, isLowEndDevice } = usePerformance();
+  const { shouldAnimate, isVisible, isLowEndDevice, disableHeavyAnimations } = usePerformanceContext();
 
   useEffect(() => {
-    // Задержка для показа анимации после загрузки основного контента
+    // Увеличиваем задержку для показа анимации после загрузки основного контента
     const timer = setTimeout(() => {
       setShowAnimation(true);
-    }, 1000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -28,7 +28,7 @@ export default function BackgroundProvider({ children }: BackgroundProviderProps
     <div className="relative min-h-screen vodeco-bg water-waves">
       {/* Выбираем тип фона в зависимости от производительности устройства */}
       {showAnimation && isVisible && (
-        shouldAnimate && !isLowEndDevice ? (
+        shouldAnimate && !isLowEndDevice && !disableHeavyAnimations ? (
           <HexOceanWaves />
         ) : (
           <StaticBackground />
@@ -40,5 +40,18 @@ export default function BackgroundProvider({ children }: BackgroundProviderProps
         {children}
       </div>
     </div>
+  );
+}
+
+/**
+ * Оптимизированный компонент фона с интеллектуальным управлением анимацией
+ */
+export default function BackgroundProvider({ children }: BackgroundProviderProps) {
+  return (
+    <PerformanceManager>
+      <BackgroundContent>
+        {children}
+      </BackgroundContent>
+    </PerformanceManager>
   );
 }

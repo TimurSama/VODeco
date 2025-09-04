@@ -7,7 +7,7 @@
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0c4a6e 50%, #0369a1 75%, #0ea5e9 100%);
   background-size: 400% 400%;
   /* Анимация только если пользователь не отключил анимации */
-  animation: vodeco-gradient 30s ease infinite;
+  animation: vodeco-gradient 60s ease infinite; /* Увеличиваем время анимации для экономии ресурсов */
 }
 
 /* Отключаем анимацию для пользователей с prefers-reduced-motion */
@@ -15,6 +15,13 @@
   .vodeco-bg {
     animation: none;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%);
+  }
+}
+
+/* Отключаем анимацию на слабых устройствах */
+@media (max-width: 768px) {
+  .vodeco-bg {
+    animation-duration: 120s; /* Еще медленнее на мобильных */
   }
 }
 

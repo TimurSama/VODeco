@@ -16,12 +16,12 @@ export default function HexOceanWaves() {
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
-    // Уменьшаем количество гексагонов для лучшей производительности
-    const hexSize = window.innerWidth < 768 ? 35 : 28; // Больше на мобильных = меньше гексагонов
+    // Значительно уменьшаем количество гексагонов для лучшей производительности
+    const hexSize = window.innerWidth < 768 ? 50 : 40; // Еще больше на мобильных = намного меньше гексагонов
     const hexHeight = Math.sqrt(3) * hexSize;
     const hexWidth = 2 * hexSize;
-    const horizSpacing = 0.75 * hexWidth;
-    const vertSpacing = hexHeight;
+    const horizSpacing = 0.8 * hexWidth; // Увеличиваем расстояние между гексагонами
+    const vertSpacing = hexHeight * 1.1; // Увеличиваем расстояние между рядами
 
     let time = 0;
     const cycleDuration = 30000; // Увеличиваем до 30 секунд для более плавной анимации
@@ -30,8 +30,8 @@ export default function HexOceanWaves() {
 
     // Оптимизированная функция анимации с ограничением FPS
     function animate(currentTime: number) {
-      // Ограничиваем FPS до 30 для экономии ресурсов
-      if (currentTime - lastTimeRef.current < 33) {
+      // Ограничиваем FPS до 20 для экономии ресурсов
+      if (currentTime - lastTimeRef.current < 50) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }

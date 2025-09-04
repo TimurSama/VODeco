@@ -303,9 +303,21 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
       }
     });
 
-    // Анимация
-    const animate = () => {
-      const animationId = requestAnimationFrame(animate);
+    // Оптимизированная анимация с ограничением FPS
+    let lastTime = 0;
+    const targetFPS = 30; // Ограничиваем FPS до 30
+    const frameInterval = 1000 / targetFPS;
+
+    const animate = (currentTime: number) => {
+      // Ограничиваем FPS
+      if (currentTime - lastTime < frameInterval) {
+        const animationId = requestAnimationFrame(animate);
+        if (globeInstanceRef.current) {
+          globeInstanceRef.current.animationId = animationId;
+        }
+        return;
+      }
+      lastTime = currentTime;
 
       controls.update();
 
@@ -340,21 +352,28 @@ const EarthGlobe: React.FC<EarthGlobeProps> = ({
         atmosphereMaterial.opacity = 0.15;
       }
 
-      const time = Date.now() * 0.0001;
-      cloudsMesh.rotation.y = time * 0.5;
+      const time = currentTime * 0.0001;
+      cloudsMesh.rotation.y = time * 0.3; // Замедляем вращение облаков
 
-      const pulseTime = Date.now() * 0.001;
-      markersGroup.children.forEach((marker, index) => {
-        const scale = 1 + Math.sin(pulseTime * 2 + index) * 0.2;
-        marker.scale.setScalar(scale);
-      });
+      // Упрощаем анимацию маркеров - обновляем только каждый 3-й кадр
+      if (Math.floor(currentTime / 50) % 3 === 0) {
+        const pulseTime = currentTime * 0.001;
+        markersGroup.children.forEach((marker, index) => {
+          const scale = 1 + Math.sin(pulseTime * 1.5 + index) * 0.15; // Уменьшаем амплитуду
+          marker.scale.setScalar(scale);
+        });
+      }
 
-      globeMaterial.needsUpdate = true;
-      cloudsMaterial.needsUpdate = true;
-      atmosphereMaterial.needsUpdate = true;
+      // Обновляем материалы только при необходимости
+      if (globeMaterial.needsUpdate || cloudsMaterial.needsUpdate || atmosphereMaterial.needsUpdate) {
+        globeMaterial.needsUpdate = true;
+        cloudsMaterial.needsUpdate = true;
+        atmosphereMaterial.needsUpdate = true;
+      }
 
       renderer.render(scene, camera);
 
+      const animationId = requestAnimationFrame(animate);
       if (globeInstanceRef.current) {
         globeInstanceRef.current.animationId = animationId;
       }
