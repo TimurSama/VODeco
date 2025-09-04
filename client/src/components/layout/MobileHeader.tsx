@@ -54,7 +54,7 @@ export default function MobileHeader({
   };
   
   return (
-    <header className="sticky top-0 z-50 w-full bg-background border-b border-primary/10 px-4 py-2 h-14 flex items-center justify-between">
+    <header className="sticky top-0 z-[60] w-full bg-background/95 backdrop-blur-sm border-b border-primary/10 px-4 py-2 h-14 flex items-center justify-between">
       {/* Левая часть шапки */}
       <div className="flex items-center gap-2">
         {showBackButton ? (
@@ -68,7 +68,7 @@ export default function MobileHeader({
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[80vw] p-0">
+            <SheetContent side="left" className="w-[80vw] p-0 z-[70]">
               <div className="flex flex-col h-full overflow-y-auto">
                 {/* Заголовок бокового меню */}
                 <div className="flex items-center justify-between p-4 border-b border-primary/10">

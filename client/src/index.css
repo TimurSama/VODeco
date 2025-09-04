@@ -2,11 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-/* VODeco фирменный фон */
+/* VODeco фирменный фон - оптимизированная версия */
 .vodeco-bg {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #0c4a6e 50%, #0369a1 75%, #0ea5e9 100%);
   background-size: 400% 400%;
-  animation: vodeco-gradient 20s ease infinite;
+  /* Анимация только если пользователь не отключил анимации */
+  animation: vodeco-gradient 30s ease infinite;
+}
+
+/* Отключаем анимацию для пользователей с prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .vodeco-bg {
+    animation: none;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0c4a6e 100%);
+  }
 }
 
 @keyframes vodeco-gradient {

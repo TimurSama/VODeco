@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import LandingHeader from '@/components/layout/LandingHeader';
@@ -27,6 +27,7 @@ import {
 const LandingPage: React.FC = () => {
   type ModalKey = 'crisis' | 'solution' | 'dao' | 'monitoring' | 'mechanics' | 'society' | 'science' | 'business' | 'government' | 'investors' | 'platform' | 'services' | 'tokenomics' | 'roadmap' | 'technology' | 'partnerships';
   
+  const shouldReduceMotion = useReducedMotion();
   const [modalStates, setModalStates] = useState<Record<ModalKey, boolean>>({
     crisis: false,
     solution: false,
@@ -62,9 +63,9 @@ const LandingPage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 to-cyan-900/50"></div>
         <div className="relative z-10 text-center max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.8 }}
           >
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               VODeco

@@ -1,8 +1,10 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 export default function HexOceanWaves() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationRef = useRef<number>();
+  const lastTimeRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -14,19 +16,27 @@ export default function HexOceanWaves() {
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
-    const hexSize = 28;
+    // Уменьшаем количество гексагонов для лучшей производительности
+    const hexSize = window.innerWidth < 768 ? 35 : 28; // Больше на мобильных = меньше гексагонов
     const hexHeight = Math.sqrt(3) * hexSize;
     const hexWidth = 2 * hexSize;
     const horizSpacing = 0.75 * hexWidth;
     const vertSpacing = hexHeight;
 
     let time = 0;
-    let animationId: number;
-    const cycleDuration = 25000; // 25 секунд на полный цикл
+    const cycleDuration = 30000; // Увеличиваем до 30 секунд для более плавной анимации
     let cycleStartTime = 0;
     let isAnimating = true;
 
+    // Оптимизированная функция анимации с ограничением FPS
     function animate(currentTime: number) {
+      // Ограничиваем FPS до 30 для экономии ресурсов
+      if (currentTime - lastTimeRef.current < 33) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastTimeRef.current = currentTime;
+
       if (!cycleStartTime) cycleStartTime = currentTime;
       
       const elapsed = currentTime - cycleStartTime;
@@ -40,9 +50,14 @@ export default function HexOceanWaves() {
       
       ctx.clearRect(0, 0, width, height);
 
-      // Рендерим все гексагоны
-      for (let row = -1; row < height / vertSpacing + 2; row++) {
-        for (let col = -1; col < width / horizSpacing + 2; col++) {
+      // Оптимизированный рендеринг - рендерим только видимые гексагоны
+      const startRow = Math.max(0, Math.floor(-vertSpacing / vertSpacing));
+      const endRow = Math.min(height / vertSpacing + 2, Math.ceil((height + vertSpacing) / vertSpacing));
+      const startCol = Math.max(0, Math.floor(-horizSpacing / horizSpacing));
+      const endCol = Math.min(width / horizSpacing + 2, Math.ceil((width + horizSpacing) / horizSpacing));
+
+      for (let row = startRow; row < endRow; row++) {
+        for (let col = startCol; col < endCol; col++) {
           const cx = col * horizSpacing;
           const cy = row * vertSpacing + (col % 2 ? vertSpacing / 2 : 0);
           drawHexagon(cx, cy);
@@ -50,7 +65,7 @@ export default function HexOceanWaves() {
       }
 
       if (isAnimating) {
-        animationId = requestAnimationFrame(animate);
+        animationRef.current = requestAnimationFrame(animate);
       }
     }
 
@@ -103,19 +118,25 @@ export default function HexOceanWaves() {
       }
     }
 
-    function handleResize() {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    }
+    // Оптимизированный обработчик изменения размера с дебаунсом
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (!canvas) return;
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }, 100);
+    };
 
     window.addEventListener("resize", handleResize);
-    animate(0);
+    animationRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (animationId) {
-        cancelAnimationFrame(animationId);
+      clearTimeout(resizeTimeout);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
   }, []);

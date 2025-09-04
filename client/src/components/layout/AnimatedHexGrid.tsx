@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from '@/hooks/use-media-query';
 
 interface AnimatedHexGridProps {
@@ -7,6 +7,7 @@ interface AnimatedHexGridProps {
   pulseOpacity?: number;
   color?: string;
   speed?: number;
+  enabled?: boolean; // Новый проп для включения/отключения анимации
 }
 
 const AnimatedHexGrid = ({
@@ -14,22 +15,34 @@ const AnimatedHexGrid = ({
   baseOpacity = 0.15,
   pulseOpacity = 0.25,
   color = '#14b8a6',
-  speed = 1
+  speed = 1,
+  enabled = true
 }: AnimatedHexGridProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationRef = useRef<number>();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  useEffect(() => {
+    // Проверяем настройки пользователя
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const prefersReducedMotion = mediaQuery.matches;
+    
+    // Запускаем анимацию только если она включена и пользователь не отключил анимации
+    setShouldAnimate(enabled && !prefersReducedMotion);
+  }, [enabled]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !shouldAnimate) return;
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
-    const hexSize = isMobile ? 30 : 40; // Меньше на мобильных устройствах
-    const speedValue = 0.005 * speed;
+    const hexSize = isMobile ? 35 : 45; // Увеличиваем размер для меньшего количества гексагонов
+    const speedValue = 0.003 * speed; // Замедляем анимацию
     let time = 0;
 
     // Преобразуем HEX-цвет в формат rgba
@@ -67,14 +80,22 @@ const AnimatedHexGrid = ({
     };
 
     const render = () => {
+      if (!shouldAnimate) return;
+      
       ctx.clearRect(0, 0, width, height);
       time += speedValue;
 
       const dx = hexSize * Math.sqrt(3);
       const dy = hexSize * 1.5;
 
-      for (let y = -dy; y < height + dy; y += dy) {
-        for (let x = -dx; x < width + dx; x += dx) {
+      // Оптимизированный рендеринг - рендерим только видимые гексагоны
+      const startY = Math.max(-dy, 0);
+      const endY = Math.min(height + dy, height + dy);
+      const startX = Math.max(-dx, 0);
+      const endX = Math.min(width + dx, width + dx);
+
+      for (let y = startY; y < endY; y += dy) {
+        for (let x = startX; x < endX; x += dx) {
           const offsetX = (Math.floor(y / dy) % 2) * (dx / 2);
           const dist = Math.hypot(x + offsetX - width / 2, y - height / 2);
           const alphaBase = baseOpacity;
@@ -84,10 +105,10 @@ const AnimatedHexGrid = ({
         }
       }
 
-      requestAnimationFrame(render);
+      animationRef.current = requestAnimationFrame(render);
     };
 
-    render();
+    animationRef.current = requestAnimationFrame(render);
 
     const resize = () => {
       width = canvas.width = window.innerWidth;
@@ -95,8 +116,13 @@ const AnimatedHexGrid = ({
     };
 
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [baseOpacity, pulseOpacity, color, speed, isMobile]);
+    return () => {
+      window.removeEventListener("resize", resize);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [baseOpacity, pulseOpacity, color, speed, isMobile, shouldAnimate]);
 
   return (
     <canvas
